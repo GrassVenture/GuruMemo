@@ -40,9 +40,51 @@ class Photo with _$Photo {
     @Default(UnionTimestamp.serverTimestamp())
     UnionTimestamp shotAt,
     @Default('') String storeId,
+
+    /// 写真分類用APIの実行状態
+    @SinglePhotoClassificationStatus()
+    @Default(SinglePhotoClassificationStatus.readyForUse)
+    SinglePhotoClassificationStatus classifyPhotosStatus,
   }) = _Photo;
 
   const Photo._();
 
   factory Photo.fromJson(Map<String, dynamic> json) => _$PhotoFromJson(json);
 }
+
+/// 写真分類用APIの実行状態を表すenum
+enum SinglePhotoClassificationStatus {
+  /// 処理中
+  processing,
+
+  /// 利用の準備が整っている
+  readyForUse,
+
+  /// 失敗
+  // TODO(masaki): エラーハンドリングを別途検討
+  failed;
+}
+
+/// [SinglePhotoClassificationStatus]用JsonConverter
+class SinglePhotoClassificationStatusConverter
+    implements JsonConverter<SinglePhotoClassificationStatus, String> {
+  const SinglePhotoClassificationStatusConverter();
+
+  @override
+  SinglePhotoClassificationStatus fromJson(String value) {
+    switch (value) {
+      case 'processing':
+        return SinglePhotoClassificationStatus.processing;
+      case 'readyForUse':
+        return SinglePhotoClassificationStatus.readyForUse;
+      case 'failed':
+        return SinglePhotoClassificationStatus.failed;
+      default:
+        return SinglePhotoClassificationStatus.readyForUse;
+    }
+  }
+
+  @override
+  String toJson(SinglePhotoClassificationStatus object) {
+    return object.name;
+  }
