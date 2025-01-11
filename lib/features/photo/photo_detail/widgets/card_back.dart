@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../../../core/guru_memo_card.dart';
+import '../../../../core/widgets/guru_memo_card.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store_controller.dart';
