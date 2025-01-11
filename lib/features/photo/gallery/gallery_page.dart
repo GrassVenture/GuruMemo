@@ -12,11 +12,11 @@ import '../photo.dart';
 import '../photo_controller.dart';
 import '../photo_detail/photo_detail_page.dart';
 
-class HomePage extends HookConsumerWidget {
-  const HomePage({super.key});
+class GalleryPage extends HookConsumerWidget {
+  const GalleryPage({super.key});
 
-  static const routeName = 'home_page';
-  static const routePath = '/home_page';
+  static const routeName = 'gallery_page';
+  static const routePath = '/gallery_page';
 
   Future<void> _downloadPhotos(
     WidgetRef ref,
