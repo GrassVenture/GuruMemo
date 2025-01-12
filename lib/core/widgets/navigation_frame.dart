@@ -205,7 +205,7 @@ class NavigationFrame extends HookConsumerWidget {
       case 1:
         context.go(CameraPage.routePath);
       case 2:
-        context.go(HomePage.routePath);
+        context.go(GalleryPage.routePath);
       case 3:
         context.go(MyPage.routePath);
     }

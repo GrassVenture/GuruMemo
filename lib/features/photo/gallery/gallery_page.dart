@@ -1,10 +1,20 @@
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 class HomePage extends HookWidget {
   const HomePage({super.key});
+import '../../../core/themes.dart';
+import '../../auth/auth_controller.dart';
+import '../../auth/authed_user.dart';
+import '../photo.dart';
+import '../photo_controller.dart';
+import '../photo_detail/photo_detail_page.dart';
+
+class GalleryPage extends HookConsumerWidget {
+  const GalleryPage({super.key});
 
   static const routeName = 'home_page';
   static const routePath = '/home_page';

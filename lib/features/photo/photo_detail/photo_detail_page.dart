@@ -181,7 +181,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                       );
                                       if (context.mounted) {
                                         context.pushReplacementNamed(
-                                          HomePage.routeName,
+                                          GalleryPage.routeName,
                                         );
                                       }
                                     },
