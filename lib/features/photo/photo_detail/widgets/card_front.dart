@@ -3,7 +3,7 @@ import 'package:gap/gap.dart';
 
 import '../../../../core/build_context_extension.dart';
 import '../../../../core/themes.dart';
-import '../../../../core/widgets/guru_memo_card.dart';
+import '../../../../core/widgets/cards/guru_memo_card.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 
 class CardFront extends StatelessWidget {

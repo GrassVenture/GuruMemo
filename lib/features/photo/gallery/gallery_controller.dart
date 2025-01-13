@@ -5,8 +5,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/database/database.dart';
-import '../../../core/local_photo_repository.dart';
 import '../../../core/logger.dart';
+import '../../../core/repositories/local_photo_repository.dart';
 
 final galleryControllerProvider = Provider<GalleryController>((ref) {
   return GalleryController(ref);

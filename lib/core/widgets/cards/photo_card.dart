@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../../core/themes.dart';
-import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
+import '../../../features/photo/swipe_photo/swipe_photo_controller.dart';
+import '../../themes.dart';
 
 /// 写真のキャッシュを管理するProvider
 class _PhotoFileCacheNotifier
@@ -24,8 +24,8 @@ final photoFileCacheProvider = AsyncNotifierProvider.family
 );
 
 /// 写真カードリスト
-class PhotoCards extends HookConsumerWidget {
-  const PhotoCards({required this.photos, required this.controller, super.key});
+class PhotoCard extends HookConsumerWidget {
+  const PhotoCard({required this.photos, required this.controller, super.key});
 
   final List<AssetEntity> photos;
   final AppinioSwiperController controller;
