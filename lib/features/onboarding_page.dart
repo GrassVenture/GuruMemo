@@ -126,9 +126,6 @@ class OnboardingPage extends HookConsumerWidget {
                               curve: Curves.easeInOut,
                             );
                           } else {
-                            ref
-                                .read(isOnBoardingCompletedProvider.notifier)
-                                .update((state) => true);
                             // TODO(kim): アナリティクスマージ後にコメントアウトを解除
                             // ref
                             //     .read(analyticsServiceProvider)
