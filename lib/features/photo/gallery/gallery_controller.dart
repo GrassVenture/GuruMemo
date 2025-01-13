@@ -38,29 +38,6 @@ Future<List<Photo>> fetchPhotos(Ref ref) async {
   return result.where((e) => e.url.isNotEmpty).toList();
 }
 
-final fetchPhotosFutureProvider =
-    FutureProvider.autoDispose<List<Photo>>((ref) async {
-  final userId = ref.watch(userIdProvider);
-  // TODO(masaki): nullの場合ハンドリング検討
-  if (userId == null) {
-    logger.e('userId is null');
-    return [];
-  }
-
-  await ref.watch(authedUserStreamProvider.future);
-  final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-  final isReadyForUse =
-      authedUserAsync?.classifyPhotosStatus == ClassifyPhotosStatus.readyForUse;
-  if (!isReadyForUse) {
-    return <Photo>[];
-  }
-
-  final result =
-      await ref.read(photoRepositoryProvider).downloadPhotos(userId: userId);
-
-  return result.where((e) => e.url.isNotEmpty).toList();
-});
-
 final galleryControllerProvider = Provider<GalleryController>((ref) {
   return GalleryController(ref);
 });

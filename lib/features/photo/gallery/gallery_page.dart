@@ -4,6 +4,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../core/logger.dart';
 import '../../../core/themes.dart';
 import '../photo.dart';
 import '../photo_detail/photo_detail_page.dart';
@@ -17,8 +18,11 @@ class GalleryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final photoUrls = ref.watch(fetchPhotosFutureProvider).when(
-          error: (err, _) => null,
+    final photoUrls = ref.watch(fetchPhotosProvider).when(
+          error: (err, _) {
+            logger.e(err);
+            return null;
+          },
           loading: () => null,
           data: (data) => data,
         );
