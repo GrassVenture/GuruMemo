@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/database/database.dart' as local;
 import '../../../core/local_photo_repository.dart';
@@ -11,6 +12,31 @@ import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
 import '../photo.dart';
 import '../photo_repository.dart';
+
+part 'gallery_controller.g.dart';
+
+@riverpod
+Future<List<Photo>> fetchPhotos(Ref ref) async {
+  final userId = ref.watch(userIdProvider);
+// TODO(masaki): nullの場合ハンドリング検討
+  if (userId == null) {
+    logger.e('userId is null');
+    return [];
+  }
+
+  await ref.watch(authedUserStreamProvider.future);
+  final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
+  final isReadyForUse =
+      authedUserAsync?.classifyPhotosStatus == ClassifyPhotosStatus.readyForUse;
+  if (!isReadyForUse) {
+    return <Photo>[];
+  }
+
+  final result =
+      await ref.read(photoRepositoryProvider).downloadPhotos(userId: userId);
+
+  return result.where((e) => e.url.isNotEmpty).toList();
+}
 
 final fetchPhotosFutureProvider =
     FutureProvider.autoDispose<List<Photo>>((ref) async {
