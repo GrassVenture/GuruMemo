@@ -25,6 +25,8 @@ final userIdProvider = Provider<String?>((ref) {
   return ref.watch(_authProvider).currentUser?.uid;
 });
 
+// TODO(masaki): g.ファイルにAutoDisposeStreamProviderRefが生成されないように調整
+// Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
 /// [AuthedUser]を購読するProvider
 @riverpod
 Stream<AuthedUser> authedUserStream(Ref ref) {
