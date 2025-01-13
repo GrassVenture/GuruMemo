@@ -3,16 +3,19 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/local_photo_repository.dart';
 import '../../../core/logger.dart';
 import '../../../core/photo_manager_service.dart';
+import '../../../core/shared_preferences_service.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 import 'photo_count.dart';
+
+part 'swipe_photo_controller.g.dart';
 
 /// 写真のカウントを管理するProvider
 /// スワイプ画面の上部のカウントに使用
@@ -186,3 +189,27 @@ final photoListProvider =
     AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
   _PhotoListNotifier.new,
 );
+
+/// [SharedPreferencesService]と連携して、写真分類スタート画面表示フラグを管理するNotifier
+@Riverpod(keepAlive: true)
+class IsClassifyOnboardingCompletedNotifier
+    extends _$IsClassifyOnboardingCompletedNotifier {
+  SharedPreferencesService get _sharedPreferencesService =>
+      ref.read(sharedPreferencesServiceProvider);
+
+  @override
+  bool build() {
+    return _sharedPreferencesService.getBool(
+      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
+    );
+  }
+
+  /// [SharedPreferencesService]の値とともに更新する
+  Future<void> update({required bool isClassifyOnboardingCompleted}) async {
+    final value = await _sharedPreferencesService.setBool(
+      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
+      value: isClassifyOnboardingCompleted,
+    );
+    state = value;
+  }
+}
