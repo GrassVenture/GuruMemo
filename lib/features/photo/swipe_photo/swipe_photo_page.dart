@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/build_context_extension.dart';
 import '../../../core/exception.dart';
 import '../../../core/themes.dart';
-import '../../../core/widgets/cards/photo_card.dart';
+import '../../../core/widgets/cards/photo_cards.dart';
 import '../../../core/widgets/custom_elevated_button.dart';
 import 'swipe_photo_controller.dart';
 
@@ -103,7 +103,7 @@ class SwipePhotoPage extends HookConsumerWidget {
                       right: 8,
                       bottom: 32,
                     ),
-                    child: PhotoCard(
+                    child: PhotoCards(
                       controller: swiperController,
                       photos: photos,
                     ),

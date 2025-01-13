@@ -24,8 +24,8 @@ final photoFileCacheProvider = AsyncNotifierProvider.family
 );
 
 /// 写真カードリスト
-class PhotoCard extends HookConsumerWidget {
-  const PhotoCard({required this.photos, required this.controller, super.key});
+class PhotoCards extends HookConsumerWidget {
+  const PhotoCards({required this.photos, required this.controller, super.key});
 
   final List<AssetEntity> photos;
   final AppinioSwiperController controller;
