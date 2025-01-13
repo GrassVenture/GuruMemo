@@ -9,7 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/themes.dart';
 import '../../features/auth/auth_repository.dart';
 import '../../features/auth/my_page.dart';
-import '../../features/onboarding_page.dart';
+import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/camera/camera_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/swipe_photo/classify_start_page.dart';
@@ -28,7 +28,8 @@ class NavigationFrame extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
+          final isOnboardingComplete =
+              ref.read(isOnboardingCompletedNotifierProvider);
           selectedIndex.value = !isOnboardingComplete ? 0 : 2;
         });
         return null;
