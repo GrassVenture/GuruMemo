@@ -70,6 +70,7 @@ dev_dependencies:
   freezed: ^2.4.5
   json_serializable: ^6.7.1
   pedantic_mono: any
+  riverpod_generator: ^2.4.0
   riverpod_lint: ^2.1.1
 
 flutter_launcher_icons:
