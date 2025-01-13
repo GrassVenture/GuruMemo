@@ -18,9 +18,9 @@ class HomePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final photoUrls = ref.watch(fetchPhotosFutureProvider).when(
-          error: (err, _) => null, //エラー時
-          loading: () => null, //読み込み時
-          data: (data) => data, // 保存された値を表示
+          error: (err, _) => null,
+          loading: () => null,
+          data: (data) => data,
         );
 
     final tabController = useTabController(initialLength: 6);

@@ -15,8 +15,9 @@ import '../photo_repository.dart';
 final fetchPhotosFutureProvider =
     FutureProvider.autoDispose<List<Photo>>((ref) async {
   final userId = ref.watch(userIdProvider);
-  // TODO(kim): ログイン前にこの処理が呼び出される状況になっているが、userIdがnullになりうる状態で呼び出される状況を回避する。
+  // TODO(masaki): nullの場合ハンドリング検討
   if (userId == null) {
+    logger.e('userId is null');
     return [];
   }
 
@@ -57,7 +58,8 @@ class GalleryController {
   }
 
   Future<List<local.Photo>> _removeInvalidPhotos(
-      List<local.Photo> photos,) async {
+    List<local.Photo> photos,
+  ) async {
     final validPhotos = <local.Photo>[];
     for (final photo in photos) {
       final file = await getFileByPhoto(photo);
