@@ -13,7 +13,7 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../../core/date_utils.dart';
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
-import '../../../core/photo_manager_service.dart';
+import '../../../core/services/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 import 'camera_state.dart';

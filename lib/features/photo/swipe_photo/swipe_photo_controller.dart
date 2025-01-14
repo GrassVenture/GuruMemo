@@ -7,9 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/exception.dart';
-import '../../../core/local_photo_repository.dart';
 import '../../../core/logger.dart';
-import '../../../core/photo_manager_service.dart';
+import '../../../core/repositories/local_photo_repository.dart';
+import '../../../core/services/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 import 'photo_count.dart';
