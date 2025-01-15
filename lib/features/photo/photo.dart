@@ -42,9 +42,9 @@ class Photo with _$Photo {
     @Default('') String storeId,
 
     /// 写真分類用APIの実行状態
-    @SinglePhotoClassificationStatus()
-    @Default(SinglePhotoClassificationStatus.readyForUse)
-    SinglePhotoClassificationStatus classifyPhotosStatus,
+    // @SingleClassifyPhotoStatus()
+    // @Default(SingleClassifyPhotoStatus.readyForUse)
+    // SingleClassifyPhotoStatus classifyPhotosStatus,
   }) = _Photo;
 
   const Photo._();
@@ -53,38 +53,40 @@ class Photo with _$Photo {
 }
 
 /// 写真分類用APIの実行状態を表すenum
-enum SinglePhotoClassificationStatus {
-  /// 処理中
-  processing,
+// @JsonEnum(alwaysCreate: true)
+// enum SingleClassifyPhotoStatus {
+//   /// 処理中
+//   processing,
+//
+//   /// 利用の準備が整っている
+//   readyForUse,
+//
+//   /// 失敗
+//   // TODO(masaki): エラーハンドリングを別途検討
+//   failed;
+// }
 
-  /// 利用の準備が整っている
-  readyForUse,
+/// [SingleClassifyPhotoStatus]用JsonConverter
+// class SingleClassifyPhotoStatusConverter
+//     implements JsonConverter<SingleClassifyPhotoStatus, String> {
+//   const SingleClassifyPhotoStatusConverter();
+//
+//   @override
+//   SingleClassifyPhotoStatus fromJson(String value) {
+//     switch (value) {
+//       case 'processing':
+//         return SingleClassifyPhotoStatus.processing;
+//       case 'readyForUse':
+//         return SingleClassifyPhotoStatus.readyForUse;
+//       case 'failed':
+//         return SingleClassifyPhotoStatus.failed;
+//       default:
+//         return SingleClassifyPhotoStatus.readyForUse;
+//     }
+//   }
 
-  /// 失敗
-  // TODO(masaki): エラーハンドリングを別途検討
-  failed;
-}
-
-/// [SinglePhotoClassificationStatus]用JsonConverter
-class SinglePhotoClassificationStatusConverter
-    implements JsonConverter<SinglePhotoClassificationStatus, String> {
-  const SinglePhotoClassificationStatusConverter();
-
-  @override
-  SinglePhotoClassificationStatus fromJson(String value) {
-    switch (value) {
-      case 'processing':
-        return SinglePhotoClassificationStatus.processing;
-      case 'readyForUse':
-        return SinglePhotoClassificationStatus.readyForUse;
-      case 'failed':
-        return SinglePhotoClassificationStatus.failed;
-      default:
-        return SinglePhotoClassificationStatus.readyForUse;
-    }
-  }
-
-  @override
-  String toJson(SinglePhotoClassificationStatus object) {
-    return object.name;
-  }
+// @override
+// String toJson(SingleClassifyPhotoStatus object) {
+//   return object.name;
+// }
+// }
