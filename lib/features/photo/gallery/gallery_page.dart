@@ -28,7 +28,6 @@ class GalleryPage extends HookConsumerWidget {
         );
 
     final tabController = useTabController(initialLength: 6);
-    final isImagePickerVisible = useState(false); // フラグを追加
 
     return Scaffold(
       appBar: PreferredSize(
@@ -54,30 +53,16 @@ class GalleryPage extends HookConsumerWidget {
       ),
       body: DefaultTabController(
         length: 6,
-        child: Stack(
+        child: TabBarView(
+          controller: tabController,
           children: [
-            TabBarView(
-              controller: tabController,
-              children: [
-                _buildPhotoGrid(context, 'すべて', photoUrls),
-                _buildPhotoGrid(context, 'ramen', photoUrls),
-                _buildPhotoGrid(context, 'cafe', photoUrls),
-                _buildPhotoGrid(context, 'japanese_food', photoUrls),
-                _buildPhotoGrid(context, 'western_food', photoUrls),
-                _buildPhotoGrid(context, 'ethnic', photoUrls),
-              ],
-            ),
-            if (isImagePickerVisible.value)
-              _buildImagePickerDrawer(), // ドロワーを表示
+            _buildPhotoGrid(context, 'すべて', photoUrls),
+            _buildPhotoGrid(context, 'ramen', photoUrls),
+            _buildPhotoGrid(context, 'cafe', photoUrls),
+            _buildPhotoGrid(context, 'japanese_food', photoUrls),
+            _buildPhotoGrid(context, 'western_food', photoUrls),
+            _buildPhotoGrid(context, 'ethnic', photoUrls),
           ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          isImagePickerVisible.value = !isImagePickerVisible.value;
-        },
-        child: Icon(
-          isImagePickerVisible.value ? Icons.close : Icons.image,
         ),
       ),
     );
@@ -143,22 +128,6 @@ class GalleryPage extends HookConsumerWidget {
           );
         },
         itemCount: filteredPhotos.length,
-      ),
-    );
-  }
-
-  Widget _buildImagePickerDrawer() {
-    return Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        height: 200,
-        color: Colors.grey[200],
-        child: Center(
-          child: Text(
-            'Image Picker Drawer',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-        ),
       ),
     );
   }

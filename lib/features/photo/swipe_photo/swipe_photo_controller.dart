@@ -2,19 +2,20 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:exif/exif.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/local_photo_repository.dart';
 import '../../../core/logger.dart';
 import '../../../core/photo_manager_service.dart';
+import '../../../core/shared_preferences_service.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
 import 'photo_count.dart';
+
+part 'swipe_photo_controller.g.dart';
 
 /// 写真のカウントを管理するProvider
 /// スワイプ画面の上部のカウントに使用
@@ -165,104 +166,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
   }
 
-  Future<void> swipeRight({
-    required XFile image,
-    bool isFood = true,
-  }) async {
-    // ID生成や圧縮の準備
-    final modifiedPhotoId = image.path.split('/').last.replaceAll('/', '-');
-    final userId = ref.read(userIdProvider);
-
-    if (userId == null) {
-      throw Exception('User not signed in');
-    }
-
-    try {
-      if (isFood) {
-        // 画像から位置情報を取得
-        final location = await getImageLocation(image.path);
-
-        if (location != null) {
-          await ref.read(photoRepositoryProvider).registerStoreInfo(
-                photoId: modifiedPhotoId,
-                userId: userId,
-                latitude: location['latitude'],
-                longitude: location['longitude'],
-              );
-        }
-
-        // 画像ファイルの圧縮と送信
-        final photoFile = File(image.path);
-        final compressedData = await _compressImage(photoFile);
-
-        if (compressedData != null) {
-          await ref.read(photoRepositoryProvider).categorizeFood(
-                userId: userId,
-                photoId: modifiedPhotoId,
-                photoData: compressedData,
-              );
-        }
-      }
-    } on Exception catch (e, stacktrace) {
-      state = AsyncValue.error(e, stacktrace);
-      logger.e('Error in swipeRight: $e');
-    }
-  }
-
-  /// 画像から位置情報を取得
-  Future<Map<String, double>?> getImageLocation(String imagePath) async {
-    try {
-      final file = File(imagePath);
-      final bytes = await file.readAsBytes();
-
-      final data = await readExifFromBytes(bytes);
-
-      if (data.isEmpty) {
-        return null;
-      }
-
-      final gpsLatitude = data['GPS GPSLatitude']?.values.toList();
-      final gpsLongitude = data['GPS GPSLongitude']?.values.toList();
-      final gpsLatitudeRef = data['GPS GPSLatitudeRef']?.printable;
-      final gpsLongitudeRef = data['GPS GPSLongitudeRef']?.printable;
-
-      if (gpsLatitude != null && gpsLongitude != null) {
-        final latitude = _convertToDecimal(
-          gpsLatitude,
-          gpsLatitudeRef == 'S' ? -1 : 1,
-        );
-        final longitude = _convertToDecimal(
-          gpsLongitude,
-          gpsLongitudeRef == 'W' ? -1 : 1,
-        );
-
-        return {
-          'latitude': latitude,
-          'longitude': longitude,
-        };
-      }
-    } on Exception catch (e) {
-      logger.e('Error in getImageLocation: $e');
-    }
-    return null;
-  }
-
-  /// 度分秒を10進数に変換
-  double _convertToDecimal(List<dynamic> values, int sign) {
-    final degrees = _toDouble(values[0]);
-    final minutes = _toDouble(values[1]) / 60;
-    final seconds = _toDouble(values[2]) / 3600;
-    return sign * (degrees + minutes + seconds);
-  }
-
-  /// EXIF値を`double`に変換
-  double _toDouble(dynamic value) {
-    if (value is! Ratio) {
-      throw ArgumentError('値がRatio型ではありません: $value');
-    }
-    return value.numerator / value.denominator;
-  }
-
   /// 強制リフレッシュ
   void forceRefresh() {
     state = const AsyncLoading<List<AssetEntity>>();
@@ -286,3 +189,27 @@ final photoListProvider =
     AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
   _PhotoListNotifier.new,
 );
+
+/// [SharedPreferencesService]と連携して、写真分類スタート画面表示フラグを管理するNotifier
+@Riverpod(keepAlive: true)
+class IsClassifyOnboardingCompletedNotifier
+    extends _$IsClassifyOnboardingCompletedNotifier {
+  SharedPreferencesService get _sharedPreferencesService =>
+      ref.read(sharedPreferencesServiceProvider);
+
+  @override
+  bool build() {
+    return _sharedPreferencesService.getBool(
+      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
+    );
+  }
+
+  /// [SharedPreferencesService]の値とともに更新する
+  Future<void> update({required bool isClassifyOnboardingCompleted}) async {
+    final value = await _sharedPreferencesService.setBool(
+      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
+      value: isClassifyOnboardingCompleted,
+    );
+    state = value;
+  }
+}

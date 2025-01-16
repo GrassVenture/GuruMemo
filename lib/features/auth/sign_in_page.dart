@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // TODO(kim): アナリティクスマージ後にコメントアウトを解除
 // import '../../core/analytics/analytics_service.dart';
 import '../../core/themes.dart';
+import '../onboarding/onboarding_controller.dart';
 import '../photo/swipe_photo/swipe_photo_page.dart';
 import 'auth_controller.dart';
 
@@ -83,7 +84,7 @@ class SignInPage extends HookConsumerWidget {
       child: ElevatedButton.icon(
         onPressed: isLoading.value
             ? () {}
-            : () => _handleSignIn(isLoading, signInMethod, context),
+            : () => _handleSignIn(isLoading, signInMethod, context, ref),
         icon: Image.asset(
           iconPath,
           width: 24,
@@ -106,10 +107,14 @@ class SignInPage extends HookConsumerWidget {
     ValueNotifier<bool> isLoading,
     Future<void> Function() signIn,
     BuildContext context,
+    WidgetRef ref,
   ) async {
     try {
       isLoading.value = true;
       await signIn();
+      await ref
+          .read(isOnboardingCompletedNotifierProvider.notifier)
+          .update(isOnboardingCompleted: true);
       if (!context.mounted) {
         return;
       }
