@@ -6,7 +6,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/database/database.dart' as local;
-import '../../../core/local_photo_repository.dart';
+import 'package:my_gourmet/core/database/database.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';

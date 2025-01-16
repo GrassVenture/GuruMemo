@@ -14,7 +14,7 @@ import '../features/photo/photo_detail/photo_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
 import '../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../features/root_page.dart';
-import 'analytics_repository.dart';
+import 'services/analytics_service.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(

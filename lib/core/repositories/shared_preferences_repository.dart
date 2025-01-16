@@ -10,16 +10,17 @@ enum SharedPreferencesKey {
   isClassifyOnboardingCompleted,
 }
 
-/// [SharedPreferencesService]用プロバイダー
+/// [SharedPreferencesRepository]用プロバイダー
 ///
 /// アプリ起動時 or テスト時に、初期化処理としてインスタンスを生成しておく。
-final sharedPreferencesServiceProvider = Provider<SharedPreferencesService>(
-  (ref) => SharedPreferencesService._(),
+final sharedPreferencesRepositoryProvider =
+    Provider<SharedPreferencesRepository>(
+  (ref) => SharedPreferencesRepository._(),
 );
 
 /// [SharedPreferences]を操作するクラス
-class SharedPreferencesService {
-  SharedPreferencesService._();
+class SharedPreferencesRepository {
+  SharedPreferencesRepository._();
 
   late final SharedPreferences _sharedPreferences;
 
