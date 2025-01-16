@@ -8,9 +8,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
-import '../../../core/photo_manager_service.dart';
-import '../../../core/shared_preferences_service.dart';
 import '../../../core/repositories/local_photo_repository.dart';
+import '../../../core/repositories/shared_preferences_repository.dart';
 import '../../../core/services/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
 import '../photo_repository.dart';
@@ -191,23 +190,23 @@ final photoListProvider =
   _PhotoListNotifier.new,
 );
 
-/// [SharedPreferencesService]と連携して、写真分類スタート画面表示フラグを管理するNotifier
+/// [SharedPreferencesRepository]と連携して、写真分類スタート画面表示フラグを管理するNotifier
 @Riverpod(keepAlive: true)
 class IsClassifyOnboardingCompletedNotifier
     extends _$IsClassifyOnboardingCompletedNotifier {
-  SharedPreferencesService get _sharedPreferencesService =>
-      ref.read(sharedPreferencesServiceProvider);
+  SharedPreferencesRepository get _sharedPreferencesRepository =>
+      ref.read(sharedPreferencesRepositoryProvider);
 
   @override
   bool build() {
-    return _sharedPreferencesService.getBool(
+    return _sharedPreferencesRepository.getBool(
       key: SharedPreferencesKey.isClassifyOnboardingCompleted,
     );
   }
 
-  /// [SharedPreferencesService]の値とともに更新する
+  /// [SharedPreferencesRepository]の値とともに更新する
   Future<void> update({required bool isClassifyOnboardingCompleted}) async {
-    final value = await _sharedPreferencesService.setBool(
+    final value = await _sharedPreferencesRepository.setBool(
       key: SharedPreferencesKey.isClassifyOnboardingCompleted,
       value: isClassifyOnboardingCompleted,
     );
