@@ -13,7 +13,8 @@ import '../core/widgets/confirm_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
 import 'auth/auth_repository.dart';
 import 'auth/sign_in_page.dart';
-import 'onboarding_page.dart';
+import 'onboarding/onboarding_controller.dart';
+import 'onboarding/onboarding_page.dart';
 
 /// 全てのページの基盤となるページ
 ///
@@ -60,7 +61,7 @@ class RootPage extends HookConsumerWidget {
               children: [
                 child,
                 if (!ref.watch(
-                  isOnBoardingCompletedProvider,
+                  isOnboardingCompletedNotifierProvider,
                 )) // オンボーディングページが完了していない場合
                   const OnboardingPage(),
               ],

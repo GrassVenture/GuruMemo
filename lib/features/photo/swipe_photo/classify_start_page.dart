@@ -4,28 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/build_context_extension.dart';
-import '../../../core/repositories/shared_preferences_repository.dart';
 import '../../../core/widgets/custom_elevated_button.dart';
+import 'swipe_photo_controller.dart';
 import 'swipe_photo_page.dart';
-
-/// 写真分類スタート画面表示フラグ[StateProvider]
-///
-///  外部から更新をすることで[SharedPreferencesRepository]側の値も更新する。
-final isClassifyOnboardingCompletedProvider = StateProvider<bool>((ref) {
-  final sharedPreferencesService =
-      ref.watch(sharedPreferencesRepositoryProvider);
-
-  ref.listenSelf((_, next) {
-    sharedPreferencesService.setBool(
-      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-      value: next,
-    );
-  });
-
-  return sharedPreferencesService.getBool(
-    key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-  );
-});
 
 /// 写真分類開始画面
 class ClassifyStartPage extends ConsumerWidget {
@@ -67,9 +48,11 @@ class ClassifyStartPage extends ConsumerWidget {
               child: CustomElevatedButton(
                 onPressed: () async {
                   final goRouter = GoRouter.of(context);
-                  ref
-                      .read(isClassifyOnboardingCompletedProvider.notifier)
-                      .update((state) => true);
+                  await ref
+                      .read(
+                        isClassifyOnboardingCompletedNotifierProvider.notifier,
+                      )
+                      .update(isClassifyOnboardingCompleted: true);
                   goRouter.go(SwipePhotoPage.routePath);
                 },
                 text: '分類スタート',

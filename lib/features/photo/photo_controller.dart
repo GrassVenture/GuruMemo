@@ -1,4 +1,5 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import 'photo.dart';
 import 'photo_repository.dart';
 
@@ -16,13 +17,6 @@ class PhotoController {
   final Ref _ref;
 
   PhotoRepository get _photoRepository => _ref.read(photoRepositoryProvider);
-
-  /// 写真ダウンロード用メソッド
-  Future<List<Photo>> downloadPhotos({
-    required String userId,
-  }) async {
-    return _photoRepository.downloadPhotos(userId: userId);
-  }
 
   // TODO(kim): Photo?の部分はあとで書き換える。
   Future<Photo?> downloadPhoto({
