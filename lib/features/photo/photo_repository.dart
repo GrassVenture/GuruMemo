@@ -3,7 +3,6 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
@@ -71,10 +70,10 @@ class PhotoRepository {
 
       if (response.statusCode == 200) {
         // 成功した場合の処理
-        debugPrint('API call successful: ${response.body}');
+        logger.d('API call successful: ${response.body}');
       } else {
         // エラーが返された場合の処理
-        debugPrint('API call failed: ${response.body}');
+        logger.d('API call failed: ${response.body}');
       }
     } on Exception catch (error) {
       logger.e(error.toString());
@@ -101,10 +100,10 @@ class PhotoRepository {
 
       if (response.statusCode == 200) {
         // 成功した場合の処理
-        debugPrint('API call successful: ${response.body}');
+        logger.d('API call successful: ${response.body}');
       } else {
         // エラーが返された場合の処理
-        debugPrint('API call failed: ${response.body}');
+        logger.d('API call failed: ${response.body}');
       }
     } on Exception catch (error) {
       logger.e(error.toString());
@@ -235,7 +234,7 @@ class PhotoRepository {
     if (photoDocSnapshot.exists) {
       // ドキュメントが存在する場合、storeIdを更新
       await photoDoc.update({'storeId': storeId});
-      debugPrint('StoreId updated successfully for photoId: $photoId');
+      logger.d('StoreId updated successfully for photoId: $photoId');
     } else {
       logger.e('Error Photo with id: $photoId does not exist.');
     }
@@ -251,12 +250,12 @@ class PhotoRepository {
       // Firestoreから該当の写真ドキュメントを削除
       final photoDoc = photosRef(userId: userId).doc(photoId);
       await photoDoc.delete();
-      debugPrint('Firestore document deleted for photoId: $photoId');
+      logger.d('Firestore document deleted for photoId: $photoId');
 
       // GCSから該当の写真ファイルを削除
       final storageRef = FirebaseStorage.instance.refFromURL(photoUrl);
       await storageRef.delete();
-      debugPrint('Photo deleted from storage for photoUrl: $photoUrl');
+      logger.d('Photo deleted from storage for photoUrl: $photoUrl');
     } on Exception catch (e) {
       // エラーハンドリング
       logger.e('Failed to delete photo: $e');
