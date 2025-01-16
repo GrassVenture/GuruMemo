@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../features/photo/swipe_photo/swipe_photo_controller.dart';
-import 'local_photo_repository.dart';
+import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
+import '../repositories/local_photo_repository.dart';
 
 /// [PhotoService]用プロバイダー
 final photoManagerServiceProvider = Provider<PhotoService>(
@@ -78,6 +78,28 @@ class PhotoService {
     final photos = await albums[0].getAssetListPaged(page: 0, size: 100);
 
     return photos;
+  }
+
+  /// 最新の写真を取得
+  /// 最新の写真を取得するメソッド
+  Future<AssetEntity?> getLatestPhoto() async {
+    // 写真アルバムを取得し、最新の写真から取得するための設定
+    final albums = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
+    );
+
+    // 写真がない場合は null を返す
+    if (albums.isEmpty) {
+      return null;
+    }
+
+    // アルバムから最新の写真1枚を取得
+    final photo = await albums[0].getAssetListPaged(
+      page: 0,
+      size: 1, // 1枚だけ取得
+    );
+
+    return photo.isNotEmpty ? photo.first : null;
   }
 
   /// フィルタリング

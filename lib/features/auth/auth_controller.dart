@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'auth_repository.dart';
 import 'authed_user.dart';
+
+part 'auth_controller.g.dart';
 
 /// [FirebaseAuth]のインスタンスを提供するProvider
 final _authProvider =
@@ -22,10 +25,13 @@ final userIdProvider = Provider<String?>((ref) {
   return ref.watch(_authProvider).currentUser?.uid;
 });
 
+// TODO(masaki): g.ファイルにAutoDisposeStreamProviderRefが生成されないように調整
+// Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
 /// [AuthedUser]を購読するProvider
-final authedUserStreamProvider = StreamProvider.autoDispose<AuthedUser>(
-  (ref) => ref.watch(authRepositoryProvider).subscribeAuthedUser(),
-);
+@riverpod
+Stream<AuthedUser> authedUserStream(Ref ref) {
+  return ref.watch(authRepositoryProvider).subscribeAuthedUser();
+}
 
 final authControllerProvider = Provider<AuthController>(AuthController.new);
 

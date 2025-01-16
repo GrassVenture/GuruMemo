@@ -5,9 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/themes.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../auth/auth_controller.dart';
 import '../../store/store.dart';
 import '../../store/store_controller.dart';
+import '../gallery/gallery_page.dart';
 import '../photo.dart';
 import '../photo_controller.dart';
 import 'widgets/photo_detail_card.dart';
@@ -35,6 +37,10 @@ class PhotoDetailPage extends HookConsumerWidget {
     final photo = useState<Future<Photo?>?>(null);
 
     final userId = ref.watch(userIdProvider);
+
+    final isEditing = useState(false);
+
+    final photoController = ref.read(photoControllerProvider);
 
     void downloadPhoto(WidgetRef ref) {
       if (userId == null) {
@@ -99,7 +105,20 @@ class PhotoDetailPage extends HookConsumerWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.pop(),
         ),
-        toolbarHeight: 24,
+        toolbarHeight: 50,
+        actions: [
+          if (isEditing.value)
+            TextButton(
+              onPressed: () => isEditing.value = false,
+              style: TextButton.styleFrom(foregroundColor: Themes.mainOrange),
+              child: const Text('完了'),
+            )
+          else
+            IconButton(
+              onPressed: () => isEditing.value = true,
+              icon: const Icon(Icons.edit),
+            ),
+        ],
       ),
       body: Center(
         child: Stack(
@@ -120,6 +139,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (snapshot.hasData && snapshot.data != null) {
                   final photo = snapshot.data!;
+                  final photoUrl = photo.url;
                   final storeFuture = fetchStore(photo);
 
                   return FutureBuilder<Store?>(
@@ -147,6 +167,27 @@ class PhotoDetailPage extends HookConsumerWidget {
                                 right: 4,
                               ),
                               child: PhotoDetailCard(
+                                isEditing: isEditing.value,
+                                onDelete: () async {
+                                  await ConfirmDialog.show(
+                                    context,
+                                    titleString: '削除',
+                                    contentString: '選択した写真を削除します。\nよろしいですか？',
+                                    onConfirmed: () async {
+                                      await photoController.deletePhoto(
+                                        userId!,
+                                        photoId,
+                                        photoUrl,
+                                      );
+                                      if (context.mounted) {
+                                        context.pushReplacementNamed(
+                                          GalleryPage.routeName,
+                                        );
+                                      }
+                                    },
+                                    hasCancelButton: true,
+                                  );
+                                },
                                 userId: photo.userId,
                                 photoId: photo.id,
                                 areaStoreIds: photo.areaStoreIds,

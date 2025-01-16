@@ -32,6 +32,11 @@ target 'Runner' do
   use_modular_headers!
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
+
+  # Firestore静的ライブラリ設定
+  # ref: https://zenn.dev/issei_manabi/articles/b1ff544165f83c
+  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '11.0.0' # 必要に応じてバージョンを変更
+
   target 'RunnerTests' do
     inherit! :search_paths
   end

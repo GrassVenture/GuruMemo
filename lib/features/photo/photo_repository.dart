@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -237,6 +238,29 @@ class PhotoRepository {
       debugPrint('StoreId updated successfully for photoId: $photoId');
     } else {
       logger.e('Error Photo with id: $photoId does not exist.');
+    }
+  }
+
+  /// FirestoreとGCSから写真を削除する
+  Future<void> deletePhoto(
+    String userId,
+    String photoId,
+    String photoUrl,
+  ) async {
+    try {
+      // Firestoreから該当の写真ドキュメントを削除
+      final photoDoc = photosRef(userId: userId).doc(photoId);
+      await photoDoc.delete();
+      debugPrint('Firestore document deleted for photoId: $photoId');
+
+      // GCSから該当の写真ファイルを削除
+      final storageRef = FirebaseStorage.instance.refFromURL(photoUrl);
+      await storageRef.delete();
+      debugPrint('Photo deleted from storage for photoUrl: $photoUrl');
+    } on Exception catch (e) {
+      // エラーハンドリング
+      logger.e('Failed to delete photo: $e');
+      throw Exception('Failed to delete photo: $e');
     }
   }
 }

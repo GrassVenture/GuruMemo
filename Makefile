@@ -1,6 +1,8 @@
 
 .PHONY: setup
 setup:
+	brew tap leoafarias/fvm
+	brew install fvm
 	fvm install --setup
 	$(MAKE) run-build-runner
 

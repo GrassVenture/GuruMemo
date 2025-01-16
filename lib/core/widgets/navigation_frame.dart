@@ -9,9 +9,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/themes.dart';
 import '../../features/auth/auth_repository.dart';
 import '../../features/auth/my_page.dart';
-import '../../features/onboarding_page.dart';
+import '../../features/onboarding/onboarding_controller.dart';
+import '../../features/photo/camera/camera_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/swipe_photo/classify_start_page.dart';
+import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
 import '../../features/photo/swipe_photo/swipe_photo_page.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
@@ -27,8 +29,9 @@ class NavigationFrame extends HookConsumerWidget {
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          final isOnboardingComplete = ref.read(isOnBoardingCompletedProvider);
-          selectedIndex.value = !isOnboardingComplete ? 0 : 1;
+          final isOnboardingComplete =
+              ref.read(isOnboardingCompletedNotifierProvider);
+          selectedIndex.value = !isOnboardingComplete ? 0 : 2;
         });
         return null;
       },
@@ -36,12 +39,12 @@ class NavigationFrame extends HookConsumerWidget {
     );
 
     final isClassifyOnboardingCompleted =
-        ref.watch(isClassifyOnboardingCompletedProvider);
+        ref.watch(isClassifyOnboardingCompletedNotifierProvider);
 
     // サインイン状態かどうかに応じて、ボトムナビゲーションバーの表示・非表示を切り替える。
     final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
 
-    final itemWidth = MediaQuery.of(context).size.width / 3;
+    final itemWidth = MediaQuery.of(context).size.width / 4;
     final circleWidth = itemWidth * 0.8;
 
     return Scaffold(
@@ -100,9 +103,18 @@ class NavigationFrame extends HookConsumerWidget {
                             selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
+                            icon: Icons.photo_camera_outlined,
+                            label: 'カメラ',
+                            index: 1,
+                            context: context,
+                            isClassifyOnboardingCompleted:
+                                isClassifyOnboardingCompleted,
+                            selectedIndex: selectedIndex,
+                          ),
+                          _buildNavItem(
                             icon: Icons.photo,
                             label: 'ギャラリー',
-                            index: 1,
+                            index: 2,
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
@@ -111,7 +123,7 @@ class NavigationFrame extends HookConsumerWidget {
                           _buildNavItem(
                             icon: Icons.person,
                             label: 'マイページ',
-                            index: 2,
+                            index: 3,
                             context: context,
                             isClassifyOnboardingCompleted:
                                 isClassifyOnboardingCompleted,
@@ -137,7 +149,7 @@ class NavigationFrame extends HookConsumerWidget {
     required ValueNotifier<int> selectedIndex,
   }) {
     final isSelected = index == selectedIndex.value;
-    final itemWidth = MediaQuery.of(context).size.width / 3;
+    final itemWidth = MediaQuery.of(context).size.width / 4;
     final circleWidth = itemWidth * 0.8;
 
     return Material(
@@ -206,8 +218,10 @@ class NavigationFrame extends HookConsumerWidget {
               : ClassifyStartPage.routePath,
         );
       case 1:
-        context.go(HomePage.routePath);
+        context.go(CameraPage.routePath);
       case 2:
+        context.go(GalleryPage.routePath);
+      case 3:
         context.go(MyPage.routePath);
     }
   }
