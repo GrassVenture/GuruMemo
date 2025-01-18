@@ -8,6 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../core/build_context_extension.dart';
 import '../../core/widgets/custom_elevated_button.dart';
 import '../auth/sign_in_page.dart';
+import 'onboarding_controller.dart';
 
 /// オンボーディング用画面
 class OnboardingPage extends HookConsumerWidget {
@@ -102,9 +103,9 @@ class OnboardingPage extends HookConsumerWidget {
                     child: SizedBox(
                       height: 60,
                       child: CustomElevatedButton(
-                        onPressed: () {
+                        onPressed: () async {
                           if (!isLastPage) {
-                            pageController.nextPage(
+                            await pageController.nextPage(
                               duration: const Duration(milliseconds: 300),
                               curve: Curves.easeInOut,
                             );
@@ -113,6 +114,15 @@ class OnboardingPage extends HookConsumerWidget {
                             // ref
                             //     .read(analyticsServiceProvider)
                             //     .sendEvent(name: 'complete_onboarding');
+                            await ref
+                                .read(
+                                  isOnboardingCompletedNotifierProvider
+                                      .notifier,
+                                )
+                                .update(isOnboardingCompleted: true);
+                            if (!context.mounted) {
+                              return;
+                            }
                             context.go(SignInPage.routePath);
                           }
                         },
