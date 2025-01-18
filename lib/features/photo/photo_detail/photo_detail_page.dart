@@ -10,8 +10,8 @@ import '../../auth/auth_controller.dart';
 import '../../store/store.dart';
 import '../../store/store_controller.dart';
 import '../gallery/gallery_page.dart';
-import '../photo.dart';
-import '../photo_controller.dart';
+import '../remote_photo.dart';
+import '../remote_photo_controller.dart';
 import 'widgets/photo_detail_card.dart';
 
 class PhotoDetailPage extends HookConsumerWidget {
@@ -34,20 +34,20 @@ class PhotoDetailPage extends HookConsumerWidget {
       viewportFraction: 0.9,
     );
 
-    final photo = useState<Future<Photo?>?>(null);
+    final photo = useState<Future<RemotePhoto?>?>(null);
 
     final userId = ref.watch(userIdProvider);
 
     final isEditing = useState(false);
 
-    final photoController = ref.read(photoControllerProvider);
+    final photoController = ref.read(remotePhotoControllerProvider);
 
     void downloadPhoto(WidgetRef ref) {
       if (userId == null) {
         return;
       }
 
-      photo.value = ref.read(photoControllerProvider).downloadPhoto(
+      photo.value = ref.read(remotePhotoControllerProvider).downloadPhoto(
             userId: userId,
             photoId: photoId,
           );
@@ -61,7 +61,7 @@ class PhotoDetailPage extends HookConsumerWidget {
       [],
     );
 
-    Future<Store?> fetchStore(Photo photo) async {
+    Future<Store?> fetchStore(RemotePhoto photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
