@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../features/photo/swipe_photo/swipe_photo_controller.dart';
-import 'local_photo_repository.dart';
+import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
+import '../repositories/local_photo_repository.dart';
 
 /// [PhotoService]用プロバイダー
 final photoManagerServiceProvider = Provider<PhotoService>(

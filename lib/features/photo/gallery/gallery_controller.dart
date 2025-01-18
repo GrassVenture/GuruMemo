@@ -6,8 +6,8 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/database/database.dart' as local;
-import '../../../core/local_photo_repository.dart';
 import '../../../core/logger.dart';
+import '../../../core/repositories/local_photo_repository.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
 import '../photo.dart';

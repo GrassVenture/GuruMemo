@@ -1,26 +1,25 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../core/shared_preferences_service.dart';
+import '../../core/repositories/shared_preferences_repository.dart';
 
 part 'onboarding_controller.g.dart';
 
-/// [SharedPreferencesService]と連携して、オンボーディング完了フラグを管理するNotifier
+/// [SharedPreferencesRepository]と連携して、オンボーディング完了フラグを管理するNotifier
 @Riverpod(keepAlive: true)
 class IsOnboardingCompletedNotifier extends _$IsOnboardingCompletedNotifier {
-  SharedPreferencesService get _sharedPreferencesService =>
-      ref.read(sharedPreferencesServiceProvider);
+  SharedPreferencesRepository get _sharedPreferencesRepository =>
+      ref.read(sharedPreferencesRepositoryProvider);
 
   @override
   bool build() {
-    return _sharedPreferencesService.getBool(
+    return _sharedPreferencesRepository.getBool(
       key: SharedPreferencesKey.isOnboardingCompleted,
     );
   }
 
-  /// [SharedPreferencesService]の値とともに更新する
-  Future<void> update(bool Function(dynamic state) param0,
-      {required bool isOnboardingCompleted}) async {
-    final value = await _sharedPreferencesService.setBool(
+  /// [SharedPreferencesRepository]の値とともに更新する
+  Future<void> update({required bool isOnboardingCompleted}) async {
+    final value = await _sharedPreferencesRepository.setBool(
       key: SharedPreferencesKey.isOnboardingCompleted,
       value: isOnboardingCompleted,
     );
