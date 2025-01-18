@@ -8,6 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../core/build_context_extension.dart';
 import '../../core/widgets/custom_elevated_button.dart';
 import '../auth/sign_in_page.dart';
+import 'onboarding_controller.dart';
 
 /// オンボーディング用画面
 class OnboardingPage extends HookConsumerWidget {
@@ -110,6 +111,15 @@ class OnboardingPage extends HookConsumerWidget {
                             );
                           } else {
                             // TODO(kim): アナリティクスマージ後にコメントアウトを解除
+                            ref
+                                .read(
+                                  isOnboardingCompletedNotifierProvider
+                                      .notifier,
+                                )
+                                .update(
+                                  (state) => true,
+                                  isOnboardingCompleted: true,
+                                );
                             // ref
                             //     .read(analyticsServiceProvider)
                             //     .sendEvent(name: 'complete_onboarding');

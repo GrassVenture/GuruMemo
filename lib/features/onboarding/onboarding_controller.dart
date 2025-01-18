@@ -18,7 +18,8 @@ class IsOnboardingCompletedNotifier extends _$IsOnboardingCompletedNotifier {
   }
 
   /// [SharedPreferencesService]の値とともに更新する
-  Future<void> update({required bool isOnboardingCompleted}) async {
+  Future<void> update(bool Function(dynamic state) param0,
+      {required bool isOnboardingCompleted}) async {
     final value = await _sharedPreferencesService.setBool(
       key: SharedPreferencesKey.isOnboardingCompleted,
       value: isOnboardingCompleted,
