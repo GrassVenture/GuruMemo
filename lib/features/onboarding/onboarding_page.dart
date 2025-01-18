@@ -115,8 +115,10 @@ class OnboardingPage extends HookConsumerWidget {
                             //     .read(analyticsServiceProvider)
                             //     .sendEvent(name: 'complete_onboarding');
                             await ref
-                                .read(isOnboardingCompletedNotifierProvider
-                                    .notifier)
+                                .read(
+                                  isOnboardingCompletedNotifierProvider
+                                      .notifier,
+                                )
                                 .update(isOnboardingCompleted: true);
                             if (!context.mounted) {
                               return;
