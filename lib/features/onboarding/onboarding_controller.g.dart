@@ -7,9 +7,9 @@ part of 'onboarding_controller.dart';
 // **************************************************************************
 
 String _$isOnboardingCompletedNotifierHash() =>
-    r'156aaae71368657645c8b6bbb62e9e42d513bad2';
+    r'f9ef602ca6458066d6a10ffdae3dfde2e44b5695';
 
-/// [SharedPreferencesService]と連携して、オンボーディング完了フラグを管理するNotifier
+/// [SharedPreferencesRepository]と連携して、オンボーディング完了フラグを管理するNotifier
 ///
 /// Copied from [IsOnboardingCompletedNotifier].
 @ProviderFor(IsOnboardingCompletedNotifier)
