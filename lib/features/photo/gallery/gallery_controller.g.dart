@@ -6,11 +6,12 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPhotosHash() => r'603357c7555c5e3ffb97ddfd2ce5c9f9a021c494';
+String _$fetchPhotosHash() => r'4a13784e4d024408596da0ef52f8123df27ac770';
 
 /// See also [fetchPhotos].
 @ProviderFor(fetchPhotos)
-final fetchPhotosProvider = AutoDisposeFutureProvider<List<Photo>>.internal(
+final fetchPhotosProvider =
+    AutoDisposeFutureProvider<List<RemotePhoto>>.internal(
   fetchPhotos,
   name: r'fetchPhotosProvider',
   debugGetCreateSourceHash:
@@ -19,5 +20,6 @@ final fetchPhotosProvider = AutoDisposeFutureProvider<List<Photo>>.internal(
   allTransitiveDependencies: null,
 );
 
+typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

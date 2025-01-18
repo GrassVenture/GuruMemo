@@ -10,15 +10,15 @@ import '../../../core/logger.dart';
 import '../../../core/repositories/local_photo_repository.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
-import '../photo.dart';
-import '../photo_repository.dart';
+import '../remote_photo.dart';
+import '../remote_photo_repository.dart';
 
 part 'gallery_controller.g.dart';
 
 // TODO(masaki): g.ファイルにAutoDisposeFutureProviderRefが生成されないように調整
 // Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
 @riverpod
-Future<List<Photo>> fetchPhotos(Ref ref) async {
+Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   final userId = ref.watch(userIdProvider);
 // TODO(masaki): nullの場合ハンドリング検討
   if (userId == null) {
@@ -31,7 +31,7 @@ Future<List<Photo>> fetchPhotos(Ref ref) async {
   final isReadyForUse =
       authedUserAsync?.classifyPhotosStatus == ClassifyPhotosStatus.readyForUse;
   if (!isReadyForUse) {
-    return <Photo>[];
+    return <RemotePhoto>[];
   }
 
   final result =
