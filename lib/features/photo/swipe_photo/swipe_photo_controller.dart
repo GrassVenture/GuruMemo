@@ -12,7 +12,7 @@ import '../../../core/repositories/local_photo_repository.dart';
 import '../../../core/repositories/shared_preferences_repository.dart';
 import '../../../core/services/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
-import '../photo_repository.dart';
+import '../remote_photo_repository.dart';
 import 'photo_count.dart';
 
 part 'swipe_photo_controller.g.dart';

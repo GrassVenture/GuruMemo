@@ -7,9 +7,9 @@ part of 'swipe_photo_controller.dart';
 // **************************************************************************
 
 String _$isClassifyOnboardingCompletedNotifierHash() =>
-    r'65b5276d58f488756a2d78aab5b37e1786f590f8';
+    r'873daca8ad0a12c41846cf7518fd2e56b70c46fc';
 
-/// [SharedPreferencesService]と連携して、写真分類スタート画面表示フラグを管理するNotifier
+/// [SharedPreferencesRepository]と連携して、写真分類スタート画面表示フラグを管理するNotifier
 ///
 /// Copied from [IsClassifyOnboardingCompletedNotifier].
 @ProviderFor(IsClassifyOnboardingCompletedNotifier)
