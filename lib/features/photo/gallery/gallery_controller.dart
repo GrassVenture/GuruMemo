@@ -107,3 +107,15 @@ class GalleryController {
     return file!;
   }
 }
+
+@riverpod
+class ImagePickerVisibility extends _$ImagePickerVisibility {
+  @override
+  bool build() => false;
+
+  void show() => state = true;
+
+  void hide() => state = false;
+
+  void toggle() => state = !state;
+}

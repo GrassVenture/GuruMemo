@@ -22,6 +22,8 @@ class GalleryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final isImagePickerVisible = ref.watch(imagePickerVisibilityProvider);
+
     final photoUrls = ref.watch(fetchPhotosProvider).when(
           error: (err, _) {
             logger.e(err);
@@ -70,7 +72,9 @@ class GalleryPage extends HookConsumerWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          ref.read(imagePickerVisibilityProvider.notifier).show();
+        },
         child: const Icon(Icons.add),
       ),
     );
