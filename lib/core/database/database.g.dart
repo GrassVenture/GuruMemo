@@ -970,3 +970,26 @@ class $AppDatabaseManager {
   $$PhotoDetailsTableTableManager get photoDetails =>
       $$PhotoDetailsTableTableManager(_db, _db.photoDetails);
 }
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$appDatabaseHash() => r'18ce5c8c4d8ddbfe5a7d819d8fb7d5aca76bf416';
+
+/// [AppDatabase]インスタンス用Provider
+///
+/// Copied from [appDatabase].
+@ProviderFor(appDatabase)
+final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
+  appDatabase,
+  name: r'appDatabaseProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$appDatabaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

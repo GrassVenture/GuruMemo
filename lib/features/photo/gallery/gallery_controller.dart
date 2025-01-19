@@ -7,9 +7,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/database/database.dart';
 import '../../../core/logger.dart';
-import '../../../core/repositories/local_photo_repository.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
+import '../local_photo_repository.dart';
 import '../remote_photo.dart';
 import '../remote_photo_repository.dart';
 

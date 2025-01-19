@@ -8,10 +8,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
-import '../../../core/repositories/local_photo_repository.dart';
+import '../../../core/photo_manager_service.dart';
 import '../../../core/repositories/shared_preferences_repository.dart';
-import '../../../core/services/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
+import '../local_photo_repository.dart';
 import '../remote_photo_repository.dart';
 import 'photo_count.dart';
 
