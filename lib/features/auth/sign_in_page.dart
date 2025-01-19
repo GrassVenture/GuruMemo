@@ -111,9 +111,6 @@ class SignInPage extends HookConsumerWidget {
     try {
       isLoading.value = true;
       await signIn();
-      await ref
-          .read(isOnboardingCompletedNotifierProvider.notifier)
-          .update(isOnboardingCompleted: true);
       if (!context.mounted) {
         return;
       }
