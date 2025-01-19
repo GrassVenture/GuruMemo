@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
+
 import '../../../core/database/database.dart';
 
 /// [LocalPhotoRepository]用プロバイダー
@@ -15,7 +16,7 @@ class LocalPhotoRepository {
   final AppDatabase db = AppDatabase();
 
   /// 写真リストを取得する
-  Future<List<Photo>> getAllPhotos() async {
+  Future<List<LocalPhoto>> getAllPhotos() async {
     return db.select(db.photos).get();
   }
 
@@ -26,7 +27,7 @@ class LocalPhotoRepository {
   }
 
   /// 写真情報を取得する
-  Future<PhotoDetail?> getPhotoDetail() async {
+  Future<LocalPhotoDetail?> getPhotoDetail() async {
     return (db.select(db.photoDetails)..limit(1)).getSingleOrNull();
   }
 

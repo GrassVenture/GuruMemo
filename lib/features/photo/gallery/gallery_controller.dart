@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/database/database.dart' as local;
+import '../../../core/database/database.dart';
 import '../../../core/logger.dart';
 import '../../../core/repositories/local_photo_repository.dart';
 import '../../auth/auth_controller.dart';
@@ -52,7 +52,7 @@ class GalleryController {
   LocalPhotoRepository get _localPhotoRepository =>
       ref.read(localPhotoRepositoryProvider);
 
-  Future<List<local.Photo>> getPhotos() async {
+  Future<List<LocalPhoto>> getPhotos() async {
     try {
       final photos = await _localPhotoRepository.getAllPhotos();
       return _removeInvalidPhotos(photos);
@@ -62,10 +62,10 @@ class GalleryController {
     }
   }
 
-  Future<List<local.Photo>> _removeInvalidPhotos(
-    List<local.Photo> photos,
+  Future<List<LocalPhoto>> _removeInvalidPhotos(
+    List<LocalPhoto> photos,
   ) async {
-    final validPhotos = <local.Photo>[];
+    final validPhotos = <LocalPhoto>[];
     for (final photo in photos) {
       final file = await getFileByPhoto(photo);
       if (file.existsSync()) {
@@ -75,7 +75,7 @@ class GalleryController {
     return validPhotos;
   }
 
-  Future<List<Size>> calculateSizes(List<local.Photo> photos) async {
+  Future<List<Size>> calculateSizes(List<LocalPhoto> photos) async {
     final sizes = <Size>[];
     for (final photo in photos) {
       if ((photo.width == 0 || photo.height == 0) ||
@@ -96,7 +96,7 @@ class GalleryController {
     }
   }
 
-  Future<File> getFileByPhoto(local.Photo photo) async {
+  Future<File> getFileByPhoto(LocalPhoto photo) async {
     if (Platform.isAndroid) {
       return File(photo.path);
     }

@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart';
 part 'database.g.dart';
 
 /// 写真テーブル
-@DataClassName('Photo')
+@DataClassName('LocalPhoto')
 class Photos extends Table {
   /// 写真のid
   TextColumn get id => text()();
@@ -34,7 +34,7 @@ class Photos extends Table {
 }
 
 /// 写真情報を保存するテーブル
-@DataClassName('PhotoDetail')
+@DataClassName('LocalPhotoDetail')
 class PhotoDetails extends Table {
   /// 最後の写真id
   TextColumn get lastId => text()();
