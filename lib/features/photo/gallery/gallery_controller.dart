@@ -5,7 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/database/database.dart';
+import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';

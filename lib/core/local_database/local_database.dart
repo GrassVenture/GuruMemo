@@ -7,7 +7,7 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'database.g.dart';
+part 'local_database.g.dart';
 
 /// 写真テーブル
 @DataClassName('LocalPhoto')

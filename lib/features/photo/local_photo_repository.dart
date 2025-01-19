@@ -2,7 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 
-import '../../../core/database/database.dart';
+import '../../../core/local_database/local_database.dart';
 
 /// [LocalPhotoRepository]用プロバイダー
 final localPhotoRepositoryProvider = Provider(LocalPhotoRepository._);
