@@ -119,3 +119,46 @@ class ImagePickerVisibility extends _$ImagePickerVisibility {
 
   void toggle() => state = !state;
 }
+
+@riverpod
+class LocalPhotoAssets extends _$LocalPhotoAssets {
+  @override
+  Future<List<AssetEntity>> build() async {
+    return _loadLocalPhotos();
+  }
+
+  Future<List<AssetEntity>> _loadLocalPhotos() async {
+    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
+    if (albums.isNotEmpty) {
+      return albums[0].getAssetListPaged(page: 0, size: 500);
+    }
+    return [];
+  }
+
+  Future<void> reloadLocalPhotos() async {
+    state = const AsyncValue.loading();
+    state = await AsyncValue.guard(_loadLocalPhotos);
+  }
+}
+
+@riverpod
+class SelectedLocalPhotos extends _$SelectedLocalPhotos {
+  @override
+  List<AssetEntity> build() => [];
+
+  void selectPhoto(AssetEntity photo) {
+    if (!state.contains(photo)) {
+      state = [...state, photo];
+    }
+  }
+
+  void deselectPhoto(AssetEntity photo) {
+    state = state.where((p) => p != photo).toList();
+  }
+
+  bool isSelected(AssetEntity photo) => state.contains(photo);
+
+  void clearSelection() {
+    state = [];
+  }
+}

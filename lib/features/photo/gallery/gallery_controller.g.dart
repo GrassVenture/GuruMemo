@@ -38,5 +38,38 @@ final imagePickerVisibilityProvider =
 );
 
 typedef _$ImagePickerVisibility = AutoDisposeNotifier<bool>;
+String _$localPhotoAssetsHash() => r'7b26565c63b42e50d36fe9af5f7b9a9a28c44b1c';
+
+/// See also [LocalPhotoAssets].
+@ProviderFor(LocalPhotoAssets)
+final localPhotoAssetsProvider = AutoDisposeAsyncNotifierProvider<
+    LocalPhotoAssets, List<AssetEntity>>.internal(
+  LocalPhotoAssets.new,
+  name: r'localPhotoAssetsProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$localPhotoAssetsHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LocalPhotoAssets = AutoDisposeAsyncNotifier<List<AssetEntity>>;
+String _$selectedLocalPhotosHash() =>
+    r'6868dfc3217aeb5eb2bf669f6875bc3322fdf9c6';
+
+/// See also [SelectedLocalPhotos].
+@ProviderFor(SelectedLocalPhotos)
+final selectedLocalPhotosProvider = AutoDisposeNotifierProvider<
+    SelectedLocalPhotos, List<AssetEntity>>.internal(
+  SelectedLocalPhotos.new,
+  name: r'selectedLocalPhotosProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$selectedLocalPhotosHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$SelectedLocalPhotos = AutoDisposeNotifier<List<AssetEntity>>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
