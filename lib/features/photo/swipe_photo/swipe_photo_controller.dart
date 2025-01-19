@@ -8,11 +8,11 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
-import '../../../core/repositories/local_photo_repository.dart';
 import '../../../core/repositories/shared_preferences_repository.dart';
-import '../../../core/services/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
-import '../photo_repository.dart';
+import '../local_photo_manager_service.dart';
+import '../local_photo_repository.dart';
+import '../remote_photo_repository.dart';
 import 'photo_count.dart';
 
 part 'swipe_photo_controller.g.dart';
@@ -74,7 +74,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     }
 
     // 写真取得
-    return ref.read(photoManagerServiceProvider).getAllPhotos();
+    return ref.read(localPhotoManagerServiceProvider).getAllPhotos();
   }
 
   Future<void> loadNext({bool isFood = false, required int index}) async {
@@ -152,9 +152,10 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
     try {
       // 次の写真リストをDBから取得
-      final results = await ref.read(photoManagerServiceProvider).getAllPhotos(
-            lastEntity: photos[index],
-          );
+      final results =
+          await ref.read(localPhotoManagerServiceProvider).getAllPhotos(
+                lastEntity: photos[index],
+              );
 
       // 状態更新
       state = AsyncValue<List<AssetEntity>>.data([

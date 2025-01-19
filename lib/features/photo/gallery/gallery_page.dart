@@ -6,8 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
-import '../photo.dart';
 import '../photo_detail/photo_detail_page.dart';
+import '../remote_photo.dart';
 import 'gallery_controller.dart';
 
 class GalleryPage extends HookConsumerWidget {
@@ -71,13 +71,13 @@ class GalleryPage extends HookConsumerWidget {
   Widget _buildPhotoGrid(
     BuildContext context,
     String category,
-    List<Photo>? photoUrls,
+    List<RemotePhoto>? photoUrls,
   ) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    List<Photo> filteredPhotos;
+    List<RemotePhoto> filteredPhotos;
     if (category == 'すべて') {
       filteredPhotos = photoUrls;
     } else {

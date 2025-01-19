@@ -9,7 +9,7 @@ import '../../../../core/themes.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store.dart';
-import '../../photo_controller.dart';
+import '../../remote_photo_controller.dart';
 
 List<File> shopList = [];
 int shopNoSelected = 0; // 初期値を0に設定
@@ -183,7 +183,7 @@ Future<void> showShopListDialog(
                         onPressed: () async {
                           // 決定ボタン押下時にstoreIdを更新
                           await ref
-                              .read(photoControllerProvider)
+                              .read(remotePhotoControllerProvider)
                               .updateStoreIdForPhoto(
                                 userId: userId,
                                 photoId: photoId,

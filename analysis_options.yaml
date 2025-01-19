@@ -11,3 +11,5 @@ analyzer:
     - custom_lint
   errors:
     asset_does_not_exist: ignore
+    # riverpod_generatorの影響でg.dart末尾に不要な指定が付いてしまうため
+    duplicate_ignore: ignore

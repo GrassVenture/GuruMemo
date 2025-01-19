@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'photo.dart';
+part of 'remote_photo.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
+_$RemotePhotoImpl _$$RemotePhotoImplFromJson(Map<String, dynamic> json) =>
+    _$RemotePhotoImpl(
       id: json['id'] as String? ?? '',
       createdAt: json['createdAt'] == null
           ? const UnionTimestamp.serverTimestamp()
@@ -27,7 +28,7 @@ _$PhotoImpl _$$PhotoImplFromJson(Map<String, dynamic> json) => _$PhotoImpl(
       storeId: json['storeId'] as String? ?? '',
     );
 
-Map<String, dynamic> _$$PhotoImplToJson(_$PhotoImpl instance) =>
+Map<String, dynamic> _$$RemotePhotoImplToJson(_$RemotePhotoImpl instance) =>
     <String, dynamic>{
       'id': instance.id,
       'createdAt': timestampConverter.toJson(instance.createdAt),
