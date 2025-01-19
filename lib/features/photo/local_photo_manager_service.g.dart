@@ -1,27 +1,28 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_controller.dart';
+part of 'local_photo_manager_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authedUserStreamHash() => r'1339d5b33422b48a40b1635cc3bce651ef020f5b';
+String _$localPhotoManagerServiceHash() =>
+    r'93c455c17188971d7b7d849b6228eed442245037';
 
-/// [AuthedUser]を購読するProvider
+/// [LocalPhotoManagerService]用Provider
 ///
-/// Copied from [authedUserStream].
-@ProviderFor(authedUserStream)
-final authedUserStreamProvider = AutoDisposeStreamProvider<AuthedUser>.internal(
-  authedUserStream,
-  name: r'authedUserStreamProvider',
+/// Copied from [localPhotoManagerService].
+@ProviderFor(localPhotoManagerService)
+final localPhotoManagerServiceProvider =
+    AutoDisposeProvider<LocalPhotoManagerService>.internal(
+  localPhotoManagerService,
+  name: r'localPhotoManagerServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authedUserStreamHash,
+      : _$localPhotoManagerServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef AuthedUserStreamRef = Ref<AuthedUser>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -1,9 +1,9 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'database.dart';
+part of 'local_database.dart';
 
 // ignore_for_file: type=lint
-class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
+class $PhotosTable extends Photos with TableInfo<$PhotosTable, LocalPhoto> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -53,7 +53,7 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
   String get actualTableName => $name;
   static const String $name = 'photos';
   @override
-  VerificationContext validateIntegrity(Insertable<Photo> instance,
+  VerificationContext validateIntegrity(Insertable<LocalPhoto> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -90,9 +90,9 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
   @override
   Set<GeneratedColumn> get $primaryKey => {id};
   @override
-  Photo map(Map<String, dynamic> data, {String? tablePrefix}) {
+  LocalPhoto map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return Photo(
+    return LocalPhoto(
       id: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}id'])!,
       path: attachedDatabase.typeMapping
@@ -114,7 +114,7 @@ class $PhotosTable extends Photos with TableInfo<$PhotosTable, Photo> {
   }
 }
 
-class Photo extends DataClass implements Insertable<Photo> {
+class LocalPhoto extends DataClass implements Insertable<LocalPhoto> {
   /// 写真のid
   final String id;
 
@@ -132,7 +132,7 @@ class Photo extends DataClass implements Insertable<Photo> {
 
   /// 経度
   final double? longitude;
-  const Photo(
+  const LocalPhoto(
       {required this.id,
       required this.path,
       required this.width,
@@ -170,10 +170,10 @@ class Photo extends DataClass implements Insertable<Photo> {
     );
   }
 
-  factory Photo.fromJson(Map<String, dynamic> json,
+  factory LocalPhoto.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return Photo(
+    return LocalPhoto(
       id: serializer.fromJson<String>(json['id']),
       path: serializer.fromJson<String>(json['path']),
       width: serializer.fromJson<int>(json['width']),
@@ -195,14 +195,14 @@ class Photo extends DataClass implements Insertable<Photo> {
     };
   }
 
-  Photo copyWith(
+  LocalPhoto copyWith(
           {String? id,
           String? path,
           int? width,
           int? height,
           Value<double?> latitude = const Value.absent(),
           Value<double?> longitude = const Value.absent()}) =>
-      Photo(
+      LocalPhoto(
         id: id ?? this.id,
         path: path ?? this.path,
         width: width ?? this.width,
@@ -210,8 +210,8 @@ class Photo extends DataClass implements Insertable<Photo> {
         latitude: latitude.present ? latitude.value : this.latitude,
         longitude: longitude.present ? longitude.value : this.longitude,
       );
-  Photo copyWithCompanion(PhotosCompanion data) {
-    return Photo(
+  LocalPhoto copyWithCompanion(PhotosCompanion data) {
+    return LocalPhoto(
       id: data.id.present ? data.id.value : this.id,
       path: data.path.present ? data.path.value : this.path,
       width: data.width.present ? data.width.value : this.width,
@@ -223,7 +223,7 @@ class Photo extends DataClass implements Insertable<Photo> {
 
   @override
   String toString() {
-    return (StringBuffer('Photo(')
+    return (StringBuffer('LocalPhoto(')
           ..write('id: $id, ')
           ..write('path: $path, ')
           ..write('width: $width, ')
@@ -239,7 +239,7 @@ class Photo extends DataClass implements Insertable<Photo> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is Photo &&
+      (other is LocalPhoto &&
           other.id == this.id &&
           other.path == this.path &&
           other.width == this.width &&
@@ -248,7 +248,7 @@ class Photo extends DataClass implements Insertable<Photo> {
           other.longitude == this.longitude);
 }
 
-class PhotosCompanion extends UpdateCompanion<Photo> {
+class PhotosCompanion extends UpdateCompanion<LocalPhoto> {
   final Value<String> id;
   final Value<String> path;
   final Value<int> width;
@@ -275,7 +275,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
     this.rowid = const Value.absent(),
   })  : id = Value(id),
         path = Value(path);
-  static Insertable<Photo> custom({
+  static Insertable<LocalPhoto> custom({
     Expression<String>? id,
     Expression<String>? path,
     Expression<int>? width,
@@ -357,7 +357,7 @@ class PhotosCompanion extends UpdateCompanion<Photo> {
 }
 
 class $PhotoDetailsTable extends PhotoDetails
-    with TableInfo<$PhotoDetailsTable, PhotoDetail> {
+    with TableInfo<$PhotoDetailsTable, LocalPhotoDetail> {
   @override
   final GeneratedDatabase attachedDatabase;
   final String? _alias;
@@ -394,7 +394,7 @@ class $PhotoDetailsTable extends PhotoDetails
   String get actualTableName => $name;
   static const String $name = 'photo_details';
   @override
-  VerificationContext validateIntegrity(Insertable<PhotoDetail> instance,
+  VerificationContext validateIntegrity(Insertable<LocalPhotoDetail> instance,
       {bool isInserting = false}) {
     final context = VerificationContext();
     final data = instance.toColumns(true);
@@ -434,9 +434,9 @@ class $PhotoDetailsTable extends PhotoDetails
   @override
   Set<GeneratedColumn> get $primaryKey => const {};
   @override
-  PhotoDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
+  LocalPhotoDetail map(Map<String, dynamic> data, {String? tablePrefix}) {
     final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
-    return PhotoDetail(
+    return LocalPhotoDetail(
       lastId: attachedDatabase.typeMapping
           .read(DriftSqlType.string, data['${effectivePrefix}last_id'])!,
       lastCreateDateSecond: attachedDatabase.typeMapping.read(
@@ -454,7 +454,8 @@ class $PhotoDetailsTable extends PhotoDetails
   }
 }
 
-class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
+class LocalPhotoDetail extends DataClass
+    implements Insertable<LocalPhotoDetail> {
   /// 最後の写真id
   final String lastId;
 
@@ -466,7 +467,7 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
 
   /// 過去のグルメ分類合計枚数(追加された写真をカウントするのに使用)
   final int pastFoodTotal;
-  const PhotoDetail(
+  const LocalPhotoDetail(
       {required this.lastId,
       required this.lastCreateDateSecond,
       required this.currentCount,
@@ -490,10 +491,10 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
     );
   }
 
-  factory PhotoDetail.fromJson(Map<String, dynamic> json,
+  factory LocalPhotoDetail.fromJson(Map<String, dynamic> json,
       {ValueSerializer? serializer}) {
     serializer ??= driftRuntimeOptions.defaultSerializer;
-    return PhotoDetail(
+    return LocalPhotoDetail(
       lastId: serializer.fromJson<String>(json['lastId']),
       lastCreateDateSecond:
           serializer.fromJson<int>(json['lastCreateDateSecond']),
@@ -512,19 +513,19 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
     };
   }
 
-  PhotoDetail copyWith(
+  LocalPhotoDetail copyWith(
           {String? lastId,
           int? lastCreateDateSecond,
           int? currentCount,
           int? pastFoodTotal}) =>
-      PhotoDetail(
+      LocalPhotoDetail(
         lastId: lastId ?? this.lastId,
         lastCreateDateSecond: lastCreateDateSecond ?? this.lastCreateDateSecond,
         currentCount: currentCount ?? this.currentCount,
         pastFoodTotal: pastFoodTotal ?? this.pastFoodTotal,
       );
-  PhotoDetail copyWithCompanion(PhotoDetailsCompanion data) {
-    return PhotoDetail(
+  LocalPhotoDetail copyWithCompanion(PhotoDetailsCompanion data) {
+    return LocalPhotoDetail(
       lastId: data.lastId.present ? data.lastId.value : this.lastId,
       lastCreateDateSecond: data.lastCreateDateSecond.present
           ? data.lastCreateDateSecond.value
@@ -540,7 +541,7 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
 
   @override
   String toString() {
-    return (StringBuffer('PhotoDetail(')
+    return (StringBuffer('LocalPhotoDetail(')
           ..write('lastId: $lastId, ')
           ..write('lastCreateDateSecond: $lastCreateDateSecond, ')
           ..write('currentCount: $currentCount, ')
@@ -555,14 +556,14 @@ class PhotoDetail extends DataClass implements Insertable<PhotoDetail> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      (other is PhotoDetail &&
+      (other is LocalPhotoDetail &&
           other.lastId == this.lastId &&
           other.lastCreateDateSecond == this.lastCreateDateSecond &&
           other.currentCount == this.currentCount &&
           other.pastFoodTotal == this.pastFoodTotal);
 }
 
-class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
+class PhotoDetailsCompanion extends UpdateCompanion<LocalPhotoDetail> {
   final Value<String> lastId;
   final Value<int> lastCreateDateSecond;
   final Value<int> currentCount;
@@ -585,7 +586,7 @@ class PhotoDetailsCompanion extends UpdateCompanion<PhotoDetail> {
         lastCreateDateSecond = Value(lastCreateDateSecond),
         currentCount = Value(currentCount),
         pastFoodTotal = Value(pastFoodTotal);
-  static Insertable<PhotoDetail> custom({
+  static Insertable<LocalPhotoDetail> custom({
     Expression<String>? lastId,
     Expression<int>? lastCreateDateSecond,
     Expression<int>? currentCount,
@@ -770,14 +771,14 @@ class $$PhotosTableAnnotationComposer
 class $$PhotosTableTableManager extends RootTableManager<
     _$AppDatabase,
     $PhotosTable,
-    Photo,
+    LocalPhoto,
     $$PhotosTableFilterComposer,
     $$PhotosTableOrderingComposer,
     $$PhotosTableAnnotationComposer,
     $$PhotosTableCreateCompanionBuilder,
     $$PhotosTableUpdateCompanionBuilder,
-    (Photo, BaseReferences<_$AppDatabase, $PhotosTable, Photo>),
-    Photo,
+    (LocalPhoto, BaseReferences<_$AppDatabase, $PhotosTable, LocalPhoto>),
+    LocalPhoto,
     PrefetchHooks Function()> {
   $$PhotosTableTableManager(_$AppDatabase db, $PhotosTable table)
       : super(TableManagerState(
@@ -835,14 +836,14 @@ class $$PhotosTableTableManager extends RootTableManager<
 typedef $$PhotosTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $PhotosTable,
-    Photo,
+    LocalPhoto,
     $$PhotosTableFilterComposer,
     $$PhotosTableOrderingComposer,
     $$PhotosTableAnnotationComposer,
     $$PhotosTableCreateCompanionBuilder,
     $$PhotosTableUpdateCompanionBuilder,
-    (Photo, BaseReferences<_$AppDatabase, $PhotosTable, Photo>),
-    Photo,
+    (LocalPhoto, BaseReferences<_$AppDatabase, $PhotosTable, LocalPhoto>),
+    LocalPhoto,
     PrefetchHooks Function()>;
 typedef $$PhotoDetailsTableCreateCompanionBuilder = PhotoDetailsCompanion
     Function({
@@ -934,17 +935,17 @@ class $$PhotoDetailsTableAnnotationComposer
 class $$PhotoDetailsTableTableManager extends RootTableManager<
     _$AppDatabase,
     $PhotoDetailsTable,
-    PhotoDetail,
+    LocalPhotoDetail,
     $$PhotoDetailsTableFilterComposer,
     $$PhotoDetailsTableOrderingComposer,
     $$PhotoDetailsTableAnnotationComposer,
     $$PhotoDetailsTableCreateCompanionBuilder,
     $$PhotoDetailsTableUpdateCompanionBuilder,
     (
-      PhotoDetail,
-      BaseReferences<_$AppDatabase, $PhotoDetailsTable, PhotoDetail>
+      LocalPhotoDetail,
+      BaseReferences<_$AppDatabase, $PhotoDetailsTable, LocalPhotoDetail>
     ),
-    PhotoDetail,
+    LocalPhotoDetail,
     PrefetchHooks Function()> {
   $$PhotoDetailsTableTableManager(_$AppDatabase db, $PhotoDetailsTable table)
       : super(TableManagerState(
@@ -994,17 +995,17 @@ class $$PhotoDetailsTableTableManager extends RootTableManager<
 typedef $$PhotoDetailsTableProcessedTableManager = ProcessedTableManager<
     _$AppDatabase,
     $PhotoDetailsTable,
-    PhotoDetail,
+    LocalPhotoDetail,
     $$PhotoDetailsTableFilterComposer,
     $$PhotoDetailsTableOrderingComposer,
     $$PhotoDetailsTableAnnotationComposer,
     $$PhotoDetailsTableCreateCompanionBuilder,
     $$PhotoDetailsTableUpdateCompanionBuilder,
     (
-      PhotoDetail,
-      BaseReferences<_$AppDatabase, $PhotoDetailsTable, PhotoDetail>
+      LocalPhotoDetail,
+      BaseReferences<_$AppDatabase, $PhotoDetailsTable, LocalPhotoDetail>
     ),
-    PhotoDetail,
+    LocalPhotoDetail,
     PrefetchHooks Function()>;
 
 class $AppDatabaseManager {
@@ -1015,3 +1016,25 @@ class $AppDatabaseManager {
   $$PhotoDetailsTableTableManager get photoDetails =>
       $$PhotoDetailsTableTableManager(_db, _db.photoDetails);
 }
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$appDatabaseHash() => r'18ce5c8c4d8ddbfe5a7d819d8fb7d5aca76bf416';
+
+/// [AppDatabase]インスタンス用Provider
+///
+/// Copied from [appDatabase].
+@ProviderFor(appDatabase)
+final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
+  appDatabase,
+  name: r'appDatabaseProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$appDatabaseHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
