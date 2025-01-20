@@ -14,11 +14,11 @@ import '../features/photo/photo_detail/photo_detail_page.dart';
 import '../features/photo/swipe_photo/classify_start_page.dart';
 import '../features/photo/swipe_photo/swipe_photo_page.dart';
 import '../features/root_page.dart';
-import 'analytics_repository.dart';
+import 'services/analytics_service.dart';
 
 final routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: HomePage.routePath,
+    initialLocation: GalleryPage.routePath,
     routes: [
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
@@ -29,9 +29,9 @@ final routerProvider = Provider(
             builder: (context, state) => const SignInPage(),
           ),
           GoRoute(
-            name: HomePage.routeName,
-            path: HomePage.routePath,
-            builder: (context, state) => const HomePage(),
+            name: GalleryPage.routeName,
+            path: GalleryPage.routePath,
+            builder: (context, state) => const GalleryPage(),
           ),
           GoRoute(
             name: MyPage.routeName,

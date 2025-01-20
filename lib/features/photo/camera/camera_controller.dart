@@ -13,9 +13,9 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../../core/date_utils.dart';
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
-import '../../../core/photo_manager_service.dart';
 import '../../auth/auth_controller.dart';
-import '../photo_repository.dart';
+import '../local_photo_manager_service.dart';
+import '../remote_photo_repository.dart';
 import 'camera_state.dart';
 
 class CameraStateNotifier extends StateNotifier<CameraState> {
@@ -168,7 +168,7 @@ class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
     await PhotoManager.clearFileCache();
     await PhotoManager.getAssetPathList();
     final latestPhoto =
-        await ref.read(photoManagerServiceProvider).getLatestPhoto();
+        await ref.read(localPhotoManagerServiceProvider).getLatestPhoto();
     state = AsyncValue.data(latestPhoto);
 
     final value = state.valueOrNull;

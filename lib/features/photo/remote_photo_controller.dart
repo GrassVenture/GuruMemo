@@ -1,31 +1,26 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'photo.dart';
-import 'photo_repository.dart';
 
-final photoControllerProvider = Provider<PhotoController>(PhotoController._);
+import 'remote_photo.dart';
+import 'remote_photo_repository.dart';
+
+final remotePhotoControllerProvider =
+    Provider<RemotePhotoController>(RemotePhotoController._);
 
 /// 写真に関連した外部通信の操作を担当するコントローラー
 ///
-/// 写真関連の外部通信を行う際にはこのコントローラーを[photoControllerProvider]経由で操作する。
+/// 写真関連の外部通信を行う際にはこのコントローラーを[remotePhotoControllerProvider]経由で操作する。
 /// 別クラスを参照する場合は、refによりgetter経由でインスタンス化して用いる。
 /// refを渡さずコンストラクタから依存性を注入するようにすると
 /// クラス内で_ref.invalidateメソッド等を用いたriverpodらしい状態管理が出来なくなるため、依存関係はgetterで表現しておく。
-class PhotoController {
-  PhotoController._(this._ref);
+class RemotePhotoController {
+  RemotePhotoController._(this._ref);
 
   final Ref _ref;
 
   PhotoRepository get _photoRepository => _ref.read(photoRepositoryProvider);
 
-  /// 写真ダウンロード用メソッド
-  Future<List<Photo>> downloadPhotos({
-    required String userId,
-  }) async {
-    return _photoRepository.downloadPhotos(userId: userId);
-  }
-
-  // TODO(kim): Photo?の部分はあとで書き換える。
-  Future<Photo?> downloadPhoto({
+  // TODO(kim): RemotePhoto?の部分はあとで書き換える。
+  Future<RemotePhoto?> downloadPhoto({
     required String userId,
     required String photoId,
   }) async {
@@ -42,7 +37,7 @@ class PhotoController {
     );
   }
 
-  Future<Photo?> getPhotoById({
+  Future<RemotePhoto?> getPhotoById({
     required String userId,
     required String photoId,
   }) async {

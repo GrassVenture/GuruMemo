@@ -1,33 +1,35 @@
 import 'package:drift/drift.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
-import '../../core/database/database.dart';
+
+import '../../../core/local_database/local_database.dart';
 
 /// [LocalPhotoRepository]用プロバイダー
-final localPhotoRepositoryProvider =
-    Provider((ref) => LocalPhotoRepository._());
+final localPhotoRepositoryProvider = Provider(LocalPhotoRepository._);
 
-/// DBを操作するクラス
+/// ローカルDBに接続して[LocalPhoto]を操作するクラス
 class LocalPhotoRepository {
-  LocalPhotoRepository._();
+  LocalPhotoRepository._(this._ref);
 
-  /// DBインスタンス生成
-  final AppDatabase db = AppDatabase();
+  final Ref _ref;
+
+  /// DBインスタンス
+  AppDatabase get _db => _ref.read(appDatabaseProvider);
 
   /// 写真リストを取得する
-  Future<List<Photo>> getAllPhotos() async {
-    return db.select(db.photos).get();
+  Future<List<LocalPhoto>> getAllPhotos() async {
+    return _db.select(_db.photos).get();
   }
 
   /// 写真を削除する
   /// [id] 写真id
   Future<void> deletePhoto(String id) async {
-    await (db.delete(db.photos)..where((tbl) => tbl.id.equals(id))).go();
+    await (_db.delete(_db.photos)..where((tbl) => tbl.id.equals(id))).go();
   }
 
   /// 写真情報を取得する
-  Future<PhotoDetail?> getPhotoDetail() async {
-    return (db.select(db.photoDetails)..limit(1)).getSingleOrNull();
+  Future<LocalPhotoDetail?> getPhotoDetail() async {
+    return (_db.select(_db.photoDetails)..limit(1)).getSingleOrNull();
   }
 
   /// グルメ分類合計枚数を取得する
@@ -36,7 +38,7 @@ class LocalPhotoRepository {
     final photoDetail = await getPhotoDetail();
 
     final countExpression = countAll();
-    final query = db.selectOnly(db.photos)..addColumns([countExpression]);
+    final query = _db.selectOnly(_db.photos)..addColumns([countExpression]);
     final row = await query.getSingle();
 
     final count = row.rawData.data.values.first as int;
@@ -45,7 +47,7 @@ class LocalPhotoRepository {
     final lastPhotoModel = PhotoDetailsCompanion(
       pastFoodTotal: Value(count),
     );
-    await db.update(db.photoDetails).write(lastPhotoModel);
+    await _db.update(_db.photoDetails).write(lastPhotoModel);
 
     return count - photoDetail!.pastFoodTotal;
   }
@@ -71,7 +73,7 @@ class LocalPhotoRepository {
         latitude: Value(latLng.latitude),
         longitude: Value(latLng.longitude),
       );
-      await db.into(db.photos).insert(
+      await _db.into(_db.photos).insert(
             photoModel,
             mode: InsertMode.insertOrIgnore,
           );
@@ -88,10 +90,10 @@ class LocalPhotoRepository {
     );
     if (photoDetail != null) {
       // 更新
-      await db.update(db.photoDetails).write(lastPhotoModel);
+      await _db.update(_db.photoDetails).write(lastPhotoModel);
     } else {
       // 登録
-      await db.into(db.photoDetails).insert(lastPhotoModel);
+      await _db.into(_db.photoDetails).insert(lastPhotoModel);
     }
   }
 }

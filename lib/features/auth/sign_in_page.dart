@@ -83,7 +83,7 @@ class SignInPage extends HookConsumerWidget {
       child: ElevatedButton.icon(
         onPressed: isLoading.value
             ? () {}
-            : () => _handleSignIn(isLoading, signInMethod, context),
+            : () => _handleSignIn(isLoading, signInMethod, context, ref),
         icon: Image.asset(
           iconPath,
           width: 24,
@@ -106,6 +106,7 @@ class SignInPage extends HookConsumerWidget {
     ValueNotifier<bool> isLoading,
     Future<void> Function() signIn,
     BuildContext context,
+    WidgetRef ref,
   ) async {
     try {
       isLoading.value = true;

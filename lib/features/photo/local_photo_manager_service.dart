@@ -2,23 +2,27 @@ import 'dart:io';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../features/photo/swipe_photo/swipe_photo_controller.dart';
 import 'local_photo_repository.dart';
+import 'swipe_photo/swipe_photo_controller.dart';
 
-/// [PhotoService]用プロバイダー
-final photoManagerServiceProvider = Provider<PhotoService>(
-  PhotoService._,
-);
+part 'local_photo_manager_service.g.dart';
 
-/// [PhotoManager]を操作するクラス
-class PhotoService {
-  PhotoService._(this.ref);
+/// [LocalPhotoManagerService]用Provider
+@riverpod
+LocalPhotoManagerService localPhotoManagerService(Ref ref) {
+  return LocalPhotoManagerService._(ref);
+}
 
-  final Ref ref;
+/// デバイスの写真を取得する[PhotoManager]を操作するクラス
+class LocalPhotoManagerService {
+  LocalPhotoManagerService._(this._ref);
+
+  final Ref _ref;
 
   LocalPhotoRepository get _localPhotoRepository =>
-      ref.read(localPhotoRepositoryProvider);
+      _ref.read(localPhotoRepositoryProvider);
 
   /// 写真取得
   /// [lastEntity] 最後の写真情報
@@ -35,7 +39,7 @@ class PhotoService {
         type: RequestType.image,
       );
       // カウント更新
-      ref
+      _ref
           .read(photoCountProvider.notifier)
           .updateCount(photoDetail?.currentCount ?? 0, totalCount);
 
@@ -67,8 +71,8 @@ class PhotoService {
     // 写真が取得できない場合
     if (albums.isEmpty) {
       // スワイプ完了
-      if (ref.read(photoCountProvider) != null) {
-        ref.read(photoCountProvider.notifier).complete();
+      if (_ref.read(photoCountProvider) != null) {
+        _ref.read(photoCountProvider.notifier).complete();
       }
 
       return [];

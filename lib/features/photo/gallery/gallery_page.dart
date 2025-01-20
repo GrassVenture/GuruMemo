@@ -1,80 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../core/logger.dart';
 import '../../../core/themes.dart';
-import '../../auth/auth_controller.dart';
-import '../../auth/authed_user.dart';
-import '../photo.dart';
-import '../photo_controller.dart';
 import '../photo_detail/photo_detail_page.dart';
+import '../remote_photo.dart';
+import 'gallery_controller.dart';
 
-class HomePage extends HookConsumerWidget {
-  const HomePage({super.key});
+class GalleryPage extends HookConsumerWidget {
+  const GalleryPage({super.key});
 
-  static const routeName = 'home_page';
-  static const routePath = '/home_page';
-
-  Future<void> _downloadPhotos(
-    WidgetRef ref,
-    ValueNotifier<List<Photo>?> photoUrls,
-  ) async {
-    final userId = ref.watch(userIdProvider);
-
-    if (userId == null) {
-      return;
-    }
-
-    final result = await ref.read(photoControllerProvider).downloadPhotos(
-          userId: userId,
-        );
-
-    photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
-  }
-
-  Future<void> _initDownloadPhotos(
-    WidgetRef ref,
-    BuildContext context,
-    ValueNotifier<bool> isReady,
-    ValueNotifier<List<Photo>?> photoUrls,
-  ) async {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      final isSignedIn = ref.watch(userIdProvider) != null;
-      if (!isSignedIn) {
-        isReady.value = true;
-        return;
-      }
-      await ref.watch(authedUserStreamProvider.future);
-      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
-          ClassifyPhotosStatus.readyForUse;
-      if (!isReadyForUse) {
-        isReady.value = true;
-        return;
-      }
-
-      await _downloadPhotos(ref, photoUrls);
-      isReady.value = true;
-    });
-  }
+  static const routeName = 'gallery_page';
+  static const routePath = '/gallery_page';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isReady = useState(false);
-    final photoUrls = useState<List<Photo>?>(null);
+    final photoUrls = ref.watch(fetchPhotosProvider).when(
+          error: (err, _) {
+            logger.e(err);
+            return null;
+          },
+          loading: () => null,
+          data: (data) => data,
+        );
 
     final tabController = useTabController(initialLength: 6);
-
-    useEffect(
-      () {
-        _initDownloadPhotos(ref, context, isReady, photoUrls);
-        return null;
-      },
-      [],
-    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -103,12 +56,12 @@ class HomePage extends HookConsumerWidget {
         child: TabBarView(
           controller: tabController,
           children: [
-            _buildPhotoGrid(context, 'すべて', photoUrls.value),
-            _buildPhotoGrid(context, 'ramen', photoUrls.value),
-            _buildPhotoGrid(context, 'cafe', photoUrls.value),
-            _buildPhotoGrid(context, 'japanese_food', photoUrls.value),
-            _buildPhotoGrid(context, 'western_food', photoUrls.value),
-            _buildPhotoGrid(context, 'ethnic', photoUrls.value),
+            _buildPhotoGrid(context, 'すべて', photoUrls),
+            _buildPhotoGrid(context, 'ramen', photoUrls),
+            _buildPhotoGrid(context, 'cafe', photoUrls),
+            _buildPhotoGrid(context, 'japanese_food', photoUrls),
+            _buildPhotoGrid(context, 'western_food', photoUrls),
+            _buildPhotoGrid(context, 'ethnic', photoUrls),
           ],
         ),
       ),
@@ -118,13 +71,13 @@ class HomePage extends HookConsumerWidget {
   Widget _buildPhotoGrid(
     BuildContext context,
     String category,
-    List<Photo>? photoUrls,
+    List<RemotePhoto>? photoUrls,
   ) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    List<Photo> filteredPhotos;
+    List<RemotePhoto> filteredPhotos;
     if (category == 'すべて') {
       filteredPhotos = photoUrls;
     } else {
