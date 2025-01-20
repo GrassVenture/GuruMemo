@@ -181,7 +181,9 @@ class GalleryPage extends HookConsumerWidget {
 
 Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
   final localPhotoAssets = ref.watch(localPhotoAssetsProvider);
-  final selectedPhotos = useState<Set<AssetEntity>>({});
+  final selectedLocalPhotosNotifier =
+      ref.watch(selectedLocalPhotosProvider.notifier);
+  final selectedLocalPhotos = ref.watch(selectedLocalPhotosProvider);
 
   return Material(
     color: Colors.grey,
@@ -198,7 +200,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
               const Spacer(),
               // 選択中の枚数を表示
               Text(
-                '選択中: ${selectedPhotos.value.length} 枚',
+                '選択中: ${selectedLocalPhotos.length} 枚',
                 style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
               const SizedBox(width: 16),
@@ -235,7 +237,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
               itemCount: photos.length,
               itemBuilder: (context, index) {
                 final photo = photos[index];
-                final isSelected = selectedPhotos.value.contains(photo);
+                final isSelected = selectedLocalPhotos.contains(photo);
 
                 return FutureBuilder<Uint8List?>(
                   future: photo.thumbnailData,
@@ -247,13 +249,9 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                     return GestureDetector(
                       onTap: () {
                         if (isSelected) {
-                          selectedPhotos.value = {
-                            ...selectedPhotos.value..remove(photo),
-                          };
+                          selectedLocalPhotosNotifier.deselectPhoto(photo);
                         } else {
-                          selectedPhotos.value = {
-                            ...selectedPhotos.value..add(photo),
-                          };
+                          selectedLocalPhotosNotifier.selectPhoto(photo);
                         }
                       },
                       child: Stack(
