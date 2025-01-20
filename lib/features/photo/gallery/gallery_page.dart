@@ -184,7 +184,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
   final selectedPhotos = useState<Set<AssetEntity>>({});
 
   return Material(
-    color: Colors.black54,
+    color: Colors.grey,
     child: Column(
       children: [
         Padding(
@@ -238,7 +238,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                 final isSelected = selectedPhotos.value.contains(photo);
 
                 return FutureBuilder<Uint8List?>(
-                  future: photo.thumbnailData as Future<Uint8List?>?,
+                  future: photo.thumbnailData,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Container(color: Colors.grey);
