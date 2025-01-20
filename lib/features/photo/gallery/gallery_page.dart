@@ -1,5 +1,4 @@
-import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
-import 'dart:nativewrappers/_internal/vm/lib/typed_data_patch.dart';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -22,7 +21,7 @@ class GalleryPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final isImagePickerVisible = ref.watch(imagePickerVisibilityProvider);
+    final isImagePickerVisible = ref.watch(imagePickerVisibilityProvider);
 
     final photoUrls = ref.watch(fetchPhotosProvider).when(
           error: (err, _) {
@@ -57,19 +56,28 @@ class GalleryPage extends HookConsumerWidget {
           ),
         ),
       ),
-      body: DefaultTabController(
-        length: 6,
-        child: TabBarView(
-          controller: tabController,
-          children: [
-            _buildPhotoGrid(context, 'すべて', photoUrls),
-            _buildPhotoGrid(context, 'ramen', photoUrls),
-            _buildPhotoGrid(context, 'cafe', photoUrls),
-            _buildPhotoGrid(context, 'japanese_food', photoUrls),
-            _buildPhotoGrid(context, 'western_food', photoUrls),
-            _buildPhotoGrid(context, 'ethnic', photoUrls),
-          ],
-        ),
+      body: Stack(
+        children: [
+          DefaultTabController(
+            length: 6,
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                _buildPhotoGrid(context, 'すべて', photoUrls),
+                _buildPhotoGrid(context, 'ramen', photoUrls),
+                _buildPhotoGrid(context, 'cafe', photoUrls),
+                _buildPhotoGrid(context, 'japanese_food', photoUrls),
+                _buildPhotoGrid(context, 'western_food', photoUrls),
+                _buildPhotoGrid(context, 'ethnic', photoUrls),
+              ],
+            ),
+          ),
+          if (isImagePickerVisible)
+            _buildImagePickerOverlay(
+              context,
+              ref,
+            ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -143,79 +151,94 @@ class GalleryPage extends HookConsumerWidget {
       ),
     );
   }
+  // Widget _buildSelectedImagesList(List<AssetEntity> selectedImages) {
+  //   return selectedImages.isEmpty
+  //       ? const Center(child: Text("画像が選択されていません"))
+  //       : GridView.builder(
+  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+  //             crossAxisCount: 4,
+  //             mainAxisSpacing: 4,
+  //             crossAxisSpacing: 4,
+  //           ),
+  //           itemCount: selectedImages.length,
+  //           itemBuilder: (context, index) {
+  //             return FutureBuilder<Uint8List?>(
+  //               future: selectedImages[index].thumbnailData,
+  //               builder: (context, snapshot) {
+  //                 if (!snapshot.hasData) {
+  //                   return Container(color: Colors.grey);
+  //                 }
+  //                 return Image.memory(
+  //                   snapshot.data!,
+  //                   fit: BoxFit.cover,
+  //                 );
+  //               },
+  //             );
+  //           },
+  //         );
+  // }
+}
 
-  Widget _buildImagePickerOverlay(
-    BuildContext context,
-    ValueNotifier<bool> isImagePickerVisible,
-    ValueNotifier<List<AssetEntity>> selectedImages,
-  ) {
-    final photoAssets = useState<List<AssetEntity>>([]);
-    final selectedPhotos = useState<Set<AssetEntity>>({});
+Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
+  final localPhotoAssets = ref.watch(localPhotoAssetsProvider);
+  final selectedPhotos = useState<Set<AssetEntity>>({});
 
-    useEffect(() {
-      () async {
-        final albums =
-            await PhotoManager.getAssetPathList(type: RequestType.image);
-        if (albums.isNotEmpty) {
-          final photos = await albums[0].getAssetListPaged(page: 0, size: 500);
-          photoAssets.value = photos;
-        }
-      }();
-      return null;
-    }, []);
-
-    return Material(
-      color: Colors.black54,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                const Text(
-                  '画像を選択',
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                const Spacer(),
-                // 選択中の枚数を表示
-                Text(
-                  '選択中: ${selectedPhotos.value.length} 枚',
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
-                const SizedBox(width: 16), // 少し間隔を空ける
-                SizedBox(
-                  width: 100,
-                  child: ElevatedButton(
-                    onPressed: () {
-                      selectedImages.value = selectedPhotos.value.toList();
-                      isImagePickerVisible.value = false;
-                    },
-                    child: const Text('確定'),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
+  return Material(
+    color: Colors.black54,
+    child: Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              const Text(
+                '画像を選択',
+                style: TextStyle(color: Colors.white, fontSize: 18),
+              ),
+              const Spacer(),
+              // 選択中の枚数を表示
+              Text(
+                '選択中: ${selectedPhotos.value.length} 枚',
+                style: const TextStyle(color: Colors.white, fontSize: 16),
+              ),
+              const SizedBox(width: 16),
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
                   onPressed: () {
-                    isImagePickerVisible.value = false;
+                    // 確定処理を実行
+                    // final selectedImages = selectedPhotos.value.toList();
+                    // ref
+                    //     .read(selectedLocalPhotosProvider.notifier)
+                    //     .setImages(selectedImages);
                   },
+                  child: const Text('確定'),
                 ),
-              ],
-            ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () {
+                  ref.read(imagePickerVisibilityProvider.notifier).hide();
+                },
+              ),
+            ],
           ),
-          Expanded(
-            child: GridView.builder(
+        ),
+        Expanded(
+          child: localPhotoAssets.when(
+            data: (photos) => GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
                 mainAxisSpacing: 4,
                 crossAxisSpacing: 4,
               ),
-              itemCount: photoAssets.value.length,
+              itemCount: photos.length,
               itemBuilder: (context, index) {
-                final photo = photoAssets.value[index];
+                final photo = photos[index];
                 final isSelected = selectedPhotos.value.contains(photo);
 
                 return FutureBuilder<Uint8List?>(
-                  future: photo.thumbnailData,
+                  future: photo.thumbnailData as Future<Uint8List?>?,
                   builder: (context, snapshot) {
                     if (!snapshot.hasData) {
                       return Container(color: Colors.grey);
@@ -235,10 +258,13 @@ class GalleryPage extends HookConsumerWidget {
                       },
                       child: Stack(
                         children: [
-                          Image.memory(
-                            snapshot.data!,
-                            fit: BoxFit.cover,
-                          ),
+                          if (snapshot.data != null)
+                            Image.memory(
+                              snapshot.data!,
+                              fit: BoxFit.cover,
+                            )
+                          else
+                            Container(color: Colors.grey),
                           if (isSelected)
                             Positioned(
                               right: 4,
@@ -263,36 +289,11 @@ class GalleryPage extends HookConsumerWidget {
                 );
               },
             ),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(child: Text('Error: $error')),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSelectedImagesList(List<AssetEntity> selectedImages) {
-    return selectedImages.isEmpty
-        ? const Center(child: Text("画像が選択されていません"))
-        : GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              mainAxisSpacing: 4,
-              crossAxisSpacing: 4,
-            ),
-            itemCount: selectedImages.length,
-            itemBuilder: (context, index) {
-              return FutureBuilder<Uint8List?>(
-                future: selectedImages[index].thumbnailData,
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Container(color: Colors.grey);
-                  }
-                  return Image.memory(
-                    snapshot.data!,
-                    fit: BoxFit.cover,
-                  );
-                },
-              );
-            },
-          );
-  }
+        ),
+      ],
+    ),
+  );
 }
