@@ -48,7 +48,7 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
-  // 写真の周辺のお店を取得するための処理
+  /// 写真のお店を登録するための処理
   Future<void> registerStoreInfo({
     required String photoId,
     String? accessToken,
@@ -113,16 +113,16 @@ class PhotoRepository {
     }
   }
 
-  Future<void> registerPhotoDataToStore({
+  Future<void> registerPhotoData({
     required String userId,
-    required UnionTimestamp shotAt,
+    required UnionTimestamp registerShotAt,
     required String photoId,
   }) async {
     try {
       await photosRef(userId: userId).doc(photoId).set(
             Photo(
               userId: userId,
-              shotAt: shotAt,
+              shotAt: registerShotAt,
             ),
           );
     } on Exception catch (error) {

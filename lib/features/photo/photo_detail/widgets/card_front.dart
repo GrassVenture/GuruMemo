@@ -5,6 +5,7 @@ import '../../../../core/build_context_extension.dart';
 import '../../../../core/guru_memo_card.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/scalable_photo.dart';
+import '../../../../core/date_utils.dart';
 
 class CardFront extends StatelessWidget {
   const CardFront({
@@ -30,10 +31,6 @@ class CardFront extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = shotAt != null
-        ? '${shotAt!.year}/${shotAt!.month}/${shotAt!.day}'
-        : null;
-
     return GuruMemoCard(
       child: Stack(
         alignment: AlignmentDirectional.topEnd,
@@ -105,10 +102,10 @@ class CardFront extends StatelessWidget {
                         ],
                       ),
                       // 写真の撮影日時の表示
-                      formattedDate == null
-                          ? const SizedBox()
+                      shotAt == null
+                          ? const SizedBox.shrink()
                           : Text(
-                              formattedDate,
+                              FormatDateTime.dateFmt.format(shotAt!),
                               style: context.textTheme.titleSmall,
                             ),
                       Text(
