@@ -7,7 +7,7 @@ part of 'local_photo_manager_service.dart';
 // **************************************************************************
 
 String _$localPhotoManagerServiceHash() =>
-    r'93c455c17188971d7b7d849b6228eed442245037';
+    r'a7e66d79cb6152013e0d5d4207194e15253069fa';
 
 /// [LocalPhotoManagerService]用Provider
 ///
