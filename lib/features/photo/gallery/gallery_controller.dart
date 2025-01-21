@@ -180,7 +180,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
   }
 
   Future<void> classifyPhotoAsFood({
-    required Map<String, double> location,
     required XFile image,
     bool isFood = true,
   }) async {
@@ -188,12 +187,15 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
-      throw Exception('User not signed in');
+      throw Exception('サインインされていません');
     }
 
     try {
+      final location = await getImageLocation(image.path);
+
       if (isFood) {
-        if (location.isNotEmpty) {
+        if (location != null && location.isNotEmpty) {
+          // サーバーに位置情報を送信
           await ref.read(photoRepositoryProvider).registerStoreInfo(
                 photoId: modifiedPhotoId,
                 userId: userId,
@@ -216,7 +218,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
       }
     } on Exception catch (e, stacktrace) {
       state = AsyncValue.error(e, stacktrace);
-      logger.e('Error in swipeRight: $e');
+      logger.e('Error in classifyPhotoAsFood: $e');
     }
   }
 
@@ -286,3 +288,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
     return result;
   }
 }
+
+final photoListNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<_PhotoListNotifier, void>(
+        () => _PhotoListNotifier());

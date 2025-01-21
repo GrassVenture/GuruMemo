@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
@@ -206,12 +207,38 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
               SizedBox(
                 width: 100,
                 child: ElevatedButton(
-                  onPressed: () {
-                    // 確定処理を実行
-                    // final selectedImages = selectedPhotos.value.toList();
-                    // ref
-                    //     .read(selectedLocalPhotosProvider.notifier)
-                    //     .setImages(selectedImages);
+                  onPressed: () async {
+                    // 選択された写真を取得
+                    final selectedPhotos = selectedLocalPhotos.toList();
+                    final photoListNotifier =
+                        ref.read(photoListNotifierProvider.notifier);
+
+                    for (final photo in selectedPhotos) {
+                      try {
+                        // AssetEntity から File を取得
+                        final file = await photo.file;
+
+                        if (file != null) {
+                          // XFile に変換
+                          final xFile = XFile(file.path);
+
+                          // 写真を分類
+                          await photoListNotifier.classifyPhotoAsFood(
+                            image: xFile,
+                          );
+                        }
+                      } on Exception catch (e) {
+                        logger.e('Error classify processing photo: $e');
+                      }
+                    }
+
+                    // 処理後に選択をクリア
+                    ref
+                        .read(selectedLocalPhotosProvider.notifier)
+                        .clearSelection();
+
+                    // ImagePicker を閉じる
+                    ref.read(imagePickerVisibilityProvider.notifier).hide();
                   },
                   child: const Text('確定'),
                 ),
