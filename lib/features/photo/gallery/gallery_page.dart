@@ -5,7 +5,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
@@ -190,7 +189,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
     child: Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Row(
             children: [
               const Text(

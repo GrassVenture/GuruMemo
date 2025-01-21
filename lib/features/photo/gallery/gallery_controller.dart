@@ -1,10 +1,16 @@
+import 'dart:async';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/exception.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
@@ -160,5 +166,123 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
 
   void clearSelection() {
     state = [];
+  }
+}
+
+class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
+  /// 初期処理
+  @override
+  Future<void> build() async {
+    final permission = await PhotoManager.requestPermissionExtend();
+    if (!permission.isAuth && !permission.hasAccess) {
+      throw PermissionException();
+    }
+  }
+
+  Future<void> classifyPhotoAsFood({
+    required Map<String, double> location,
+    required XFile image,
+    bool isFood = true,
+  }) async {
+    final modifiedPhotoId = image.path.split('/').last.replaceAll('/', '-');
+    final userId = ref.read(userIdProvider);
+
+    if (userId == null) {
+      throw Exception('User not signed in');
+    }
+
+    try {
+      if (isFood) {
+        if (location.isNotEmpty) {
+          await ref.read(photoRepositoryProvider).registerStoreInfo(
+                photoId: modifiedPhotoId,
+                userId: userId,
+                latitude: location['latitude'],
+                longitude: location['longitude'],
+              );
+        }
+
+        // 画像ファイルの圧縮と送信
+        final photoFile = File(image.path);
+        final compressedData = await _compressImage(photoFile);
+
+        if (compressedData != null) {
+          await ref.read(photoRepositoryProvider).categorizeFood(
+                userId: userId,
+                photoId: modifiedPhotoId,
+                photoData: compressedData,
+              );
+        }
+      }
+    } on Exception catch (e, stacktrace) {
+      state = AsyncValue.error(e, stacktrace);
+      logger.e('Error in swipeRight: $e');
+    }
+  }
+
+  /// 画像から位置情報を取得
+  Future<Map<String, double>?> getImageLocation(String imagePath) async {
+    try {
+      final file = File(imagePath);
+      final bytes = await file.readAsBytes();
+
+      // EXIFデータを解析
+      final data = await readExifFromBytes(bytes);
+
+      if (data.isEmpty) {
+        return null;
+      }
+
+      final gpsLatitude = data['GPS GPSLatitude']?.values.toList();
+      final gpsLongitude = data['GPS GPSLongitude']?.values.toList();
+      final gpsLatitudeRef = data['GPS GPSLatitudeRef']?.printable;
+      final gpsLongitudeRef = data['GPS GPSLongitudeRef']?.printable;
+
+      if (gpsLatitude != null && gpsLongitude != null) {
+        final latitude = _convertToDecimal(
+          gpsLatitude,
+          gpsLatitudeRef == 'S' ? -1 : 1,
+        );
+        final longitude = _convertToDecimal(
+          gpsLongitude,
+          gpsLongitudeRef == 'W' ? -1 : 1,
+        );
+
+        return {
+          'latitude': latitude,
+          'longitude': longitude,
+        };
+      }
+    } on Exception catch (e) {
+      logger.e('位置情報の取得に失敗しました: $e');
+    }
+    return null;
+  }
+
+  /// 度分秒を10進数に変換
+  double _convertToDecimal(List<dynamic> values, int sign) {
+    final degrees = _toDouble(values[0]);
+    final minutes = _toDouble(values[1]) / 60;
+    final seconds = _toDouble(values[2]) / 3600;
+    return sign * (degrees + minutes + seconds);
+  }
+
+  /// EXIF値を`double`に変換
+  double _toDouble(dynamic value) {
+    if (value is! Ratio) {
+      throw ArgumentError('値がRatio型ではありません: $value');
+    }
+    return value.numerator / value.denominator;
+  }
+
+  Future<Uint8List?> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      minWidth: 256,
+      minHeight: 256,
+      quality: 85,
+      keepExif: true,
+    );
+    return result;
   }
 }
