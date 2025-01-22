@@ -6,12 +6,11 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPhotosHash() => r'4a13784e4d024408596da0ef52f8123df27ac770';
+String _$fetchPhotosHash() => r'3b648e9da201a81eb012ba4d4cbe21b1c090052f';
 
 /// See also [fetchPhotos].
 @ProviderFor(fetchPhotos)
-final fetchPhotosProvider =
-    AutoDisposeFutureProvider<List<RemotePhoto>>.internal(
+final fetchPhotosProvider = FutureProvider<List<RemotePhoto>>.internal(
   fetchPhotos,
   name: r'fetchPhotosProvider',
   debugGetCreateSourceHash:
@@ -20,7 +19,9 @@ final fetchPhotosProvider =
   allTransitiveDependencies: null,
 );
 
-typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef FetchPhotosRef = FutureProviderRef<List<RemotePhoto>>;
 String _$imagePickerVisibilityHash() =>
     r'2af400b9ecdc2622b456ad790c1fad00bbd17647';
 
@@ -89,4 +90,4 @@ final classifyLocalPhotoNotifierProvider =
 
 typedef _$ClassifyLocalPhotoNotifier = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

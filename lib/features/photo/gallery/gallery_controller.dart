@@ -6,7 +6,6 @@ import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,7 +22,7 @@ part 'gallery_controller.g.dart';
 
 // TODO(masaki): g.ファイルにAutoDisposeFutureProviderRefが生成されないように調整
 // Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
-@riverpod
+@Riverpod(keepAlive: true)
 Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   final userId = ref.watch(userIdProvider);
 // TODO(masaki): nullの場合ハンドリング検討
