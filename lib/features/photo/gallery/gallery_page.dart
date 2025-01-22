@@ -187,7 +187,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                   onPressed: () async {
                     final selectedPhotos = selectedLocalPhotos.toList();
                     final photoListNotifier =
-                        ref.read(photoListNotifierProvider.notifier);
+                        ref.read(classifyLocalPhotoNotifierProvider.notifier);
 
                     ref.read(imagePickerVisibilityProvider.notifier).hide();
 

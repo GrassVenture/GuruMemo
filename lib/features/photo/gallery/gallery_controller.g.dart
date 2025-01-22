@@ -71,5 +71,22 @@ final selectedLocalPhotosProvider = AutoDisposeNotifierProvider<
 );
 
 typedef _$SelectedLocalPhotos = AutoDisposeNotifier<List<AssetEntity>>;
+String _$classifyLocalPhotoNotifierHash() =>
+    r'4ba754adcf5ed91045fb1cf4084f329941a0b3eb';
+
+/// See also [ClassifyLocalPhotoNotifier].
+@ProviderFor(ClassifyLocalPhotoNotifier)
+final classifyLocalPhotoNotifierProvider =
+    AutoDisposeAsyncNotifierProvider<ClassifyLocalPhotoNotifier, void>.internal(
+  ClassifyLocalPhotoNotifier.new,
+  name: r'classifyLocalPhotoNotifierProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$classifyLocalPhotoNotifierHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$ClassifyLocalPhotoNotifier = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

@@ -179,16 +179,19 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
   }
 }
 
-class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
-  /// 初期処理
+@riverpod
+class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
+  /// 初期化
   @override
-  Future<void> build() async {
+  FutureOr<void> build() async {
+    // パーミッション確認
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
   }
 
+  /// 写真を分類（食べ物として）
   Future<void> classifyPhotoAsFood({
     required XFile image,
     bool isFood = true,
@@ -201,7 +204,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
     }
 
     try {
-      final location = await getImageLocation(image.path);
+      final location = await _getImageLocation(image.path);
 
       if (isFood) {
         if (location != null && location.isNotEmpty) {
@@ -226,14 +229,14 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
               );
         }
       }
-    } on Exception catch (e, stacktrace) {
-      state = AsyncValue.error(e, stacktrace);
+    } on Exception catch (e, stackTrace) {
+      state = AsyncValue.error(e, stackTrace);
       logger.e('Error in classifyPhotoAsFood: $e');
     }
   }
 
   /// 画像から位置情報を取得
-  Future<Map<String, double>?> getImageLocation(String imagePath) async {
+  Future<Map<String, double>?> _getImageLocation(String imagePath) async {
     try {
       final file = File(imagePath);
       final bytes = await file.readAsBytes();
@@ -287,6 +290,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
     return value.numerator / value.denominator;
   }
 
+  /// 画像を圧縮
   Future<Uint8List?> _compressImage(File file) async {
     final result = await FlutterImageCompress.compressWithFile(
       file.absolute.path,
@@ -298,7 +302,3 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<void> {
     return result;
   }
 }
-
-final photoListNotifierProvider =
-    AutoDisposeAsyncNotifierProvider<_PhotoListNotifier, void>(
-        () => _PhotoListNotifier());
