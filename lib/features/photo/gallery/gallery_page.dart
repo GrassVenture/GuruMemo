@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
@@ -79,12 +80,14 @@ class GalleryPage extends HookConsumerWidget {
             ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          ref.read(imagePickerVisibilityProvider.notifier).show();
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: !isImagePickerVisible
+          ? FloatingActionButton(
+              onPressed: () {
+                ref.read(imagePickerVisibilityProvider.notifier).show();
+              },
+              child: const Icon(Icons.add),
+            )
+          : null,
     );
   }
 
@@ -151,32 +154,6 @@ class GalleryPage extends HookConsumerWidget {
       ),
     );
   }
-  // Widget _buildSelectedImagesList(List<AssetEntity> selectedImages) {
-  //   return selectedImages.isEmpty
-  //       ? const Center(child: Text("画像が選択されていません"))
-  //       : GridView.builder(
-  //           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-  //             crossAxisCount: 4,
-  //             mainAxisSpacing: 4,
-  //             crossAxisSpacing: 4,
-  //           ),
-  //           itemCount: selectedImages.length,
-  //           itemBuilder: (context, index) {
-  //             return FutureBuilder<Uint8List?>(
-  //               future: selectedImages[index].thumbnailData,
-  //               builder: (context, snapshot) {
-  //                 if (!snapshot.hasData) {
-  //                   return Container(color: Colors.grey);
-  //                 }
-  //                 return Image.memory(
-  //                   snapshot.data!,
-  //                   fit: BoxFit.cover,
-  //                 );
-  //               },
-  //             );
-  //           },
-  //         );
-  // }
 }
 
 Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
@@ -200,29 +177,27 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
               const Spacer(),
               // 選択中の枚数を表示
               Text(
-                '選択中: ${selectedLocalPhotos.length} 枚',
+                '選択中: ${selectedLocalPhotos.length} / 30 枚',
                 style: const TextStyle(color: Colors.white, fontSize: 16),
               ),
-              const SizedBox(width: 16),
+              const Gap(16),
               SizedBox(
                 width: 100,
                 child: ElevatedButton(
                   onPressed: () async {
-                    // 選択された写真を取得
                     final selectedPhotos = selectedLocalPhotos.toList();
                     final photoListNotifier =
                         ref.read(photoListNotifierProvider.notifier);
 
+                    ref.read(imagePickerVisibilityProvider.notifier).hide();
+
                     for (final photo in selectedPhotos) {
                       try {
-                        // AssetEntity から File を取得
                         final file = await photo.file;
 
                         if (file != null) {
-                          // XFile に変換
                           final xFile = XFile(file.path);
 
-                          // 写真を分類
                           await photoListNotifier.classifyPhotoAsFood(
                             image: xFile,
                           );
@@ -232,13 +207,9 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                       }
                     }
 
-                    // 処理後に選択をクリア
                     ref
                         .read(selectedLocalPhotosProvider.notifier)
                         .clearSelection();
-
-                    // ImagePicker を閉じる
-                    ref.read(imagePickerVisibilityProvider.notifier).hide();
                   },
                   child: const Text('確定'),
                 ),

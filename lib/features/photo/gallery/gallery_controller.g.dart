@@ -38,7 +38,7 @@ final imagePickerVisibilityProvider =
 );
 
 typedef _$ImagePickerVisibility = AutoDisposeNotifier<bool>;
-String _$localPhotoAssetsHash() => r'7b26565c63b42e50d36fe9af5f7b9a9a28c44b1c';
+String _$localPhotoAssetsHash() => r'497b7962fa49ee49d0203f43f012f24833384deb';
 
 /// See also [LocalPhotoAssets].
 @ProviderFor(LocalPhotoAssets)
@@ -55,7 +55,7 @@ final localPhotoAssetsProvider = AutoDisposeAsyncNotifierProvider<
 
 typedef _$LocalPhotoAssets = AutoDisposeAsyncNotifier<List<AssetEntity>>;
 String _$selectedLocalPhotosHash() =>
-    r'6868dfc3217aeb5eb2bf669f6875bc3322fdf9c6';
+    r'8b4321e54bb31c7c3ddaae5e6d0b3dfb4dc3dcd1';
 
 /// See also [SelectedLocalPhotos].
 @ProviderFor(SelectedLocalPhotos)

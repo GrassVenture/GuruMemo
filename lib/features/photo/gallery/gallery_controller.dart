@@ -149,21 +149,31 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
 
 @riverpod
 class SelectedLocalPhotos extends _$SelectedLocalPhotos {
+  static const int maxSelection = 30; // 選択可能な最大枚数
+
   @override
   List<AssetEntity> build() => [];
 
+  /// 写真を選択
   void selectPhoto(AssetEntity photo) {
+    if (state.length >= maxSelection) {
+      // 選択可能枚数を超えている場合は何もしない
+      return;
+    }
     if (!state.contains(photo)) {
       state = [...state, photo];
     }
   }
 
+  /// 写真を選択解除
   void deselectPhoto(AssetEntity photo) {
     state = state.where((p) => p != photo).toList();
   }
 
+  /// 写真が選択されているか確認
   bool isSelected(AssetEntity photo) => state.contains(photo);
 
+  /// 選択をクリア
   void clearSelection() {
     state = [];
   }
