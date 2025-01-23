@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
 import '../../../../core/build_context_extension.dart';
+import '../../../../core/date_utils.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/cards/guru_memo_card.dart';
 import '../../../../core/widgets/scalable_photo.dart';
@@ -16,6 +17,7 @@ class CardFront extends StatelessWidget {
     required this.showCardBack,
     required this.isEditing,
     required this.onDelete,
+    required this.shotAt,
   });
 
   final String photoUrl;
@@ -25,11 +27,10 @@ class CardFront extends StatelessWidget {
   final bool showCardBack;
   final bool isEditing;
   final VoidCallback onDelete;
+  final DateTime? shotAt;
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = '${dateTime.year}/${dateTime.month}/${dateTime.day}';
-
     return GuruMemoCard(
       child: Stack(
         alignment: AlignmentDirectional.topEnd,
@@ -100,7 +101,13 @@ class CardFront extends StatelessWidget {
                             ),
                         ],
                       ),
-                      Text(formattedDate, style: context.textTheme.titleSmall),
+                      // 写真の撮影日時の表示
+                      shotAt == null
+                          ? const SizedBox.shrink()
+                          : Text(
+                              FormatDateTime.dateFmt.format(shotAt!),
+                              style: context.textTheme.titleSmall,
+                            ),
                       Text(
                         storeName,
                         maxLines: 2,
