@@ -1,5 +1,7 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+part 'shared_preferences_repository.g.dart';
 
 /// [SharedPreferences]のキーを管理するenum
 enum SharedPreferencesKey {
@@ -13,10 +15,13 @@ enum SharedPreferencesKey {
 /// [SharedPreferencesRepository]用プロバイダー
 ///
 /// アプリ起動時 or テスト時に、初期化処理としてインスタンスを生成しておく。
-final sharedPreferencesRepositoryProvider =
-    Provider<SharedPreferencesRepository>(
-  (ref) => SharedPreferencesRepository._(),
-);
+
+@Riverpod(keepAlive: true)
+SharedPreferencesRepository sharedPreferencesRepository(
+  SharedPreferencesRepositoryRef ref,
+) {
+  return SharedPreferencesRepository._();
+}
 
 /// [SharedPreferences]を操作するクラス
 class SharedPreferencesRepository {
