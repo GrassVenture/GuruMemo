@@ -225,7 +225,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
           child: localPhotoAssets.when(
             data: (photos) => GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 4,
+                crossAxisCount: 3,
                 mainAxisSpacing: 4,
                 crossAxisSpacing: 4,
               ),
