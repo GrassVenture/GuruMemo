@@ -114,14 +114,14 @@ class PhotoRepository {
 
   Future<void> registerPhotoData({
     required String userId,
-    required UnionTimestamp registerShotAt,
+    required UnionTimestamp shotAt,
     required String photoId,
   }) async {
     try {
       await photosRef(userId: userId).doc(photoId).set(
             RemotePhoto(
               userId: userId,
-              shotAt: registerShotAt,
+              shotAt: shotAt,
             ),
           );
     } on Exception catch (error) {

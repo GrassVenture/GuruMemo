@@ -125,8 +125,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
             if (compressedData != null) {
               await ref.read(photoRepositoryProvider).registerPhotoData(
                     userId: userId,
-                    registerShotAt:
-                        UnionTimestamp.dateTime(photo.createDateTime),
+                    shotAt: UnionTimestamp.dateTime(photo.createDateTime),
                     photoId: modifiedPhotoId,
                   );
               await ref.read(photoRepositoryProvider).categorizeFood(
