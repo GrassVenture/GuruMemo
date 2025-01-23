@@ -135,7 +135,7 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
   Future<List<AssetEntity>> _loadLocalPhotos() async {
     final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
     if (albums.isNotEmpty) {
-      return albums[0].getAssetListPaged(page: 0, size: 5000);
+      return albums[0].getAssetListPaged(page: 0, size: 20000);
     }
     return [];
   }
