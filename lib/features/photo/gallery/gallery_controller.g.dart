@@ -6,11 +6,12 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPhotosHash() => r'3b648e9da201a81eb012ba4d4cbe21b1c090052f';
+String _$fetchPhotosHash() => r'4a13784e4d024408596da0ef52f8123df27ac770';
 
 /// See also [fetchPhotos].
 @ProviderFor(fetchPhotos)
-final fetchPhotosProvider = FutureProvider<List<RemotePhoto>>.internal(
+final fetchPhotosProvider =
+    AutoDisposeFutureProvider<List<RemotePhoto>>.internal(
   fetchPhotos,
   name: r'fetchPhotosProvider',
   debugGetCreateSourceHash:
@@ -21,7 +22,7 @@ final fetchPhotosProvider = FutureProvider<List<RemotePhoto>>.internal(
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef FetchPhotosRef = FutureProviderRef<List<RemotePhoto>>;
+typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
 String _$imagePickerVisibilityHash() =>
     r'2af400b9ecdc2622b456ad790c1fad00bbd17647';
 
@@ -39,7 +40,7 @@ final imagePickerVisibilityProvider =
 );
 
 typedef _$ImagePickerVisibility = AutoDisposeNotifier<bool>;
-String _$localPhotoAssetsHash() => r'497b7962fa49ee49d0203f43f012f24833384deb';
+String _$localPhotoAssetsHash() => r'817325a07a5df457e7b015344ec4bcc4e8e27974';
 
 /// See also [LocalPhotoAssets].
 @ProviderFor(LocalPhotoAssets)
