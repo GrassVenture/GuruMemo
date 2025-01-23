@@ -40,7 +40,7 @@ class GalleryPage extends HookConsumerWidget {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBar(
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(0), // TabBarの高さを指定
+            preferredSize: const Size.fromHeight(0),
             child: TabBar(
               padding: const EdgeInsets.only(left: 16, bottom: 8),
               controller: tabController,
@@ -135,7 +135,6 @@ class GalleryPage extends HookConsumerWidget {
                     image: NetworkImage(photo.url),
                     fit: BoxFit.cover,
                     onError: (error, stackTrace) {
-                      // 画像が読み込めなかったときの代替表示
                       throw Exception('Error loading image: $error');
                     },
                   ),
@@ -145,7 +144,7 @@ class GalleryPage extends HookConsumerWidget {
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                height: 280, // 最低限の高さを設定
+                height: 280,
               ),
             ),
           );
@@ -175,7 +174,6 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                 style: TextStyle(color: Colors.white, fontSize: 18),
               ),
               const Spacer(),
-              // 選択中の枚数を表示
               Text(
                 '選択中: ${selectedLocalPhotos.length} / 30 枚',
                 style: const TextStyle(color: Colors.white, fontSize: 16),

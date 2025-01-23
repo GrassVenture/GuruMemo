@@ -148,7 +148,7 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
 
 @riverpod
 class SelectedLocalPhotos extends _$SelectedLocalPhotos {
-  static const int maxSelection = 30; // 選択可能な最大枚数
+  static const int maxSelection = 30;
 
   @override
   List<AssetEntity> build() => [];
@@ -156,7 +156,6 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
   /// 写真を選択
   void selectPhoto(AssetEntity photo) {
     if (state.length >= maxSelection) {
-      // 選択可能枚数を超えている場合は何もしない
       return;
     }
     if (!state.contains(photo)) {
@@ -164,15 +163,12 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
     }
   }
 
-  /// 写真を選択解除
   void deselectPhoto(AssetEntity photo) {
     state = state.where((p) => p != photo).toList();
   }
 
-  /// 写真が選択されているか確認
   bool isSelected(AssetEntity photo) => state.contains(photo);
 
-  /// 選択をクリア
   void clearSelection() {
     state = [];
   }
@@ -180,17 +176,14 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
 
 @riverpod
 class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
-  /// 初期化
   @override
   FutureOr<void> build() async {
-    // パーミッション確認
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
     }
   }
 
-  /// 写真を分類（食べ物として）
   Future<void> classifyPhotoAsFood({
     required XFile image,
     bool isFood = true,
@@ -234,7 +227,6 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
     }
   }
 
-  /// 画像から位置情報を取得
   Future<Map<String, double>?> _getImageLocation(String imagePath) async {
     try {
       final file = File(imagePath);
