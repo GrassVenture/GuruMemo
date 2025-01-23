@@ -22,7 +22,7 @@ part 'gallery_controller.g.dart';
 
 // TODO(masaki): g.ファイルにAutoDisposeFutureProviderRefが生成されないように調整
 // Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
-@Riverpod(keepAlive: true)
+@riverpod
 Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   final userId = ref.watch(userIdProvider);
 // TODO(masaki): nullの場合ハンドリング検討
@@ -135,7 +135,7 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
   Future<List<AssetEntity>> _loadLocalPhotos() async {
     final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
     if (albums.isNotEmpty) {
-      return albums[0].getAssetListPaged(page: 0, size: 500);
+      return albums[0].getAssetListPaged(page: 0, size: 5000);
     }
     return [];
   }
