@@ -4,10 +4,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../core/logger.dart';
 import 'authed_user.dart';
+
+part 'auth_repository.g.dart';
 
 /// [AuthedUser]用コレクションのためのレファレンス
 ///
@@ -33,7 +36,8 @@ final authedUsersRef =
 /// [AuthRepository]用Provider
 ///
 /// [AuthRepository]を参照する際はこのProviderを用いる。
-final authRepositoryProvider = Provider((ref) => AuthRepository._());
+@riverpod
+AuthRepository authRepository(AuthRepositoryRef ref) => AuthRepository._();
 
 /// Auth関連の外部通信を担当するクラス
 class AuthRepository {
