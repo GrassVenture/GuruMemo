@@ -1,5 +1,6 @@
-import 'package:my_gourmet/core/repositories/shared_preferences_repository.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
+import '../../core/repositories/shared_preferences_repository.dart';
 
 part 'onboarding_controller.g.dart';
 
@@ -18,7 +19,7 @@ class IsOnboardingCompletedNotifier extends _$IsOnboardingCompletedNotifier {
 
   /// [SharedPreferencesRepository]の値とともに更新する
   Future<void> update(bool Function(dynamic state) param0,
-      {required bool isOnboardingCompleted}) async {
+      {required bool isOnboardingCompleted,}) async {
     final value = await _sharedPreferencesRepository.setBool(
       key: SharedPreferencesKey.isOnboardingCompleted,
       value: isOnboardingCompleted,

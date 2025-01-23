@@ -129,7 +129,7 @@ class OnboardingPage extends HookConsumerWidget {
                                       .notifier,
                                 )
                                 .update((state) => true,
-                                    isOnboardingCompleted: true);
+                                    isOnboardingCompleted: true,);
                             if (!context.mounted) {
                               return;
                             }
