@@ -189,7 +189,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
 
                     ref.read(imagePickerVisibilityProvider.notifier).hide();
 
-                    for (final photo in selectedPhotos) {
+                    final tasks = selectedPhotos.map((photo) async {
                       try {
                         final file = await photo.file;
 
@@ -203,7 +203,9 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                       } on Exception catch (e) {
                         logger.e('Error classify processing photo: $e');
                       }
-                    }
+                    }).toList();
+
+                    await Future.wait(tasks);
 
                     ref
                         .read(selectedLocalPhotosProvider.notifier)
