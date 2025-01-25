@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-
-import '../../core/build_context_extension.dart';
+import '../themes.dart';
 
 /// 確認用のダイアログ
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog._({
     required this.contentString,
     required this.titleString,
+    this.negativeButtonString = 'キャンセル',
+    this.positiveButtonString = 'OK',
     required this.onConfirmed,
     required this.hasCancelButton,
     required this.shouldPopOnConfirmed,
+    this.isDestructiveAction = false,
   });
 
   /// ダイアログのタイトル
@@ -17,6 +19,12 @@ class ConfirmDialog extends StatelessWidget {
 
   /// ダイアログの中身
   final String contentString;
+
+  /// 否定ボタンのテキスト
+  final String negativeButtonString;
+
+  /// 肯定ボタンテキスト
+  final String positiveButtonString;
 
   /// 「はい」ボタン押下後の挙動
   final VoidCallback onConfirmed;
@@ -27,24 +35,33 @@ class ConfirmDialog extends StatelessWidget {
   /// [onConfirmed]完了後にダイアログを閉じるかどうか
   final bool shouldPopOnConfirmed;
 
+  /// 破滅的な(もとに戻せない)アクションかどうか
+  final bool isDestructiveAction;
+
   static Future<void> show(
     BuildContext context, {
-    required String titleString,
+    String? titleString,
     required String contentString,
+    String? negativeButtonString,
+    String? positiveButtonString,
     required VoidCallback onConfirmed,
     bool hasCancelButton = false,
     bool shouldPopOnConfirmed = true,
+    bool isDestructiveAction = false,
   }) async {
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
       builder: (_) {
         return ConfirmDialog._(
-          titleString: titleString,
+          titleString: titleString ?? '',
           contentString: contentString,
+          negativeButtonString: negativeButtonString ?? 'キャンセル',
+          positiveButtonString: positiveButtonString ?? 'OK',
           onConfirmed: onConfirmed,
           hasCancelButton: hasCancelButton,
           shouldPopOnConfirmed: shouldPopOnConfirmed,
+          isDestructiveAction: isDestructiveAction,
         );
       },
     );
@@ -53,23 +70,26 @@ class ConfirmDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
+      titleTextStyle: Theme.of(context).textTheme.titleMedium,
+      contentTextStyle: Theme.of(context).textTheme.bodyLarge,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
       title: Center(
-        child: Text(
-          titleString,
-          style: context.textTheme.bodyMedium!.copyWith(
-            color: Colors.white,
-          ),
-        ),
+        child: Text(titleString),
       ),
       content: Text(contentString),
       actions: [
         if (hasCancelButton)
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('いいえ'),
+            child: Text(
+              negativeButtonString,
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: Themes.gray),
+            ),
           ),
         TextButton(
           onPressed: () {
@@ -78,7 +98,14 @@ class ConfirmDialog extends StatelessWidget {
               Navigator.of(context).pop();
             }
           },
-          child: const Text('はい'),
+          child: Text(
+            positiveButtonString,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: isDestructiveAction
+                      ? Themes.errorAlertColor
+                      : Themes.mainOrange,
+                ),
+          ),
         ),
       ],
     );
