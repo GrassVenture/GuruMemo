@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../core/widgets/common_snack_bar.dart';
 import '../../core/widgets/confirm_dialog.dart';
-import '../../core/widgets/success_snack_bar.dart';
 import 'auth_controller.dart';
 
 /// マイページ
@@ -34,7 +35,7 @@ class MyPage extends ConsumerWidget {
                               .read(authControllerProvider)
                               .deleteUserAccount();
                           if (context.mounted) {
-                            SuccessSnackBar.show(
+                            CommonSnackBar.show(
                               context,
                               message: 'アカウントを削除しました',
                             );
