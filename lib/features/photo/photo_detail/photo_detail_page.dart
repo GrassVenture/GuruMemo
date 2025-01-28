@@ -202,6 +202,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                 onSelected: () {
                                   downloadPhoto(ref);
                                 },
+                                shotAt: photo.shotAt.dateTime,
                               ),
                             );
                           },

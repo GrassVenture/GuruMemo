@@ -9,6 +9,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/repositories/shared_preferences_repository.dart';
+import '../../../core/timestamp_converter.dart';
 import '../../auth/auth_controller.dart';
 import '../local_photo_manager_service.dart';
 import '../local_photo_repository.dart';
@@ -122,6 +123,11 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
           if (photoFile != null) {
             final compressedData = await _compressImage(photoFile);
             if (compressedData != null) {
+              await ref.read(photoRepositoryProvider).registerPhotoData(
+                    userId: userId,
+                    shotAt: UnionTimestamp.dateTime(photo.createDateTime),
+                    photoId: modifiedPhotoId,
+                  );
               await ref.read(photoRepositoryProvider).categorizeFood(
                     userId: userId,
                     photoId: modifiedPhotoId,

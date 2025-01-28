@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
 import '../../core/logger.dart';
+import '../../core/timestamp_converter.dart';
 import 'remote_photo.dart';
 
 /// [RemotePhoto]用コレクションのためのレファレンス
@@ -46,6 +47,7 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
+  /// 写真のお店を登録するための処理
   Future<void> registerStoreInfo({
     required String photoId,
     String? accessToken,
@@ -105,6 +107,23 @@ class PhotoRepository {
         // エラーが返された場合の処理
         logger.d('API call failed: ${response.body}');
       }
+    } on Exception catch (error) {
+      logger.e(error.toString());
+    }
+  }
+
+  Future<void> registerPhotoData({
+    required String userId,
+    required UnionTimestamp shotAt,
+    required String photoId,
+  }) async {
+    try {
+      await photosRef(userId: userId).doc(photoId).set(
+            RemotePhoto(
+              userId: userId,
+              shotAt: shotAt,
+            ),
+          );
     } on Exception catch (error) {
       logger.e(error.toString());
     }
