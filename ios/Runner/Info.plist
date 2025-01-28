@@ -41,7 +41,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>このアプリは、カメラを起動してグルメの写真を保存するために使用します。</string>
+	<string>このアプリは、カメラを起動して、グルメの写真を保存するために使用します。</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>このアプリは、常に位置情報を使用してユーザーにサービスを提供します。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
