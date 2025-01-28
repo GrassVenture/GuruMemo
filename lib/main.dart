@@ -17,6 +17,11 @@ Future<void> main() async {
   await Future.wait([
     Firebase.initializeApp(),
     dotenv.load(),
+    SystemChrome.setPreferredOrientations([
+      // アプリ全体の画面を縦向きに固定
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]),
   ]);
 
   // Firebase Analyticsのインスタンスを初期化する
@@ -36,13 +41,7 @@ Future<void> main() async {
     return true;
   };
 
-  await SystemChrome.setPreferredOrientations([
-    // アプリ全体の画面を縦向きに固定
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]).then((_) {
-    runApp(const ProviderScope(child: MyApp()));
-  });
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends ConsumerWidget {
