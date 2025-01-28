@@ -111,15 +111,6 @@ class OnboardingPage extends HookConsumerWidget {
                             );
                           } else {
                             // TODO(kim): アナリティクスマージ後にコメントアウトを解除
-                            await ref
-                                .read(
-                                  isOnboardingCompletedNotifierProvider
-                                      .notifier,
-                                )
-                                .update(
-                                  (state) => true,
-                                  isOnboardingCompleted: true,
-                                );
                             // ref
                             //     .read(analyticsServiceProvider)
                             //     .sendEvent(name: 'complete_onboarding');
@@ -129,7 +120,6 @@ class OnboardingPage extends HookConsumerWidget {
                                       .notifier,
                                 )
                                 .update(
-                                  (state) => true,
                                   isOnboardingCompleted: true,
                                 );
                             if (!context.mounted) {

@@ -121,8 +121,6 @@ class ImagePickerVisibility extends _$ImagePickerVisibility {
   void show() => state = true;
 
   void hide() => state = false;
-
-  void toggle() => state = !state;
 }
 
 @riverpod
@@ -139,23 +137,18 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
     }
     return [];
   }
-
-  Future<void> reloadLocalPhotos() async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(_loadLocalPhotos);
-  }
 }
 
 @riverpod
 class SelectedLocalPhotos extends _$SelectedLocalPhotos {
-  static const int maxSelection = 30;
+  final int _maxSelection = 30;
 
   @override
   List<AssetEntity> build() => [];
 
   /// 写真を選択
   void selectPhoto(AssetEntity photo) {
-    if (state.length >= maxSelection) {
+    if (state.length >= _maxSelection) {
       return;
     }
     if (!state.contains(photo)) {
