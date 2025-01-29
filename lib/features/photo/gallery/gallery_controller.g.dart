@@ -22,7 +22,7 @@ final fetchPhotosProvider =
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
-String _$photoThumbnailHash() => r'08dbc9a666d10372f0229db88704c4b30dc4777c';
+String _$photoThumbnailHash() => r'78c905ce4a1cc463d44a069571474f862da98b3d';
 
 /// Copied from Dart SDK
 class _SystemHash {

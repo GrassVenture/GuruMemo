@@ -232,6 +232,7 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
 
                 return Consumer(
                   builder: (context, ref, child) {
+                    // ignore: deprecated_member_use_from_same_package
                     final thumbnailAsync =
                         ref.watch(photoThumbnailProvider(photo));
 

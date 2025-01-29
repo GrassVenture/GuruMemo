@@ -288,6 +288,6 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
 }
 
 @riverpod
-Future<Uint8List?> photoThumbnail(PhotoThumbnailRef ref, AssetEntity photo) {
+Future<Uint8List?> photoThumbnail(Ref ref, AssetEntity photo) {
   return photo.thumbnailData;
 }
