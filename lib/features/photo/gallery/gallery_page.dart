@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -232,12 +230,10 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                 final photo = photos[index];
                 final isSelected = selectedLocalPhotos.contains(photo);
 
-                return FutureBuilder<Uint8List?>(
-                  future: photo.thumbnailData,
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return Container(color: Colors.grey);
-                    }
+                return Consumer(
+                  builder: (context, ref, child) {
+                    final thumbnailAsync =
+                        ref.watch(photoThumbnailProvider(photo));
 
                     return GestureDetector(
                       onTap: () {
@@ -249,13 +245,13 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                       },
                       child: Stack(
                         children: [
-                          if (snapshot.data != null)
-                            Image.memory(
-                              snapshot.data!,
-                              fit: BoxFit.cover,
-                            )
-                          else
-                            Container(color: Colors.grey),
+                          thumbnailAsync.when(
+                            data: (thumbnail) => thumbnail != null
+                                ? Image.memory(thumbnail, fit: BoxFit.cover)
+                                : Container(color: Colors.grey),
+                            loading: () => Container(color: Colors.grey),
+                            error: (_, __) => Container(color: Colors.red),
+                          ),
                           if (isSelected)
                             Positioned(
                               right: 4,
