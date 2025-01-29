@@ -24,6 +24,7 @@ final localPhotoManagerServiceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
 typedef LocalPhotoManagerServiceRef
     = AutoDisposeProviderRef<LocalPhotoManagerService>;
 // ignore_for_file: type=lint

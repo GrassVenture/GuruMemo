@@ -20,6 +20,7 @@ final fetchPhotosProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
 typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
 String _$photoThumbnailHash() => r'08dbc9a666d10372f0229db88704c4b30dc4777c';
 
@@ -53,6 +54,8 @@ class PhotoThumbnailFamily extends Family<AsyncValue<Uint8List?>> {
   /// See also [photoThumbnail].
   const PhotoThumbnailFamily();
 
+  @Deprecated('Will be removed in 3.0. Use Ref instead')
+
   /// See also [photoThumbnail].
   PhotoThumbnailProvider call(
     AssetEntity photo,
@@ -62,6 +65,7 @@ class PhotoThumbnailFamily extends Family<AsyncValue<Uint8List?>> {
     );
   }
 
+  @Deprecated('Will be removed in 3.0. Use Ref instead')
   @override
   PhotoThumbnailProvider getProviderOverride(
     covariant PhotoThumbnailProvider provider,
@@ -85,6 +89,8 @@ class PhotoThumbnailFamily extends Family<AsyncValue<Uint8List?>> {
   @override
   String? get name => r'photoThumbnailProvider';
 }
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
 
 /// See also [photoThumbnail].
 class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
@@ -157,11 +163,13 @@ class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
   }
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
 mixin PhotoThumbnailRef on AutoDisposeFutureProviderRef<Uint8List?> {
   /// The parameter `photo` of this provider.
   AssetEntity get photo;
 }
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
 class _PhotoThumbnailProviderElement
     extends AutoDisposeFutureProviderElement<Uint8List?>
     with PhotoThumbnailRef {
