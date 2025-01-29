@@ -50,12 +50,8 @@ mixin _$RemotePhoto {
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
 
-  /// Serializes this RemotePhoto to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $RemotePhotoCopyWith<RemotePhoto> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -92,8 +88,6 @@ class _$RemotePhotoCopyWithImpl<$Res, $Val extends RemotePhoto>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -147,8 +141,6 @@ class _$RemotePhotoCopyWithImpl<$Res, $Val extends RemotePhoto>
     ) as $Val);
   }
 
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get createdAt {
@@ -157,8 +149,6 @@ class _$RemotePhotoCopyWithImpl<$Res, $Val extends RemotePhoto>
     });
   }
 
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get updatedAt {
@@ -167,8 +157,6 @@ class _$RemotePhotoCopyWithImpl<$Res, $Val extends RemotePhoto>
     });
   }
 
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get shotAt {
@@ -213,8 +201,6 @@ class __$$RemotePhotoImplCopyWithImpl<$Res>
       _$RemotePhotoImpl _value, $Res Function(_$RemotePhotoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -370,7 +356,7 @@ class _$RemotePhotoImpl extends _RemotePhoto {
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -384,9 +370,7 @@ class _$RemotePhotoImpl extends _RemotePhoto {
       shotAt,
       storeId);
 
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$RemotePhotoImplCopyWith<_$RemotePhotoImpl> get copyWith =>
@@ -416,49 +400,47 @@ abstract class _RemotePhoto extends RemotePhoto {
   factory _RemotePhoto.fromJson(Map<String, dynamic> json) =
       _$RemotePhotoImpl.fromJson;
 
-  /// firestore上のドキュメントID
   @override
+
+  /// firestore上のドキュメントID
   String get id;
+  @override
 
   /// 作成日時
-  @override
   @timestampConverter
   UnionTimestamp get createdAt;
+  @override
 
   /// 更新日時
-  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
+  @override
 
   /// FirebaseStorageに保存された写真の周辺店舗のIdリスト
-  @override
   List<String> get areaStoreIds;
+  @override
 
   /// FirebaseStorageに保存された写真のURL
-  @override
   String get url;
+  @override
 
   /// geminiで推論した写真のカテゴリ
   /// ここをstringではなくてenumに変換して格納しておくと、
   /// Flutter上では型安全に扱えて想定外の実行時エラーが防げるため修正したい
-  @override
   String get category;
+  @override
 
   /// FirebaseStorageのドキュメントID
-  @override
   String get userId;
+  @override
 
   /// 写真の撮影日時
-  @override
   @timestampConverter
   UnionTimestamp get shotAt;
   @override
   String get storeId;
-
-  /// Create a copy of RemotePhoto
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$RemotePhotoImplCopyWith<_$RemotePhotoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

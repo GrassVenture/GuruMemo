@@ -36,12 +36,8 @@ mixin _$AuthedUser {
   ClassifyPhotosStatus get classifyPhotosStatus =>
       throw _privateConstructorUsedError;
 
-  /// Serializes this AuthedUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AuthedUserCopyWith<AuthedUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -73,8 +69,6 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -103,8 +97,6 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
     ) as $Val);
   }
 
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get createdAt {
@@ -113,8 +105,6 @@ class _$AuthedUserCopyWithImpl<$Res, $Val extends AuthedUser>
     });
   }
 
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get updatedAt {
@@ -153,8 +143,6 @@ class __$$AuthedUserImplCopyWithImpl<$Res>
       _$AuthedUserImpl _value, $Res Function(_$AuthedUserImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -242,14 +230,12 @@ class _$AuthedUserImpl extends _AuthedUser {
                 other.classifyPhotosStatus == classifyPhotosStatus));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode =>
       Object.hash(runtimeType, id, createdAt, updatedAt, classifyPhotosStatus);
 
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AuthedUserImplCopyWith<_$AuthedUserImpl> get copyWith =>
@@ -275,29 +261,27 @@ abstract class _AuthedUser extends AuthedUser {
   factory _AuthedUser.fromJson(Map<String, dynamic> json) =
       _$AuthedUserImpl.fromJson;
 
-  /// firestore上のドキュメントID
   @override
+
+  /// firestore上のドキュメントID
   String get id;
+  @override
 
   /// 作成日時
-  @override
   @timestampConverter
   UnionTimestamp get createdAt;
+  @override
 
   /// 更新日時
-  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
+  @override
 
   /// 写真分類用APIの実行状態
-  @override
   @ClassifyPhotosStatusConverter()
   ClassifyPhotosStatus get classifyPhotosStatus;
-
-  /// Create a copy of AuthedUser
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AuthedUserImplCopyWith<_$AuthedUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

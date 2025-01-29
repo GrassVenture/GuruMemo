@@ -7,7 +7,7 @@ part of 'onboarding_controller.dart';
 // **************************************************************************
 
 String _$isOnboardingCompletedNotifierHash() =>
-    r'509a17669922892af52fb8c5e9db4c6fd333c178';
+    r'f9ef602ca6458066d6a10ffdae3dfde2e44b5695';
 
 /// [SharedPreferencesRepository]と連携して、オンボーディング完了フラグを管理するNotifier
 ///
@@ -26,4 +26,4 @@ final isOnboardingCompletedNotifierProvider =
 
 typedef _$IsOnboardingCompletedNotifier = Notifier<bool>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

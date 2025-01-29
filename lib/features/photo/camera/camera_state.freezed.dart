@@ -36,12 +36,8 @@ mixin _$CameraState {
   /// 撮影中のフラグ
   bool get isTakingPicture => throw _privateConstructorUsedError;
 
-  /// Serializes this CameraState to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of CameraState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $CameraStateCopyWith<CameraState> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -70,8 +66,6 @@ class _$CameraStateCopyWithImpl<$Res, $Val extends CameraState>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of CameraState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -130,8 +124,6 @@ class __$$CameraStateImplCopyWithImpl<$Res>
       _$CameraStateImpl _value, $Res Function(_$CameraStateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of CameraState
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -224,14 +216,12 @@ class _$CameraStateImpl extends _CameraState {
                 other.isTakingPicture == isTakingPicture));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, capturedImage, latitude,
       longitude, imageDate, isTakingPicture);
 
-  /// Create a copy of CameraState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$CameraStateImplCopyWith<_$CameraStateImpl> get copyWith =>
@@ -257,31 +247,29 @@ abstract class _CameraState extends CameraState {
   factory _CameraState.fromJson(Map<String, dynamic> json) =
       _$CameraStateImpl.fromJson;
 
-  /// 撮影された画像ファイル
   @override
+
+  /// 撮影された画像ファイル
   @FileConverter()
   File? get capturedImage;
+  @override
 
   /// 画像の緯度
-  @override
   double? get latitude;
+  @override
 
   /// 画像の経度
-  @override
   double? get longitude;
+  @override
 
   /// 撮影日時
-  @override
   String? get imageDate;
+  @override
 
   /// 撮影中のフラグ
-  @override
   bool get isTakingPicture;
-
-  /// Create a copy of CameraState
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$CameraStateImplCopyWith<_$CameraStateImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

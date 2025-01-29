@@ -54,12 +54,8 @@ mixin _$Store {
   UnionTimestamp get shotAt => throw _privateConstructorUsedError;
   String get storeId => throw _privateConstructorUsedError;
 
-  /// Serializes this Store to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $StoreCopyWith<Store> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -96,8 +92,6 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -161,8 +155,6 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     ) as $Val);
   }
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get createdAt {
@@ -171,8 +163,6 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     });
   }
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get updatedAt {
@@ -181,8 +171,6 @@ class _$StoreCopyWithImpl<$Res, $Val extends Store>
     });
   }
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $UnionTimestampCopyWith<$Res> get shotAt {
@@ -228,8 +216,6 @@ class __$$StoreImplCopyWithImpl<$Res>
       _$StoreImpl _value, $Res Function(_$StoreImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -416,7 +402,7 @@ class _$StoreImpl extends _Store {
             (identical(other.storeId, storeId) || other.storeId == storeId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -432,9 +418,7 @@ class _$StoreImpl extends _Store {
       shotAt,
       storeId);
 
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>
@@ -465,55 +449,53 @@ abstract class _Store extends Store {
 
   factory _Store.fromJson(Map<String, dynamic> json) = _$StoreImpl.fromJson;
 
-  /// firestore上のドキュメントID
   @override
+
+  /// firestore上のドキュメントID
   String get id;
+  @override
 
   /// 作成日時
-  @override
   @timestampConverter
   UnionTimestamp get createdAt;
+  @override
 
   /// 更新日時
-  @override
   @serverTimestampConverter
   UnionTimestamp get updatedAt;
+  @override
 
   /// FirebaseStorageに保存された（ストアの）画像のURL
-  @override
   List<String> get imageUrls;
+  @override
 
   /// FirebaseStorageの(ストアの)name
-  @override
   String get name;
+  @override
 
   /// FirebaseStorageの（ストアの）電話番号
-  @override
   String get phoneNumber;
+  @override
 
   /// FirebaseStorageの（ストアの）URL
-  @override
   String get website;
+  @override
 
   /// FirebaseStorageの（ストアの）住所
-  @override
   String get address;
+  @override
 
   /// FirebaseStorageの（ストアの）営業時間
-  @override
   Map<String, String> get openingHours;
+  @override
 
   /// 写真の撮影日時
-  @override
   @timestampConverter
   UnionTimestamp get shotAt;
   @override
   String get storeId;
-
-  /// Create a copy of Store
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$StoreImplCopyWith<_$StoreImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

@@ -72,9 +72,6 @@ class _$UnionTimestampCopyWithImpl<$Res, $Val extends UnionTimestamp>
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
-
-  /// Create a copy of UnionTimestamp
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
@@ -94,8 +91,6 @@ class __$$UnionDateTimeImplCopyWithImpl<$Res>
       _$UnionDateTimeImpl _value, $Res Function(_$UnionDateTimeImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of UnionTimestamp
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -135,9 +130,7 @@ class _$UnionDateTimeImpl extends _UnionDateTime {
   @override
   int get hashCode => Object.hash(runtimeType, dateTime);
 
-  /// Create a copy of UnionTimestamp
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$UnionDateTimeImplCopyWith<_$UnionDateTimeImpl> get copyWith =>
@@ -211,10 +204,7 @@ abstract class _UnionDateTime extends UnionTimestamp {
   const _UnionDateTime._() : super._();
 
   DateTime get dateTime;
-
-  /// Create a copy of UnionTimestamp
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$UnionDateTimeImplCopyWith<_$UnionDateTimeImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -233,9 +223,6 @@ class __$$UnionServerTimestampImplCopyWithImpl<$Res>
   __$$UnionServerTimestampImplCopyWithImpl(_$UnionServerTimestampImpl _value,
       $Res Function(_$UnionServerTimestampImpl) _then)
       : super(_value, _then);
-
-  /// Create a copy of UnionTimestamp
-  /// with the given fields replaced by the non-null parameter values.
 }
 
 /// @nodoc
