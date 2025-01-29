@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/build_context_extension.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/custom_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
@@ -188,6 +189,9 @@ Future<void> showShopListDialog(
                                 userId: userId,
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
+                              );
+                          await ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'update_store_info_for_photo',
                               );
                           onSelected();
                           shopNoSelected = 0;

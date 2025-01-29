@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/logger.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
 import '../photo_detail/photo_detail_page.dart';
 import '../remote_photo.dart';
@@ -28,6 +29,31 @@ class GalleryPage extends HookConsumerWidget {
         );
 
     final tabController = useTabController(initialLength: 6);
+
+    final categories = [
+      'すべて',
+      'ramen',
+      'cafe',
+      'japanese_food',
+      'western_food',
+      'ethnic',
+    ];
+
+    useEffect(
+      () {
+        void onTabChanged() {
+          final category = categories[tabController.index];
+          ref.read(analyticsServiceProvider).sendEvent(
+            name: 'filter_photo',
+            additionalParams: {'category': category},
+          );
+        }
+
+        tabController.addListener(onTabChanged);
+        return () => tabController.removeListener(onTabChanged);
+      },
+      [tabController],
+    );
 
     return Scaffold(
       appBar: PreferredSize(
@@ -55,14 +81,9 @@ class GalleryPage extends HookConsumerWidget {
         length: 6,
         child: TabBarView(
           controller: tabController,
-          children: [
-            _buildPhotoGrid(context, 'すべて', photoUrls),
-            _buildPhotoGrid(context, 'ramen', photoUrls),
-            _buildPhotoGrid(context, 'cafe', photoUrls),
-            _buildPhotoGrid(context, 'japanese_food', photoUrls),
-            _buildPhotoGrid(context, 'western_food', photoUrls),
-            _buildPhotoGrid(context, 'ethnic', photoUrls),
-          ],
+          children: categories
+              .map((category) => _buildPhotoGrid(context, category, photoUrls))
+              .toList(),
         ),
       ),
     );
@@ -112,7 +133,6 @@ class GalleryPage extends HookConsumerWidget {
                     image: NetworkImage(photo.url),
                     fit: BoxFit.cover,
                     onError: (error, stackTrace) {
-                      // 画像が読み込めなかったときの代替表示
                       throw Exception('Error loading image: $error');
                     },
                   ),

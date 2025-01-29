@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart' hide Store;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../auth/auth_controller.dart';
@@ -51,6 +52,10 @@ class PhotoDetailPage extends HookConsumerWidget {
             userId: userId,
             photoId: photoId,
           );
+      ref.read(analyticsServiceProvider).sendEvent(
+        name: 'download_photo',
+        additionalParams: {'photo_id': photoId},
+      );
     }
 
     useEffect(

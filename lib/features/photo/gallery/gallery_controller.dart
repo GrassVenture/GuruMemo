@@ -7,6 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
 import '../local_photo_repository.dart';
@@ -20,7 +21,7 @@ part 'gallery_controller.g.dart';
 @riverpod
 Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   final userId = ref.watch(userIdProvider);
-// TODO(masaki): nullの場合ハンドリング検討
+  // TODO(masaki): nullの場合ハンドリング検討
   if (userId == null) {
     logger.e('userId is null');
     return [];
@@ -36,8 +37,16 @@ Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
 
   final result =
       await ref.read(photoRepositoryProvider).downloadPhotos(userId: userId);
+  final photoUrls = result.where((e) => e.url.isNotEmpty).toList();
 
-  return result.where((e) => e.url.isNotEmpty).toList();
+  await ref.read(analyticsServiceProvider).sendEvent(
+    name: 'download_photos',
+    additionalParams: {
+      'photo_urls_length': photoUrls.length.toString(),
+    },
+  );
+
+  return photoUrls;
 }
 
 final galleryControllerProvider = Provider<GalleryController>((ref) {

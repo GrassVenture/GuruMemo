@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/build_context_extension.dart';
+import '../../core/services/analytics_service.dart';
 import '../../core/widgets/custom_elevated_button.dart';
 import '../auth/sign_in_page.dart';
 import 'onboarding_controller.dart';
@@ -24,6 +25,9 @@ class OnboardingPage extends HookConsumerWidget {
         pageController.addListener(() {
           final page = pageController.page!.round();
           currentOnboarding.value = page;
+          ref
+              .read(analyticsServiceProvider)
+              .sendScreenView('onboarding_page_$page');
         });
         return null;
       },
