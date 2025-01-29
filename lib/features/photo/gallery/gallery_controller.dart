@@ -164,10 +164,6 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
   }
 
   bool isSelected(AssetEntity photo) => state.contains(photo);
-
-  void clearSelection() {
-    state = [];
-  }
 }
 
 /// 画像選択画面で選択された画像を用いて、画像分類APIを呼び出すProvider

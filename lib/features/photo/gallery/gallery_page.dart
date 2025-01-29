@@ -206,10 +206,6 @@ Widget _buildImagePickerOverlay(BuildContext context, WidgetRef ref) {
                     }).toList();
 
                     await Future.wait(tasks);
-
-                    ref
-                        .read(selectedLocalPhotosProvider.notifier)
-                        .clearSelection();
                   },
                   child: const Text('確定'),
                 ),
