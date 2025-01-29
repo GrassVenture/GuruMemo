@@ -45,6 +45,7 @@ Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   return result.where((e) => e.url.isNotEmpty).toList();
 }
 
+/// ギャラリーページに表示する画像を管理するProvider
 final galleryControllerProvider = Provider<GalleryController>((ref) {
   return GalleryController(ref);
 });
@@ -123,6 +124,7 @@ class ImagePickerVisibility extends _$ImagePickerVisibility {
   void hide() => state = false;
 }
 
+/// 画像選択画面に表示する画像を管理するProvider
 @riverpod
 class LocalPhotoAssets extends _$LocalPhotoAssets {
   @override
@@ -139,6 +141,7 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
   }
 }
 
+/// 画像選択画面で選択された画像を管理するProvider
 @riverpod
 class SelectedLocalPhotos extends _$SelectedLocalPhotos {
   final int _maxSelection = 30;
@@ -167,6 +170,7 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
   }
 }
 
+/// 画像選択画面で選択された画像を用いて、画像分類APIを呼び出すProvider
 @riverpod
 class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
   @override
