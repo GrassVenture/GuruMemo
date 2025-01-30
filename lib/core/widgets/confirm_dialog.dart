@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../themes.dart';
 
 /// 確認用のダイアログ
@@ -6,8 +7,8 @@ class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog._({
     required this.contentString,
     required this.titleString,
-    this.negativeButtonString = 'キャンセル',
-    this.positiveButtonString = 'OK',
+    required this.negativeButtonString,
+    required this.positiveButtonString,
     required this.onConfirmed,
     required this.hasCancelButton,
     required this.shouldPopOnConfirmed,
@@ -42,8 +43,8 @@ class ConfirmDialog extends StatelessWidget {
     BuildContext context, {
     String? titleString,
     required String contentString,
-    String? negativeButtonString,
-    String? positiveButtonString,
+    String negativeButtonString = 'キャンセル',
+    String positiveButtonString = 'OK',
     required VoidCallback onConfirmed,
     bool hasCancelButton = false,
     bool shouldPopOnConfirmed = true,
@@ -56,8 +57,8 @@ class ConfirmDialog extends StatelessWidget {
         return ConfirmDialog._(
           titleString: titleString ?? '',
           contentString: contentString,
-          negativeButtonString: negativeButtonString ?? 'キャンセル',
-          positiveButtonString: positiveButtonString ?? 'OK',
+          negativeButtonString: negativeButtonString,
+          positiveButtonString: positiveButtonString,
           onConfirmed: onConfirmed,
           hasCancelButton: hasCancelButton,
           shouldPopOnConfirmed: shouldPopOnConfirmed,
