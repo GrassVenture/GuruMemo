@@ -14,6 +14,7 @@ import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
+import '../local_photo_manager_service.dart';
 import '../local_photo_repository.dart';
 import '../remote_photo.dart';
 import '../remote_photo_repository.dart';
@@ -133,11 +134,11 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
   }
 
   Future<List<AssetEntity>> _loadLocalPhotos() async {
-    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
-    if (albums.isNotEmpty) {
-      return albums[0].getAssetListPaged(page: 0, size: 20000);
-    }
-    return [];
+    final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
+    return localPhotoManagerService.getFilteredPhotos(
+      limit: 20000,
+      sortOrder: false,
+    );
   }
 }
 
