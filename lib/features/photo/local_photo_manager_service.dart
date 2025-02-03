@@ -84,6 +84,36 @@ class LocalPhotoManagerService {
     return photos;
   }
 
+  /// 指定した件数・順番で写真を取得
+  /// [limit] 取得件数
+  /// [sortOrder] 並び順（昇順: true / 降順: false）
+  Future<List<AssetEntity>> getFilteredPhotos({
+    required int limit,
+    required bool sortOrder,
+  }) async {
+    // 写真を指定の順番で取得
+    final albums = await PhotoManager.getAssetPathList(
+      type: RequestType.image,
+      filterOption: FilterOptionGroup(
+        orders: [
+          OrderOption(
+            asc: sortOrder,
+          ),
+        ],
+      ),
+    );
+
+    // 写真が取得できない場合
+    if (albums.isEmpty) {
+      return [];
+    }
+
+    // 指定した件数分の写真を取得
+    final photos = await albums[0].getAssetListPaged(page: 0, size: limit);
+
+    return photos;
+  }
+
   /// 最新の写真を取得
   /// 最新の写真を取得するメソッド
   Future<AssetEntity?> getLatestPhoto() async {
