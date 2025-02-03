@@ -9,7 +9,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/exception.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
@@ -134,11 +133,19 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
   }
 
   Future<List<AssetEntity>> _loadLocalPhotos() async {
-    final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
-    return localPhotoManagerService.getFilteredPhotos(
-      limit: 20000,
-      sortOrder: false,
-    );
+    try {
+      final localPhotoManagerService = ref.read(
+        localPhotoManagerServiceProvider,
+      );
+      await localPhotoManagerService.checkPermission();
+
+      return localPhotoManagerService.getFilteredPhotos(
+        limit: 20000,
+        sortOrder: false,
+      );
+    } catch (e) {
+      rethrow;
+    }
   }
 }
 
@@ -172,10 +179,8 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
 class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
   @override
   FutureOr<void> build() async {
-    final permission = await PhotoManager.requestPermissionExtend();
-    if (!permission.isAuth && !permission.hasAccess) {
-      throw PermissionException();
-    }
+    final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
+    await localPhotoManagerService.checkPermission();
   }
 
   Future<void> classifyPhotoAsFood({
@@ -186,7 +191,8 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
-      throw Exception('サインインされていません');
+      logger.e('サインインされていません');
+      return;
     }
 
     try {

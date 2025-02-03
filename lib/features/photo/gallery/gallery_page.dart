@@ -5,7 +5,10 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:photo_manager/photo_manager.dart';
 
+import '../../../core/exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
 import '../photo_detail/photo_detail_page.dart';
@@ -32,6 +35,26 @@ class GalleryPage extends HookConsumerWidget {
         );
 
     final tabController = useTabController(initialLength: 6);
+
+    // `LocalPhotoAssets` の `state` を監視し、`PermissionException` をキャッチ
+    ref.listen<AsyncValue<List<AssetEntity>>>(localPhotoAssetsProvider,
+        (_, state) {
+      state.whenOrNull(
+        error: (error, _) {
+          if (error is PermissionException) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('写真へのアクセスが許可されていません。設定を確認してください。'),
+                action: SnackBarAction(
+                  label: '設定を開く',
+                  onPressed: PhotoManager.openSetting,
+                ),
+              ),
+            );
+          }
+        },
+      );
+    });
 
     return Scaffold(
       appBar: PreferredSize(
@@ -278,7 +301,28 @@ class _ImagePickerOverlay extends HookConsumerWidget {
                 },
               ),
               loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Center(child: Text('Error: $error')),
+              error: (error, stack) => Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      '写真へのアクセスが許可されていません。\n'
+                      '設定画面を確認してください。',
+                      textAlign: TextAlign.center,
+                    ),
+                    const Gap(16), // スペースを追加
+                    FractionallySizedBox(
+                      widthFactor: 0.5, // 横幅を親要素の半分に設定
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await openAppSettings();
+                        },
+                        child: const Text('設定を開く'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ),
         ],

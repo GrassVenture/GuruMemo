@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../core/exception.dart';
 import 'local_photo_repository.dart';
 import 'swipe_photo/swipe_photo_controller.dart';
 
@@ -23,6 +24,14 @@ class LocalPhotoManagerService {
 
   LocalPhotoRepository get _localPhotoRepository =>
       _ref.read(localPhotoRepositoryProvider);
+
+  /// **写真アクセスの権限をチェック**
+  Future<void> checkPermission() async {
+    final permission = await PhotoManager.requestPermissionExtend();
+    if (!permission.isAuth && !permission.hasAccess) {
+      throw PermissionException(); // 許可がない場合は例外を投げる
+    }
+  }
 
   /// 写真取得
   /// [lastEntity] 最後の写真情報
