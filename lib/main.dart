@@ -11,6 +11,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'core/router.dart';
 import 'core/themes.dart';
 
+final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+    GlobalKey<ScaffoldMessengerState>();
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -50,6 +53,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp.router(
+      scaffoldMessengerKey: scaffoldMessengerKey,
       theme: Themes.defaultTheme,
       routerConfig: ref.watch(routerProvider),
     );

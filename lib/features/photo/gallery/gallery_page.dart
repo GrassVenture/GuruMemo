@@ -1,3 +1,4 @@
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -11,6 +12,7 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../../core/exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
+import '../../../main.dart';
 import '../photo_detail/photo_detail_page.dart';
 import '../remote_photo.dart';
 import 'gallery_controller.dart';
@@ -35,26 +37,6 @@ class GalleryPage extends HookConsumerWidget {
         );
 
     final tabController = useTabController(initialLength: 6);
-
-    // `LocalPhotoAssets` の `state` を監視し、`PermissionException` をキャッチ
-    ref.listen<AsyncValue<List<AssetEntity>>>(localPhotoAssetsProvider,
-        (_, state) {
-      state.whenOrNull(
-        error: (error, _) {
-          if (error is PermissionException) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('写真へのアクセスが許可されていません。設定を確認してください。'),
-                action: SnackBarAction(
-                  label: '設定を開く',
-                  onPressed: PhotoManager.openSetting,
-                ),
-              ),
-            );
-          }
-        },
-      );
-    });
 
     return Scaffold(
       appBar: PreferredSize(
@@ -99,8 +81,30 @@ class GalleryPage extends HookConsumerWidget {
       ),
       floatingActionButton: !isImagePickerVisible
           ? FloatingActionButton(
-              onPressed: () {
-                ref.read(imagePickerVisibilityProvider.notifier).show();
+              onPressed: () async {
+                final galleryController = ref.read(galleryControllerProvider);
+                try {
+                  print('カレントstate');
+                  print(scaffoldMessengerKey.currentState);
+
+                  await galleryController.checkPermission();
+
+                  ref.read(imagePickerVisibilityProvider.notifier).show();
+                  //PermissionExceptionがErrorのサブタイプなのでクラシュリティクスで落ちるかも、後で直す
+                } catch (e) {
+                  if (e is PermissionException) {
+                    scaffoldMessengerKey.currentState!.showSnackBar(
+                      const SnackBar(
+                        content: Text('写真へのアクセスが許可されていません。設定を確認してください。'),
+                        action: SnackBarAction(
+                          label: '設定を開く',
+                          onPressed: PhotoManager.openSetting,
+                        ),
+                      ),
+                    );
+                    logger.e('写真のアクセスが許可されていません:$e');
+                  }
+                }
               },
               child: const Icon(Icons.add),
             )

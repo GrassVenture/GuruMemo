@@ -112,6 +112,11 @@ class GalleryController {
 
     return file!;
   }
+
+  Future<void> checkPermission() async {
+    final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
+    await localPhotoManagerService.checkPermission();
+  }
 }
 
 @riverpod
@@ -137,14 +142,14 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
       final localPhotoManagerService = ref.read(
         localPhotoManagerServiceProvider,
       );
-      await localPhotoManagerService.checkPermission();
 
       return localPhotoManagerService.getFilteredPhotos(
         limit: 20000,
         sortOrder: false,
       );
-    } catch (e) {
-      rethrow;
+    } on Exception catch (e) {
+      logger.e('画像選択画面の写真読み込みでエラーが発生しました: $e');
+      return [];
     }
   }
 }

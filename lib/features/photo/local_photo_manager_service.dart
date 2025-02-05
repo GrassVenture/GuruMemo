@@ -5,6 +5,7 @@ import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/exception.dart';
+import '../../core/logger.dart';
 import 'local_photo_repository.dart';
 import 'swipe_photo/swipe_photo_controller.dart';
 
@@ -100,27 +101,29 @@ class LocalPhotoManagerService {
     required int limit,
     required bool sortOrder,
   }) async {
-    // 写真を指定の順番で取得
-    final albums = await PhotoManager.getAssetPathList(
-      type: RequestType.image,
-      filterOption: FilterOptionGroup(
-        orders: [
-          OrderOption(
-            asc: sortOrder,
-          ),
-        ],
-      ),
-    );
+    try {
+      final albums = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+        filterOption: FilterOptionGroup(
+          orders: [
+            OrderOption(
+              asc: sortOrder,
+            ),
+          ],
+        ),
+      );
 
-    // 写真が取得できない場合
-    if (albums.isEmpty) {
+      // 写真が取得できない場合
+      if (albums.isEmpty) {
+        return [];
+      }
+
+      // 指定した件数分の写真を取得
+      return await albums[0].getAssetListPaged(page: 0, size: limit);
+    } on Exception catch (e) {
+      logger.e('Error getting filtered photos: $e');
       return [];
     }
-
-    // 指定した件数分の写真を取得
-    final photos = await albums[0].getAssetListPaged(page: 0, size: limit);
-
-    return photos;
   }
 
   /// 最新の写真を取得
