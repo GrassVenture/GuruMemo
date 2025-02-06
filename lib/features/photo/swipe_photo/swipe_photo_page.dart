@@ -8,8 +8,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../core/build_context_extension.dart';
 import '../../../core/exception.dart';
 import '../../../core/themes.dart';
-import '../../../core/widgets/cards/photo_cards.dart';
 import '../../../core/widgets/app_elevated_button.dart';
+import '../../../core/widgets/cards/photo_cards.dart';
 import 'swipe_photo_controller.dart';
 
 /// 写真スワイプページ
