@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 /// 共通SnackBar
-class CommonSnackBar extends SnackBar {
-  CommonSnackBar._({
+class AppSnackBar extends SnackBar {
+  AppSnackBar._({
     required String message,
     super.action,
   }) : super(
@@ -27,7 +27,7 @@ class CommonSnackBar extends SnackBar {
         : null;
 
     ScaffoldMessenger.of(context).showSnackBar(
-      CommonSnackBar._(message: message, action: action),
+      AppSnackBar._(message: message, action: action),
     );
   }
 }

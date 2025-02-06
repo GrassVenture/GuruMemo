@@ -9,7 +9,7 @@ import '../../../core/build_context_extension.dart';
 import '../../../core/exception.dart';
 import '../../../core/themes.dart';
 import '../../../core/widgets/cards/photo_cards.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
+import '../../../core/widgets/app_elevated_button.dart';
 import 'swipe_photo_controller.dart';
 
 /// 写真スワイプページ
@@ -141,7 +141,7 @@ class SwipePhotoPage extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(28),
                 child: ColoredBox(
                   color: Colors.white,
-                  child: CustomElevatedButton(
+                  child: AppElevatedButton(
                     onPressed: () => _guardSwipe(
                       swiperController.swipeLeft,
                       isSwipe,
@@ -166,7 +166,7 @@ class SwipePhotoPage extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(28),
                 child: ColoredBox(
                   color: Colors.white,
-                  child: CustomElevatedButton(
+                  child: AppElevatedButton(
                     onPressed: () => _guardSwipe(
                       swiperController.swipeRight,
                       isSwipe,

@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/build_context_extension.dart';
-import '../../core/widgets/custom_elevated_button.dart';
+import '../../core/widgets/app_elevated_button.dart';
 import '../auth/sign_in_page.dart';
 import 'onboarding_controller.dart';
 
@@ -102,7 +102,7 @@ class OnboardingPage extends HookConsumerWidget {
                     ),
                     child: SizedBox(
                       height: 60,
-                      child: CustomElevatedButton(
+                      child: AppElevatedButton(
                         onPressed: () async {
                           if (!isLastPage) {
                             await pageController.nextPage(

@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // TODO(kim): アナリティクスマージ後にコメントアウトを解除
 // import '../../core/analytics/analytics_service.dart';
 import '../../core/themes.dart';
-import '../../core/widgets/common_snack_bar.dart';
+import '../../core/widgets/app_snack_bar.dart';
 import '../photo/swipe_photo/swipe_photo_page.dart';
 import 'auth_controller.dart';
 
@@ -117,7 +117,7 @@ class SignInPage extends HookConsumerWidget {
       }
       GoRouter.of(context).go(SwipePhotoPage.routePath);
     } on Exception catch (e) {
-      CommonSnackBar.show(context, message: 'サインインに失敗しました: $e');
+      AppSnackBar.show(context, message: 'サインインに失敗しました: $e');
     } finally {
       isLoading.value = false;
     }
