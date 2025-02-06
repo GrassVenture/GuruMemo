@@ -11,7 +11,7 @@ part 'analytics_service.g.dart'; // 生成されるコードを含める
 /// FirebaseAnalyticsのインスタンス
 final analyticsRepository = Provider((ref) => FirebaseAnalytics.instance);
 
-@riverpod
+@Riverpod(keepAlive: true)
 Future<AnalyticsService> analyticsService(Ref ref) async {
   // authRepositoryProviderから認証情報を取得
   final authUser = ref.watch(authRepositoryProvider).auth;
