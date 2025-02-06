@@ -20,19 +20,18 @@ class OnboardingPage extends HookConsumerWidget {
     final pageController = usePageController();
     final currentOnboarding = useState(0);
 
-    useEffect(
-      () {
-        pageController.addListener(() {
-          final page = pageController.page!.round();
-          currentOnboarding.value = page;
-          ref
-              .read(analyticsServiceProvider)
-              .sendScreenView('onboarding_page_$page');
-        });
-        return null;
-      },
-      [pageController],
-    );
+    useEffect(() {
+      pageController.addListener(() async {
+        final page = pageController.page!.round();
+        currentOnboarding.value = page;
+
+        // analyticsServiceProvider の非同期値を取得して sendScreenView を呼び出す
+        final analyticsService =
+            await ref.read(analyticsServiceProvider.future);
+        analyticsService.sendScreenView('onboarding_page_$page');
+      });
+      return null;
+    }, [pageController],);
 
     final isLastPage = currentOnboarding.value == 2;
     final indicatorPadding = context.screenHeight * 0.035;

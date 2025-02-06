@@ -34,9 +34,13 @@ class MyPage extends ConsumerWidget {
                           await ref
                               .read(authControllerProvider)
                               .deleteUserAccount();
-                          await ref.read(analyticsServiceProvider).sendEvent(
-                                name: 'delete_account',
-                              );
+                          await ref
+                              .read(analyticsServiceProvider.future)
+                              .then((analyticsService) {
+                            analyticsService.sendEvent(
+                              name: 'delete_account',
+                            );
+                          });
                           if (context.mounted) {
                             SuccessSnackBar.show(
                               context,

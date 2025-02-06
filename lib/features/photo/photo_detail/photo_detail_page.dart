@@ -43,7 +43,7 @@ class PhotoDetailPage extends HookConsumerWidget {
 
     final photoController = ref.read(remotePhotoControllerProvider);
 
-    void downloadPhoto(WidgetRef ref) {
+    Future<void> downloadPhoto(WidgetRef ref) async {
       if (userId == null) {
         return;
       }
@@ -52,7 +52,9 @@ class PhotoDetailPage extends HookConsumerWidget {
             userId: userId,
             photoId: photoId,
           );
-      ref.read(analyticsServiceProvider).sendEvent(
+
+      final analyticsService = await ref.read(analyticsServiceProvider.future);
+      await analyticsService.sendEvent(
         name: 'download_photo',
         additionalParams: {'photo_id': photoId},
       );

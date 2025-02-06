@@ -295,12 +295,14 @@ class CardBack extends ConsumerWidget {
                           ),
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            //　発火するリクエストのメソッドの処理を追加する
-                            _fetchAndShowStoresInfo(context, ref);
-                            ref.read(analyticsServiceProvider).sendEvent(
-                                  name: 'get_store_list',
-                                );
+                          onPressed: () async {
+                            await _fetchAndShowStoresInfo(context, ref);
+
+                            final analyticsService =
+                                await ref.read(analyticsServiceProvider.future);
+                            await analyticsService.sendEvent(
+                              name: 'get_store_list',
+                            );
                           },
                           child: Text(
                             '店舗を選び直す',

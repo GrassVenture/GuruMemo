@@ -182,7 +182,6 @@ Future<void> showShopListDialog(
                       height: 44,
                       child: CustomElevatedButton(
                         onPressed: () async {
-                          // 決定ボタン押下時にstoreIdを更新
                           await ref
                               .read(remotePhotoControllerProvider)
                               .updateStoreIdForPhoto(
@@ -190,9 +189,13 @@ Future<void> showShopListDialog(
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
                               );
-                          await ref.read(analyticsServiceProvider).sendEvent(
-                                name: 'update_store_info_for_photo',
-                              );
+
+                          final analyticsService =
+                              await ref.read(analyticsServiceProvider.future);
+                          await analyticsService.sendEvent(
+                            name: 'update_store_info_for_photo',
+                          );
+
                           onSelected();
                           shopNoSelected = 0;
                         },

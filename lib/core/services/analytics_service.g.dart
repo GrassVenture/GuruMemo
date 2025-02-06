@@ -1,27 +1,26 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'auth_controller.dart';
+part of 'analytics_service.dart';
 
 // **************************************************************************
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authedUserStreamHash() => r'1339d5b33422b48a40b1635cc3bce651ef020f5b';
+String _$analyticsServiceHash() => r'791aa6b31aa6ad63843e4d8b566e210fafcdc962';
 
-/// [AuthedUser]を購読するProvider
-///
-/// Copied from [authedUserStream].
-@ProviderFor(authedUserStream)
-final authedUserStreamProvider = AutoDisposeStreamProvider<AuthedUser>.internal(
-  authedUserStream,
-  name: r'authedUserStreamProvider',
+/// See also [analyticsService].
+@ProviderFor(analyticsService)
+final analyticsServiceProvider =
+    AutoDisposeFutureProvider<AnalyticsService>.internal(
+  analyticsService,
+  name: r'analyticsServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$authedUserStreamHash,
+      : _$analyticsServiceHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
-typedef AuthedUserStreamRef = AutoDisposeStreamProviderRef<AuthedUser>;
+typedef AnalyticsServiceRef = AutoDisposeFutureProviderRef<AnalyticsService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
