@@ -4,6 +4,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
@@ -16,6 +17,11 @@ Future<void> main() async {
   await Future.wait([
     Firebase.initializeApp(),
     dotenv.load(),
+    SystemChrome.setPreferredOrientations([
+      // アプリ全体の画面を縦向きに固定
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]),
   ]);
 
   // Firebase Analyticsのインスタンスを初期化する

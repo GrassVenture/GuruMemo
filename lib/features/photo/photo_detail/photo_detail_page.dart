@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/themes.dart';
-import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/app_dialog.dart';
 import '../../auth/auth_controller.dart';
 import '../../store/store.dart';
 import '../../store/store_controller.dart';
@@ -169,7 +169,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                               child: PhotoDetailCard(
                                 isEditing: isEditing.value,
                                 onDelete: () async {
-                                  await ConfirmDialog.show(
+                                  await AppDialog.show(
                                     context,
                                     titleString: '削除',
                                     contentString: '選択した写真を削除します。\nよろしいですか？',
