@@ -298,7 +298,7 @@ class CardBack extends ConsumerWidget {
                           onPressed: () async {
                             await _fetchAndShowStoresInfo(context, ref);
 
-                            await ref.read(analyticsServiceProvider).sendEvent(
+                            ref.read(analyticsServiceProvider).sendEvent(
                                   name: 'get_store_list',
                                 );
                           },

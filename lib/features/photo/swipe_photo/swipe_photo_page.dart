@@ -316,7 +316,7 @@ class SwipePhotoPage extends HookConsumerWidget {
       isSwipe.value = false;
       swipeCount++; // Increment swipe count
 
-      await ref.read(analyticsServiceProvider).sendEvent(
+      ref.read(analyticsServiceProvider).sendEvent(
         name: 'swipe_photo',
         additionalParams: {'swipe_count': swipeCount.toString()},
       );

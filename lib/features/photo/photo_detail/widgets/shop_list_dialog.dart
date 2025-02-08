@@ -189,7 +189,7 @@ Future<void> showShopListDialog(
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
                               );
-                          await ref.read(analyticsServiceProvider).sendEvent(
+                          ref.read(analyticsServiceProvider).sendEvent(
                                 name: 'update_store_info_for_photo',
                               );
                           onSelected();

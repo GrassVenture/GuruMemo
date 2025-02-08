@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
 import '../../core/services/analytics_service.dart';
 import '../../core/themes.dart';
 import '../../core/widgets/app_dialog.dart';
@@ -38,7 +39,7 @@ class MyPage extends ConsumerWidget {
                           await ref
                               .read(authControllerProvider)
                               .deleteUserAccount();
-                          await ref.read(analyticsServiceProvider).sendEvent(
+                          ref.read(analyticsServiceProvider).sendEvent(
                                 name: 'delete_account',
                               );
                           if (context.mounted) {

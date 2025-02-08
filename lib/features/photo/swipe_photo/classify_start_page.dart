@@ -54,7 +54,7 @@ class ClassifyStartPage extends ConsumerWidget {
                         isClassifyOnboardingCompletedNotifierProvider.notifier,
                       )
                       .update(isClassifyOnboardingCompleted: true);
-                  await ref.read(analyticsServiceProvider).sendEvent(
+                  ref.read(analyticsServiceProvider).sendEvent(
                         name: 'google_sign_in',
                       );
                   goRouter.go(SwipePhotoPage.routePath);

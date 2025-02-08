@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -42,31 +44,34 @@ class AnalyticsService {
   /// [FirebaseAnalytics.logScreenView]加えて、
   /// [_parameters]を付与した[FirebaseAnalytics.logEvent]を送信する。
   void sendScreenView(String path) {
-    _analytics
-      ..logScreenView(screenName: path)
-      ..logEvent(
+    unawaited(_analytics.logScreenView(screenName: path));
+    unawaited(
+      _analytics.logEvent(
         name: 'screen_view_event',
         parameters: {
           ..._parameters,
           'screen_name': path,
         },
-      );
+      ),
+    );
   }
 
   /// 特定のイベントをAnalyticsに送信するメソッド
   ///
   /// logEvent name : name
-  Future<void> sendEvent({
+  void sendEvent({
     required String name,
     Map<String, String> additionalParams = const {},
-  }) async {
-    await _analytics.logEvent(
-      name: name,
-      parameters: {
-        ..._parameters,
-        'event_name': name,
-        ...additionalParams,
-      },
+  }) {
+    unawaited(
+      _analytics.logEvent(
+        name: name,
+        parameters: {
+          ..._parameters,
+          'event_name': name,
+          ...additionalParams,
+        },
+      ),
     );
   }
 

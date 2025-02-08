@@ -52,7 +52,7 @@ class PhotoDetailPage extends HookConsumerWidget {
             userId: userId,
             photoId: photoId,
           );
-      await ref.read(analyticsServiceProvider).sendEvent(
+      ref.read(analyticsServiceProvider).sendEvent(
         name: 'download_photo',
         additionalParams: {'photo_id': photoId},
       );

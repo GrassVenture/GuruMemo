@@ -48,8 +48,7 @@ class GalleryPage extends HookConsumerWidget {
         Future<void> onTabChanged() async {
           final category = categories[tabController.index];
 
-          // 非同期で analyticsServiceProvider を取得して sendEvent を呼び出す
-          await ref.read(analyticsServiceProvider).sendEvent(
+          ref.read(analyticsServiceProvider).sendEvent(
             name: 'filter_photo',
             additionalParams: {'category': category},
           );

@@ -44,7 +44,7 @@ Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
       await ref.read(photoRepositoryProvider).downloadPhotos(userId: userId);
   final photoUrls = result.where((e) => e.url.isNotEmpty).toList();
   final filteredPhotoUrls = result.where((e) => e.url.isNotEmpty).toList();
-  await ref.read(analyticsServiceProvider).sendEvent(
+  ref.read(analyticsServiceProvider).sendEvent(
     name: 'download_photos',
     additionalParams: {
       'photo_urls_length': filteredPhotoUrls.length.toString(),
