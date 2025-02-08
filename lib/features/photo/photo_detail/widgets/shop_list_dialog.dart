@@ -7,7 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../../../core/build_context_extension.dart';
 import '../../../../core/services/analytics_service.dart';
 import '../../../../core/themes.dart';
-import '../../../../core/widgets/custom_elevated_button.dart';
+import '../../../../core/widgets/app_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store.dart';
 import '../../remote_photo_controller.dart';
@@ -180,7 +180,7 @@ Future<void> showShopListDialog(
                     ),
                     child: SizedBox(
                       height: 44,
-                      child: CustomElevatedButton(
+                      child: AppElevatedButton(
                         onPressed: () async {
                           await ref
                               .read(remotePhotoControllerProvider)
@@ -189,13 +189,9 @@ Future<void> showShopListDialog(
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
                               );
-
-                          final analyticsService =
-                              await ref.read(analyticsServiceProvider.future);
-                          await analyticsService.sendEvent(
-                            name: 'update_store_info_for_photo',
-                          );
-
+                          await ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'update_store_info_for_photo',
+                              );
                           onSelected();
                           shopNoSelected = 0;
                         },

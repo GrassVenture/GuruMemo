@@ -298,11 +298,9 @@ class CardBack extends ConsumerWidget {
                           onPressed: () async {
                             await _fetchAndShowStoresInfo(context, ref);
 
-                            final analyticsService =
-                                await ref.read(analyticsServiceProvider.future);
-                            await analyticsService.sendEvent(
-                              name: 'get_store_list',
-                            );
+                            await ref.read(analyticsServiceProvider).sendEvent(
+                                  name: 'get_store_list',
+                                );
                           },
                           child: Text(
                             '店舗を選び直す',

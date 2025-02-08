@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../core/services/analytics_service.dart';
 import '../../core/themes.dart';
-import '../../core/widgets/confirm_dialog.dart';
-import '../../core/widgets/success_snack_bar.dart';
+import '../../core/widgets/app_dialog.dart';
+import '../../core/widgets/app_snack_bar.dart';
 import 'auth_controller.dart';
 
 /// マイページ
@@ -27,7 +27,7 @@ class MyPage extends ConsumerWidget {
                 children: [
                   ListTile(
                     onTap: () async {
-                      await ConfirmDialog.show(
+                      await AppDialog.show(
                         context,
                         hasCancelButton: true,
                         titleString: '本当にアカウントを削除しますか？',
@@ -38,15 +38,11 @@ class MyPage extends ConsumerWidget {
                           await ref
                               .read(authControllerProvider)
                               .deleteUserAccount();
-                          await ref
-                              .read(analyticsServiceProvider.future)
-                              .then((analyticsService) {
-                            analyticsService.sendEvent(
-                              name: 'delete_account',
-                            );
-                          });
+                          await ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'delete_account',
+                              );
                           if (context.mounted) {
-                            SuccessSnackBar.show(
+                            AppSnackBar.show(
                               context,
                               message: 'アカウントを削除しました',
                             );

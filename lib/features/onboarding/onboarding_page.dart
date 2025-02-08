@@ -7,7 +7,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/build_context_extension.dart';
 import '../../core/services/analytics_service.dart';
-import '../../core/widgets/custom_elevated_button.dart';
+import '../../core/widgets/app_elevated_button.dart';
 import '../auth/sign_in_page.dart';
 import 'onboarding_controller.dart';
 
@@ -20,18 +20,21 @@ class OnboardingPage extends HookConsumerWidget {
     final pageController = usePageController();
     final currentOnboarding = useState(0);
 
-    useEffect(() {
-      pageController.addListener(() async {
-        final page = pageController.page!.round();
-        currentOnboarding.value = page;
+    useEffect(
+      () {
+        pageController.addListener(() async {
+          final page = pageController.page!.round();
+          currentOnboarding.value = page;
 
-        // analyticsServiceProvider の非同期値を取得して sendScreenView を呼び出す
-        final analyticsService =
-            await ref.read(analyticsServiceProvider.future);
-        analyticsService.sendScreenView('onboarding_page_$page');
-      });
-      return null;
-    }, [pageController],);
+          // analyticsServiceProvider から同期的に値を取得して sendScreenView を呼び出す
+          ref
+              .read(analyticsServiceProvider)
+              .sendScreenView('onboarding_page_$page');
+        });
+        return null;
+      },
+      [pageController],
+    );
 
     final isLastPage = currentOnboarding.value == 2;
     final indicatorPadding = context.screenHeight * 0.035;
@@ -105,7 +108,7 @@ class OnboardingPage extends HookConsumerWidget {
                     ),
                     child: SizedBox(
                       height: 60,
-                      child: CustomElevatedButton(
+                      child: AppElevatedButton(
                         onPressed: () async {
                           if (!isLastPage) {
                             await pageController.nextPage(

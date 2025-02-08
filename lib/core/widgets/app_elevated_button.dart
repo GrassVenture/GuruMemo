@@ -4,8 +4,8 @@ import 'package:gap/gap.dart';
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
 
-class CustomElevatedButton extends StatelessWidget {
-  const CustomElevatedButton({
+class AppElevatedButton extends StatelessWidget {
+  const AppElevatedButton({
     super.key,
     required this.text,
     required this.onPressed,

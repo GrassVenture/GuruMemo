@@ -6,11 +6,11 @@ part of 'analytics_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$analyticsServiceHash() => r'aca3e5e8b7f09986f3266e5edd0bb91958a24e90';
+String _$analyticsServiceHash() => r'bf941e3a7c39c4e0e3688cf019e0b36cd4322a0b';
 
 /// See also [analyticsService].
 @ProviderFor(analyticsService)
-final analyticsServiceProvider = FutureProvider<AnalyticsService>.internal(
+final analyticsServiceProvider = Provider<AnalyticsService>.internal(
   analyticsService,
   name: r'analyticsServiceProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
@@ -20,7 +20,6 @@ final analyticsServiceProvider = FutureProvider<AnalyticsService>.internal(
   allTransitiveDependencies: null,
 );
 
-// ignore: deprecated_member_use
-typedef AnalyticsServiceRef = FutureProviderRef<AnalyticsService>;
+typedef AnalyticsServiceRef = ProviderRef<AnalyticsService>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
