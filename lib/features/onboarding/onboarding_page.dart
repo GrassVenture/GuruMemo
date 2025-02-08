@@ -26,10 +26,12 @@ class OnboardingPage extends HookConsumerWidget {
           final page = pageController.page!.round();
           currentOnboarding.value = page;
 
-          // analyticsServiceProvider から同期的に値を取得して sendScreenView を呼び出す
-          ref
-              .read(analyticsServiceProvider)
-              .sendScreenView('onboarding_page_$page');
+          ref.read(analyticsServiceProvider).sendEvent(
+            name: 'open_onboarding_page',
+            additionalParams: {
+              'page_index': page.toString(),
+            },
+          );
         });
         return null;
       },
