@@ -6,7 +6,7 @@ import '../../core/flavor.dart';
 import '../../features/auth/auth_repository.dart';
 import '../logger.dart';
 
-part 'analytics_service.g.dart'; // 生成されるコードを含める
+part 'analytics_service.g.dart';
 
 /// FirebaseAnalyticsのインスタンス
 final analyticsRepository = Provider((ref) => FirebaseAnalytics.instance);

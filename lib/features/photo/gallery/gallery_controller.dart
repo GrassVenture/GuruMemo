@@ -26,7 +26,7 @@ part 'gallery_controller.g.dart';
 @riverpod
 Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   final userId = ref.watch(userIdProvider);
-  // TODO(masaki): nullの場合ハンドリング検討
+// TODO(masaki): nullの場合ハンドリング検討
   if (userId == null) {
     logger.e('userId is null');
     return [];
