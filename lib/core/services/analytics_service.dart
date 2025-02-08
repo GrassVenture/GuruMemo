@@ -25,39 +25,58 @@ AnalyticsService analyticsService(Ref ref) {
   );
 }
 
-/// Analytics に関する操作を担当するクラス
+/// [FirebaseAnalytics]の操作を担当するクラス
 class AnalyticsService {
   AnalyticsService._({required Map<String, String> parameters})
-      : _parameters = parameters;
+      : _analytics = FirebaseAnalytics.instance,
+        _parameters = parameters;
 
-  final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
+  /// [FirebaseAnalytics]インスタンス
+  final FirebaseAnalytics _analytics;
 
-  /// パラメータ
+  /// ログ出力時に付与するパラメータ
+  ///
+  /// 初期化後に必要に応じて追加する。
+  /// 文字列はスネークケースで記述する。
   final Map<String, String> _parameters;
 
+  /// どの画面を開いているか、Analyticsにログを送信するメソッド
+  ///
+  /// [FirebaseAnalytics.logScreenView]加えて、
+  /// [_parameters]を付与した[FirebaseAnalytics.logEvent]を送信する。
   void sendScreenView(String path) {
-    _parameters
-      ..remove('event_name')
-      ..addAll({'screen_name': path});
-    logger.i('Analyticsのパラメータ : $_parameters');
-
     _analytics
-      ..logEvent(name: 'screen_view_event', parameters: _parameters)
-      ..logScreenView(screenName: path);
+      ..logScreenView(screenName: path)
+      ..logEvent(
+        name: 'screen_view_event',
+        parameters: {
+          ..._parameters,
+          'screen_name': path,
+        },
+      );
   }
 
+  /// 特定のイベントをAnalyticsに送信するメソッド
+  ///
+  /// logEvent name : name
   Future<void> sendEvent({
     required String name,
     Map<String, String> additionalParams = const {},
   }) async {
-    _parameters
-      ..addAll({'event_name': name})
-      ..addAll(additionalParams);
-
-    await _analytics.logEvent(name: name, parameters: _parameters);
+    await _analytics.logEvent(
+      name: name,
+      parameters: {
+        ..._parameters,
+        'event_name': name,
+        ...additionalParams,
+      },
+    );
   }
 
-  void setAddParameters({required Map<String, String> additionalParams}) {
+  /// Analyticsに一律追加したいパラメータを設定するメソッド
+  void addParameters({
+    required Map<String, String> additionalParams,
+  }) {
     _parameters.addAll(additionalParams);
     logger.i('追加後のAnalyticsのパラメータの状態 : $_parameters');
   }
