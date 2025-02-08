@@ -8,9 +8,6 @@ import '../logger.dart';
 
 part 'analytics_service.g.dart';
 
-/// FirebaseAnalyticsのインスタンス
-final analyticsRepository = Provider((ref) => FirebaseAnalytics.instance);
-
 @Riverpod(keepAlive: true)
 AnalyticsService analyticsService(Ref ref) {
   // authRepositoryProviderから認証情報を取得
