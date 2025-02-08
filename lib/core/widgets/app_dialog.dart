@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../themes.dart';
 
 /// 確認用のダイアログ
-class ConfirmDialog extends StatelessWidget {
-  const ConfirmDialog._({
+class AppDialog extends StatelessWidget {
+  const AppDialog._({
     required this.contentString,
     required this.titleString,
     required this.negativeButtonString,
@@ -54,7 +54,7 @@ class ConfirmDialog extends StatelessWidget {
       context: context,
       barrierDismissible: false,
       builder: (_) {
-        return ConfirmDialog._(
+        return AppDialog._(
           titleString: titleString ?? '',
           contentString: contentString,
           negativeButtonString: negativeButtonString,

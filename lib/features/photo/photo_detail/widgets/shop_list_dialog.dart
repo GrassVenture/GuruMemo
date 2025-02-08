@@ -6,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/build_context_extension.dart';
 import '../../../../core/themes.dart';
-import '../../../../core/widgets/custom_elevated_button.dart';
+import '../../../../core/widgets/app_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store.dart';
 import '../../remote_photo_controller.dart';
@@ -179,7 +179,7 @@ Future<void> showShopListDialog(
                     ),
                     child: SizedBox(
                       height: 44,
-                      child: CustomElevatedButton(
+                      child: AppElevatedButton(
                         onPressed: () async {
                           // 決定ボタン押下時にstoreIdを更新
                           await ref
