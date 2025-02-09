@@ -20,6 +20,7 @@ final fetchPhotosProvider =
   allTransitiveDependencies: null,
 );
 
+// ignore: deprecated_member_use
 typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
 String _$photoThumbnailHash() => r'08dbc9a666d10372f0229db88704c4b30dc4777c';
 
@@ -157,6 +158,7 @@ class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
   }
 }
 
+// ignore: deprecated_member_use
 mixin PhotoThumbnailRef on AutoDisposeFutureProviderRef<Uint8List?> {
   /// The parameter `photo` of this provider.
   AssetEntity get photo;
