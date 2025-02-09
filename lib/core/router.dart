@@ -17,6 +17,10 @@ import 'services/analytics_service.dart';
 final routerProvider = Provider(
   (ref) => GoRouter(
     initialLocation: GalleryPage.routePath,
+    redirect: (context, state) async {
+      ref.read(analyticsServiceProvider).sendScreenView(state.matchedLocation);
+      return null;
+    },
     routes: [
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
@@ -68,9 +72,6 @@ final routerProvider = Provider(
           );
         },
       ),
-    ],
-    observers: [
-      GoRouterObserver(analytics: ref.watch(analyticsRepository)),
     ],
   ),
 );

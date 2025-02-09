@@ -6,7 +6,7 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPhotosHash() => r'4a13784e4d024408596da0ef52f8123df27ac770';
+String _$fetchPhotosHash() => r'2340d0ac4657de0a3e3bc4157311895b83793f83';
 
 /// See also [fetchPhotos].
 @ProviderFor(fetchPhotos)
@@ -20,7 +20,7 @@ final fetchPhotosProvider =
   allTransitiveDependencies: null,
 );
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: deprecated_member_use
 typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
 String _$photoThumbnailHash() => r'78c905ce4a1cc463d44a069571474f862da98b3d';
 
@@ -54,8 +54,6 @@ class PhotoThumbnailFamily extends Family<AsyncValue<Uint8List?>> {
   /// See also [photoThumbnail].
   const PhotoThumbnailFamily();
 
-  @Deprecated('Will be removed in 3.0. Use Ref instead')
-
   /// See also [photoThumbnail].
   PhotoThumbnailProvider call(
     AssetEntity photo,
@@ -65,7 +63,6 @@ class PhotoThumbnailFamily extends Family<AsyncValue<Uint8List?>> {
     );
   }
 
-  @Deprecated('Will be removed in 3.0. Use Ref instead')
   @override
   PhotoThumbnailProvider getProviderOverride(
     covariant PhotoThumbnailProvider provider,
@@ -89,8 +86,6 @@ class PhotoThumbnailFamily extends Family<AsyncValue<Uint8List?>> {
   @override
   String? get name => r'photoThumbnailProvider';
 }
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
 
 /// See also [photoThumbnail].
 class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
@@ -163,13 +158,12 @@ class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
   }
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: deprecated_member_use
 mixin PhotoThumbnailRef on AutoDisposeFutureProviderRef<Uint8List?> {
   /// The parameter `photo` of this provider.
   AssetEntity get photo;
 }
 
-@Deprecated('Will be removed in 3.0. Use Ref instead')
 class _PhotoThumbnailProviderElement
     extends AutoDisposeFutureProviderElement<Uint8List?>
     with PhotoThumbnailRef {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../../core/services/analytics_service.dart';
 import '../../core/themes.dart';
 import '../../core/widgets/app_dialog.dart';
 import '../../core/widgets/app_snack_bar.dart';
@@ -37,6 +39,9 @@ class MyPage extends ConsumerWidget {
                           await ref
                               .read(authControllerProvider)
                               .deleteUserAccount();
+                          ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'delete_account',
+                              );
                           if (context.mounted) {
                             AppSnackBar.show(
                               context,

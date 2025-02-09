@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/exception.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
 import '../local_photo_repository.dart';
@@ -41,8 +42,16 @@ Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
 
   final result =
       await ref.read(photoRepositoryProvider).downloadPhotos(userId: userId);
+  final photoUrls = result.where((e) => e.url.isNotEmpty).toList();
+  final filteredPhotoUrls = result.where((e) => e.url.isNotEmpty).toList();
+  ref.read(analyticsServiceProvider).sendEvent(
+    name: 'download_photos',
+    additionalParams: {
+      'photo_urls_length': filteredPhotoUrls.length.toString(),
+    },
+  );
 
-  return result.where((e) => e.url.isNotEmpty).toList();
+  return photoUrls;
 }
 
 /// ギャラリーページに表示する画像を管理するProvider

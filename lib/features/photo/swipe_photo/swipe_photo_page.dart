@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/services/analytics_service.dart';
 import '../../../core/build_context_extension.dart';
 import '../../../core/exception.dart';
 import '../../../core/themes.dart';
@@ -110,7 +111,8 @@ class SwipePhotoPage extends HookConsumerWidget {
                   ),
                   Positioned(
                     bottom: 0,
-                    child: _buildButtons(context, swiperController, isSwipe),
+                    child:
+                        _buildButtons(context, ref, swiperController, isSwipe),
                   ),
                 ],
               );
@@ -124,6 +126,7 @@ class SwipePhotoPage extends HookConsumerWidget {
   /// スワイプボタン
   Widget _buildButtons(
     BuildContext context,
+    WidgetRef ref,
     AppinioSwiperController swiperController,
     ValueNotifier<bool> isSwipe,
   ) {
@@ -145,6 +148,7 @@ class SwipePhotoPage extends HookConsumerWidget {
                     onPressed: () => _guardSwipe(
                       swiperController.swipeLeft,
                       isSwipe,
+                      ref,
                     ),
                     text: 'ちがう',
                     backgroundColor: Themes.gray.shade200,
@@ -170,6 +174,7 @@ class SwipePhotoPage extends HookConsumerWidget {
                     onPressed: () => _guardSwipe(
                       swiperController.swipeRight,
                       isSwipe,
+                      ref,
                     ),
                     text: 'グルメ',
                     backgroundColor: Themes.mainOrange,
@@ -303,9 +308,19 @@ class SwipePhotoPage extends HookConsumerWidget {
   Future<void> _guardSwipe(
     Future<void> Function() execute,
     ValueNotifier<bool> isSwipe,
+    WidgetRef ref,
   ) async {
+    var swipeCount = 0;
+
     if (isSwipe.value) {
       isSwipe.value = false;
+      swipeCount++; // Increment swipe count
+
+      ref.read(analyticsServiceProvider).sendEvent(
+        name: 'swipe_photo',
+        additionalParams: {'swipe_count': swipeCount.toString()},
+      );
+
       await execute();
       await Future<void>.delayed(
         const Duration(milliseconds: 300),

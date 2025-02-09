@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/build_context_extension.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/app_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
@@ -181,13 +182,15 @@ Future<void> showShopListDialog(
                       height: 44,
                       child: AppElevatedButton(
                         onPressed: () async {
-                          // 決定ボタン押下時にstoreIdを更新
                           await ref
                               .read(remotePhotoControllerProvider)
                               .updateStoreIdForPhoto(
                                 userId: userId,
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
+                              );
+                          ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'update_store_info_for_photo',
                               );
                           onSelected();
                           shopNoSelected = 0;
