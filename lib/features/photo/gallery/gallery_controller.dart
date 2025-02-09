@@ -24,7 +24,7 @@ part 'gallery_controller.g.dart';
 // TODO(masaki): g.ファイルにAutoDisposeFutureProviderRefが生成されないように調整
 // Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
 @riverpod
-Future<List<RemotePhoto>> fetchPhotos(FetchPhotosRef ref) async {
+Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
   final userId = ref.watch(userIdProvider);
 // TODO(masaki): nullの場合ハンドリング検討
   if (userId == null) {

@@ -6,7 +6,7 @@ part of 'auth_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authedUserStreamHash() => r'cfe52885f81545fd073a8d823ecbb446044c1b9d';
+String _$authedUserStreamHash() => r'1339d5b33422b48a40b1635cc3bce651ef020f5b';
 
 /// [AuthedUser]を購読するProvider
 ///
