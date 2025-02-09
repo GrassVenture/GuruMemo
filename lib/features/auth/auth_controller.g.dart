@@ -6,7 +6,7 @@ part of 'auth_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authedUserStreamHash() => r'1339d5b33422b48a40b1635cc3bce651ef020f5b';
+String _$authedUserStreamHash() => r'cfe52885f81545fd073a8d823ecbb446044c1b9d';
 
 /// [AuthedUser]を購読するProvider
 ///
@@ -22,6 +22,6 @@ final authedUserStreamProvider = AutoDisposeStreamProvider<AuthedUser>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef AuthedUserStreamRef = Ref<AuthedUser>;
+typedef AuthedUserStreamRef = AutoDisposeStreamProviderRef<AuthedUser>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
