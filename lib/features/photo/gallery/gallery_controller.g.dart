@@ -20,7 +20,7 @@ final fetchPhotosProvider =
   allTransitiveDependencies: null,
 );
 
-typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
+typedef FetchPhotosRef = Ref<List<RemotePhoto>>;
 String _$photoThumbnailHash() => r'78c905ce4a1cc463d44a069571474f862da98b3d';
 
 /// Copied from Dart SDK
@@ -157,7 +157,7 @@ class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
   }
 }
 
-mixin PhotoThumbnailRef on AutoDisposeFutureProviderRef<Uint8List?> {
+mixin PhotoThumbnailRef on Ref<Uint8List?> {
   /// The parameter `photo` of this provider.
   AssetEntity get photo;
 }
