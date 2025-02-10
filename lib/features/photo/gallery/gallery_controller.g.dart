@@ -6,7 +6,7 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPhotosHash() => r'2340d0ac4657de0a3e3bc4157311895b83793f83';
+String _$fetchPhotosHash() => r'820d679ad31dd0b0d21a62135147a295c0d45163';
 
 /// See also [fetchPhotos].
 @ProviderFor(fetchPhotos)
@@ -22,7 +22,7 @@ final fetchPhotosProvider =
 
 // ignore: deprecated_member_use
 typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
-String _$photoThumbnailHash() => r'78c905ce4a1cc463d44a069571474f862da98b3d';
+String _$photoThumbnailHash() => r'08dbc9a666d10372f0229db88704c4b30dc4777c';
 
 /// Copied from Dart SDK
 class _SystemHash {

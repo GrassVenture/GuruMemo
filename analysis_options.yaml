@@ -3,8 +3,15 @@ include: package:pedantic_mono/analysis_options.yaml
 
 linter:
   rules:
-     prefer_relative_imports: true
-     avoid_classes_with_only_static_members: false
+    prefer_relative_imports: true
+    avoid_classes_with_only_static_members: false
+
+custom_lint:
+  rules:
+    # scoped providerは扱いにくく原則使用しないため、依存関係の明示は必須化しない
+    - provider_dependencies: false
+    # 上記に関連して、自動生成のproviderが手動生成のproviderに依存している場合用の警告を無効化
+    - avoid_manual_providers_as_generated_provider_dependency: false
 
 analyzer:
   plugins:
