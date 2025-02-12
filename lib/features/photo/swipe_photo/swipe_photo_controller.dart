@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
+import '../../../core/image_helper.dart';
 import '../../../core/logger.dart';
 import '../../../core/repositories/shared_preferences_repository.dart';
 import '../../../core/timestamp_converter.dart';
@@ -121,7 +119,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
           final photoFile = await photo.file;
           if (photoFile != null) {
-            final compressedData = await _compressImage(photoFile);
+            final compressedData = await ImageHelper.compress(photoFile);
             if (compressedData != null) {
               await ref.read(photoRepositoryProvider).registerPhotoData(
                     userId: userId,
@@ -177,18 +175,6 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   void forceRefresh() {
     state = const AsyncLoading<List<AssetEntity>>();
     ref.invalidateSelf();
-  }
-
-  /// 画像を圧縮するメソッド
-  Future<Uint8List?> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      minWidth: 256,
-      minHeight: 256,
-      quality: 85,
-      keepExif: true,
-    );
-    return result;
   }
 }
 

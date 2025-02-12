@@ -9,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/image_helper.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
@@ -216,7 +217,7 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
 
         // 画像ファイルの圧縮と送信
         final photoFile = File(image.path);
-        final compressedData = await _compressImage(photoFile);
+        final compressedData = await ImageHelper.compress(photoFile);
 
         if (compressedData != null) {
           await ref.read(photoRepositoryProvider).categorizeFood(
@@ -284,18 +285,6 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
       throw ArgumentError('値がRatio型ではありません: $value');
     }
     return value.numerator / value.denominator;
-  }
-
-  /// 画像を圧縮
-  Future<Uint8List?> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      minWidth: 256,
-      minHeight: 256,
-      quality: 85,
-      keepExif: true,
-    );
-    return result;
   }
 }
 
