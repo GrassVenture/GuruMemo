@@ -11,7 +11,7 @@ import '../logger.dart';
 part 'analytics_service.g.dart';
 
 @Riverpod(keepAlive: true)
-AnalyticsService analyticsService(AnalyticsServiceRef ref) {
+AnalyticsService analyticsService(Ref ref) {
   // authRepositoryProviderから認証情報を取得
   final authUser = ref.watch(authRepositoryProvider).auth;
 

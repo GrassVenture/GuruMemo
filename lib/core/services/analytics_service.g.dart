@@ -6,7 +6,7 @@ part of 'analytics_service.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$analyticsServiceHash() => r'c751bf4c7d5670631925c9917dfcd33d3a4c9217';
+String _$analyticsServiceHash() => r'bf941e3a7c39c4e0e3688cf019e0b36cd4322a0b';
 
 /// See also [analyticsService].
 @ProviderFor(analyticsService)
@@ -20,6 +20,8 @@ final analyticsServiceProvider = Provider<AnalyticsService>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef AnalyticsServiceRef = Ref<AnalyticsService>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AnalyticsServiceRef = ProviderRef<AnalyticsService>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

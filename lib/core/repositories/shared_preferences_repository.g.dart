@@ -7,7 +7,7 @@ part of 'shared_preferences_repository.dart';
 // **************************************************************************
 
 String _$sharedPreferencesRepositoryHash() =>
-    r'77792693077f7613b86a833c1a803ff247faa5d8';
+    r'46961b7017c92f7db8de9e79800c097ea3c48a57';
 
 /// [SharedPreferencesRepository]用プロバイダー
 ///
@@ -26,6 +26,9 @@ final sharedPreferencesRepositoryProvider =
   allTransitiveDependencies: null,
 );
 
-typedef SharedPreferencesRepositoryRef = Ref<SharedPreferencesRepository>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef SharedPreferencesRepositoryRef
+    = ProviderRef<SharedPreferencesRepository>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
