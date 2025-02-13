@@ -148,7 +148,7 @@ class NavigationFrame extends HookConsumerWidget {
           selectedIndex.value = index;
           _onItemTapped(index, context, isClassifyOnboardingCompleted);
         },
-        splashColor: Themes.mainOrange.withOpacity(0.1),
+        splashColor: Themes.mainOrange.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(36),
         child: SizedBox(
           width: itemWidth,

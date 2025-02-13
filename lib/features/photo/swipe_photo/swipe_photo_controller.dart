@@ -100,7 +100,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
       final userId = ref.read(userIdProvider);
 
       if (userId != null) {
-        //　TODO(kim): ローカルに写真を保存している処理が不要なものの、
+        // TODO(kim): ローカルに写真を保存している処理が不要なものの、
         //　保存枚数などの処理は必要なので、処理の中身を後ほど修正する。
         // 写真登録
         await ref.read(localPhotoRepositoryProvider).savePhoto(

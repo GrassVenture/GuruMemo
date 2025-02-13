@@ -85,7 +85,9 @@ class CardFront extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(16),
                                 child: ColoredBox(
-                                  color: Themes.gray[900]!.withOpacity(0.5),
+                                  color: Themes.gray[900]!.withValues(
+                                    alpha: 0.5,
+                                  ),
                                   child: Center(
                                     child: IconButton(
                                       icon: const Icon(
