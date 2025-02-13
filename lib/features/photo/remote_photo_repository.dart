@@ -3,30 +3,30 @@ import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:http/http.dart' as http;
 
 import '../../core/flavor.dart';
 import '../../core/logger.dart';
-import 'photo.dart';
+import '../../core/timestamp_converter.dart';
+import 'remote_photo.dart';
 
-/// [Photo]用コレクションのためのレファレンス
+/// [RemotePhoto]用コレクションのためのレファレンス
 ///
-/// [Photo]ドキュメントの操作にはこのレファレンスを経由すること。
+/// [RemotePhoto]ドキュメントの操作にはこのレファレンスを経由すること。
 /// fromFirestoreではドキュメントidを追加し、toFirestoreではドキュメントidを削除する。
 /// 常にtoFirestoreを経由するために、ドキュメント更新時には
 /// [DocumentReference.update]ではなく[DocumentReference.set]を用いる。
-CollectionReference<Photo> photosRef({required String userId}) {
+CollectionReference<RemotePhoto> photosRef({required String userId}) {
   return FirebaseFirestore.instance
       .collection('users')
       .doc(userId)
       .collection('photos')
-      .withConverter<Photo>(
+      .withConverter<RemotePhoto>(
     fromFirestore: (snapshot, _) {
       final data = snapshot.data()!;
-      return Photo.fromJson(<String, dynamic>{
+      return RemotePhoto.fromJson(<String, dynamic>{
         ...data,
         'id': snapshot.id,
       });
@@ -47,6 +47,7 @@ class PhotoRepository {
   final String _apiUrl =
       flavor.isProd ? dotenv.env['PROD_API_URL']! : dotenv.env['DEV_API_URL']!;
 
+  /// 写真のお店を登録するための処理
   Future<void> registerStoreInfo({
     required String photoId,
     String? accessToken,
@@ -71,10 +72,10 @@ class PhotoRepository {
 
       if (response.statusCode == 200) {
         // 成功した場合の処理
-        debugPrint('API call successful: ${response.body}');
+        logger.d('API call successful: ${response.body}');
       } else {
         // エラーが返された場合の処理
-        debugPrint('API call failed: ${response.body}');
+        logger.d('API call failed: ${response.body}');
       }
     } on Exception catch (error) {
       logger.e(error.toString());
@@ -101,18 +102,35 @@ class PhotoRepository {
 
       if (response.statusCode == 200) {
         // 成功した場合の処理
-        debugPrint('API call successful: ${response.body}');
+        logger.d('API call successful: ${response.body}');
       } else {
         // エラーが返された場合の処理
-        debugPrint('API call failed: ${response.body}');
+        logger.d('API call failed: ${response.body}');
       }
     } on Exception catch (error) {
       logger.e(error.toString());
     }
   }
 
+  Future<void> registerPhotoData({
+    required String userId,
+    required UnionTimestamp shotAt,
+    required String photoId,
+  }) async {
+    try {
+      await photosRef(userId: userId).doc(photoId).set(
+            RemotePhoto(
+              userId: userId,
+              shotAt: shotAt,
+            ),
+          );
+    } on Exception catch (error) {
+      logger.e(error.toString());
+    }
+  }
+
   // TODO(firestore): データ作成後に動作確認 & 全件取得ではない取得方法検討
-  Future<List<Photo>> downloadPhotos({
+  Future<List<RemotePhoto>> downloadPhotos({
     required String userId,
   }) async {
     try {
@@ -126,20 +144,20 @@ class PhotoRepository {
           .orderBy(FieldPath.documentId, descending: true)
           .get();
 
-      // ドキュメントのデータをPhotoオブジェクトに変換
+      // ドキュメントのデータをRemotePhotoオブジェクトに変換
       return photosSnap.docs
           .map((doc) {
             final data = doc.data();
             if (data != null) {
               (data as Map<String, dynamic>).addAll({'id': doc.id});
               // nullチェックを追加
-              return Photo.fromJson(data);
+              return RemotePhoto.fromJson(data);
             } else {
               return null;
             }
           })
           .where((photo) => photo != null)
-          .cast<Photo>()
+          .cast<RemotePhoto>()
           .toList();
     } on Exception catch (e) {
       logger.e('An error occurred: $e');
@@ -147,8 +165,8 @@ class PhotoRepository {
     }
   }
 
-  // TODO(kim): Photo?の部分はあとで書き換える。
-  Future<Photo?> downloadPhoto({
+  // TODO(kim): RemotePhoto?の部分はあとで書き換える。
+  Future<RemotePhoto?> downloadPhoto({
     required String userId,
     required String photoId,
   }) async {
@@ -165,7 +183,7 @@ class PhotoRepository {
       if (data != null) {
         data.addAll({'id': photosSnap.id});
 
-        return Photo.fromJson(data);
+        return RemotePhoto.fromJson(data);
       } else {
         return null;
       }
@@ -175,7 +193,7 @@ class PhotoRepository {
     }
   }
 
-  Future<Photo?> getPhotoById({
+  Future<RemotePhoto?> getPhotoById({
     required String userId,
     required String photoId,
   }) async {
@@ -235,7 +253,7 @@ class PhotoRepository {
     if (photoDocSnapshot.exists) {
       // ドキュメントが存在する場合、storeIdを更新
       await photoDoc.update({'storeId': storeId});
-      debugPrint('StoreId updated successfully for photoId: $photoId');
+      logger.d('StoreId updated successfully for photoId: $photoId');
     } else {
       logger.e('Error Photo with id: $photoId does not exist.');
     }
@@ -251,12 +269,12 @@ class PhotoRepository {
       // Firestoreから該当の写真ドキュメントを削除
       final photoDoc = photosRef(userId: userId).doc(photoId);
       await photoDoc.delete();
-      debugPrint('Firestore document deleted for photoId: $photoId');
+      logger.d('Firestore document deleted for photoId: $photoId');
 
       // GCSから該当の写真ファイルを削除
       final storageRef = FirebaseStorage.instance.refFromURL(photoUrl);
       await storageRef.delete();
-      debugPrint('Photo deleted from storage for photoUrl: $photoUrl');
+      logger.d('Photo deleted from storage for photoUrl: $photoUrl');
     } on Exception catch (e) {
       // エラーハンドリング
       logger.e('Failed to delete photo: $e');

@@ -4,14 +4,15 @@ import 'package:flutter_hooks/flutter_hooks.dart' hide Store;
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
-import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/app_dialog.dart';
 import '../../auth/auth_controller.dart';
 import '../../store/store.dart';
 import '../../store/store_controller.dart';
 import '../gallery/gallery_page.dart';
-import '../photo.dart';
-import '../photo_controller.dart';
+import '../remote_photo.dart';
+import '../remote_photo_controller.dart';
 import 'widgets/photo_detail_card.dart';
 
 class PhotoDetailPage extends HookConsumerWidget {
@@ -34,23 +35,27 @@ class PhotoDetailPage extends HookConsumerWidget {
       viewportFraction: 0.9,
     );
 
-    final photo = useState<Future<Photo?>?>(null);
+    final photo = useState<Future<RemotePhoto?>?>(null);
 
     final userId = ref.watch(userIdProvider);
 
     final isEditing = useState(false);
 
-    final photoController = ref.read(photoControllerProvider);
+    final photoController = ref.read(remotePhotoControllerProvider);
 
-    void downloadPhoto(WidgetRef ref) {
+    Future<void> downloadPhoto(WidgetRef ref) async {
       if (userId == null) {
         return;
       }
 
-      photo.value = ref.read(photoControllerProvider).downloadPhoto(
+      photo.value = ref.read(remotePhotoControllerProvider).downloadPhoto(
             userId: userId,
             photoId: photoId,
           );
+      ref.read(analyticsServiceProvider).sendEvent(
+        name: 'download_photo',
+        additionalParams: {'photo_id': photoId},
+      );
     }
 
     useEffect(
@@ -61,7 +66,7 @@ class PhotoDetailPage extends HookConsumerWidget {
       [],
     );
 
-    Future<Store?> fetchStore(Photo photo) async {
+    Future<Store?> fetchStore(RemotePhoto photo) async {
       final storeController = ref.read(storeControllerProvider);
       final userId = FirebaseAuth.instance.currentUser!.uid;
 
@@ -169,7 +174,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                               child: PhotoDetailCard(
                                 isEditing: isEditing.value,
                                 onDelete: () async {
-                                  await ConfirmDialog.show(
+                                  await AppDialog.show(
                                     context,
                                     titleString: '削除',
                                     contentString: '選択した写真を削除します。\nよろしいですか？',
@@ -202,6 +207,7 @@ class PhotoDetailPage extends HookConsumerWidget {
                                 onSelected: () {
                                   downloadPhoto(ref);
                                 },
+                                shotAt: photo.shotAt.dateTime,
                               ),
                             );
                           },

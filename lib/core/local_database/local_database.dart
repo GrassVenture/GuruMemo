@@ -2,13 +2,15 @@ import 'dart:io';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-part 'database.g.dart';
+part 'local_database.g.dart';
 
 /// 写真テーブル
-@DataClassName('Photo')
+@DataClassName('LocalPhoto')
 class Photos extends Table {
   /// 写真のid
   TextColumn get id => text()();
@@ -34,7 +36,7 @@ class Photos extends Table {
 }
 
 /// 写真情報を保存するテーブル
-@DataClassName('PhotoDetail')
+@DataClassName('LocalPhotoDetail')
 class PhotoDetails extends Table {
   /// 最後の写真id
   TextColumn get lastId => text()();
@@ -87,10 +89,6 @@ LazyDatabase _openConnection() {
   });
 }
 
-/// DBインスタンス生成
-final AppDatabase appDatabase = AppDatabase();
-
-/// DBインスタンス取得
-AppDatabase getAppDatabaseInstance() {
-  return appDatabase;
-}
+/// [AppDatabase]インスタンス用Provider
+@riverpod
+AppDatabase appDatabase(AppDatabaseRef ref) => AppDatabase();

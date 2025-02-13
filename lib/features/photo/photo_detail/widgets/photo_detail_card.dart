@@ -21,6 +21,7 @@ class PhotoDetailCard extends StatelessWidget {
     required this.storeImageUrls,
     this.showCardBack = true,
     required this.storeOpeningHours,
+    required this.shotAt,
   });
 
   final bool isEditing;
@@ -37,6 +38,7 @@ class PhotoDetailCard extends StatelessWidget {
   final bool showCardBack;
   final Map<String, String> storeOpeningHours;
   final void Function() onSelected;
+  final DateTime? shotAt;
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +53,7 @@ class PhotoDetailCard extends StatelessWidget {
               showCardBack: showCardBack,
               isEditing: isEditing,
               onDelete: onDelete,
+              shotAt: shotAt,
             ),
             back: CardBack(
               onSelected: onSelected,
@@ -73,6 +76,7 @@ class PhotoDetailCard extends StatelessWidget {
             showCardBack: showCardBack,
             isEditing: isEditing,
             onDelete: onDelete,
+            shotAt: shotAt,
           );
   }
 }

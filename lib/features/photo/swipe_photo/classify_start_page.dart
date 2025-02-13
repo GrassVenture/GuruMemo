@@ -3,8 +3,9 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/services/analytics_service.dart';
 import '../../../core/build_context_extension.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
+import '../../../core/widgets/app_elevated_button.dart';
 import 'swipe_photo_controller.dart';
 import 'swipe_photo_page.dart';
 
@@ -45,7 +46,7 @@ class ClassifyStartPage extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: CustomElevatedButton(
+              child: AppElevatedButton(
                 onPressed: () async {
                   final goRouter = GoRouter.of(context);
                   await ref
@@ -53,6 +54,9 @@ class ClassifyStartPage extends ConsumerWidget {
                         isClassifyOnboardingCompletedNotifierProvider.notifier,
                       )
                       .update(isClassifyOnboardingCompleted: true);
+                  ref.read(analyticsServiceProvider).sendEvent(
+                        name: 'google_sign_in',
+                      );
                   goRouter.go(SwipePhotoPage.routePath);
                 },
                 text: '分類スタート',
