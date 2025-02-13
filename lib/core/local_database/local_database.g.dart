@@ -1021,7 +1021,7 @@ class $AppDatabaseManager {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'e151cda86f5d12245922187e36c675da52ecec4f';
+String _$appDatabaseHash() => r'd45cc0b6c7795466b6a12d864805fefa097f39cd';
 
 /// [AppDatabase]インスタンス用Provider
 ///
