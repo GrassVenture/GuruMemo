@@ -13,3 +13,5 @@ runs:
     # fvm のバージョン で Flutter SDK を設定する
     - name: Setup Flutter SDK
       uses: kuhnroyal/flutter-fvm-config-action/setup@v3
+      with:
+        cache: true
