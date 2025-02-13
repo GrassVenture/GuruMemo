@@ -10,35 +10,6 @@ inputs:
 runs:
   using: 'composite'
   steps:
-
-    # fvm のバージョンとチャネルを環境変数に設定する
-    - name: Check fvm
-      uses: kuhnroyal/flutter-fvm-config-action@v2
-
-    # Flutter SDK の設定
+    # fvm のバージョン で Flutter SDK を設定する
     - name: Setup Flutter SDK
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-        channel: ${{ env.FLUTTER_CHANNEL }}
-        cache: true
-        cache-key: flutter
-        cache-path: ${{ runner.tool_cache }}/flutter
-
-    # flutter pub get を実行
-    # - name: Cache Pub
-    #   uses: actions/cache@v3
-    #   id: pub-cache
-    #   with:
-    #     path: |
-    #       ${{ env.FLUTTER_HOME }}/.pub-cache
-    #       **/.packages
-    #       **/.flutter-plugins
-    #       **/.flutter-plugin-dependencies
-    #       **/.dart_tool/package_config.json
-    #     key: build-pubspec-${{ hashFiles('**/pubspec.lock') }}
-    #     restore-keys: build-pubspec-
-    # - run : flutter pub get
-    # - name: Create env.dart
-    #   run: bin/flutter_env -g ${{ inputs.GITHUB_ACCESS_TOKEN }}
-    #   shell: bash
+      uses: kuhnroyal/flutter-fvm-config-action/setup@v3
