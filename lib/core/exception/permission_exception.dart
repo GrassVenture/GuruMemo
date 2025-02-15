@@ -5,14 +5,14 @@ import 'exception_code.dart';
 
 class PermissionException extends CustomException {
   const PermissionException(
-    PermissionExceptionCode exceptionCode, {
-    dynamic info,
-  }) : super(exceptionCode, info: info);
+    PermissionExceptionCode super.exceptionCode, {
+    super.info,
+  });
 
   // factoryでExceptionから生成する
   factory PermissionException.fromCode(String exceptionCode) {
     final exceptionInfo = PermissionExceptionCode.fromCode(exceptionCode);
-    // 取得に失敗した場合、一律システムエラーとする
+    // 取得に失敗した場合、一律permissionExceptionとする
     if (exceptionInfo == null) {
       throw const PermissionException(
         PermissionExceptionCode.permissonException,

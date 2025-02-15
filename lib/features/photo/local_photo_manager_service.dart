@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../core/exception/permission_exception.dart';
 import '../../core/logger.dart';
 import 'local_photo_repository.dart';
 import 'swipe_photo/swipe_photo_controller.dart';
@@ -29,7 +30,9 @@ class LocalPhotoManagerService {
   Future<void> checkPermission() async {
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
-      throw Exception('写真アクセスの権限がありません'); // 許可がない場合は例外を投げる
+      throw const PermissionException(
+        PermissionExceptionCode.localStragePermissonException,
+      );
     }
   }
 

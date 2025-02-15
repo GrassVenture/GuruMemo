@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../../core/exception/permission_exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/themes.dart';
 import '../../../main.dart';
@@ -85,7 +86,7 @@ class GalleryPage extends HookConsumerWidget {
                   await galleryController.checkPermission();
 
                   ref.read(imagePickerVisibilityProvider.notifier).show();
-                } on Exception catch (e) {
+                } on PermissionException catch (e) {
                   scaffoldMessengerKey.currentState!.showSnackBar(
                     const SnackBar(
                       content: Text('写真へのアクセスが許可されていません。設定を確認してください。'),
@@ -95,7 +96,7 @@ class GalleryPage extends HookConsumerWidget {
                       ),
                     ),
                   );
-                  logger.e('写真のアクセスが許可されていません:$e');
+                  logger.e('写真のアクセスが許可されていません: $e');
                 }
               },
               child: const Icon(Icons.add),
