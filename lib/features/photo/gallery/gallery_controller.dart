@@ -12,6 +12,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../core/image_helper.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
 import '../local_photo_manager_service.dart';
@@ -24,7 +25,7 @@ part 'gallery_controller.g.dart';
 // TODO(masaki): g.ファイルにAutoDisposeFutureProviderRefが生成されないように調整
 // Flutterバージョンを上げた後、build_runnerを最新にして再生成する等を行う
 @riverpod
-Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
+Future<List<RemotePhoto>> fetchPhotos(FetchPhotosRef ref) async {
   final userId = ref.watch(userIdProvider);
 // TODO(masaki): nullの場合ハンドリング検討
   if (userId == null) {
@@ -42,8 +43,16 @@ Future<List<RemotePhoto>> fetchPhotos(Ref ref) async {
 
   final result =
       await ref.read(photoRepositoryProvider).downloadPhotos(userId: userId);
+  final photoUrls = result.where((e) => e.url.isNotEmpty).toList();
+  final filteredPhotoUrls = result.where((e) => e.url.isNotEmpty).toList();
+  ref.read(analyticsServiceProvider).sendEvent(
+    name: 'download_photos',
+    additionalParams: {
+      'photo_urls_length': filteredPhotoUrls.length.toString(),
+    },
+  );
 
-  return result.where((e) => e.url.isNotEmpty).toList();
+  return photoUrls;
 }
 
 /// ギャラリーページに表示する画像を管理するProvider
@@ -289,6 +298,6 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
 }
 
 @riverpod
-Future<Uint8List?> photoThumbnail(Ref ref, AssetEntity photo) {
+Future<Uint8List?> photoThumbnail(PhotoThumbnailRef ref, AssetEntity photo) {
   return photo.thumbnailData;
 }

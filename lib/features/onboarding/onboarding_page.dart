@@ -6,7 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../../core/build_context_extension.dart';
-import '../../core/widgets/custom_elevated_button.dart';
+import '../../core/services/analytics_service.dart';
+import '../../core/widgets/app_elevated_button.dart';
 import '../auth/sign_in_page.dart';
 import 'onboarding_controller.dart';
 
@@ -21,9 +22,16 @@ class OnboardingPage extends HookConsumerWidget {
 
     useEffect(
       () {
-        pageController.addListener(() {
+        pageController.addListener(() async {
           final page = pageController.page!.round();
           currentOnboarding.value = page;
+
+          ref.read(analyticsServiceProvider).sendEvent(
+            name: 'open_onboarding_page',
+            additionalParams: {
+              'page_index': page.toString(),
+            },
+          );
         });
         return null;
       },
@@ -102,7 +110,7 @@ class OnboardingPage extends HookConsumerWidget {
                     ),
                     child: SizedBox(
                       height: 60,
-                      child: CustomElevatedButton(
+                      child: AppElevatedButton(
                         onPressed: () async {
                           if (!isLastPage) {
                             await pageController.nextPage(

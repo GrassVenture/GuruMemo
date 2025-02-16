@@ -9,7 +9,7 @@ import 'package:package_info/package_info.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/repositories/shared_preferences_repository.dart';
-import '../core/widgets/confirm_dialog.dart';
+import '../core/widgets/app_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
 import 'auth/auth_repository.dart';
 import 'auth/sign_in_page.dart';
@@ -86,7 +86,7 @@ class RootPage extends HookConsumerWidget {
     final packageInfo = await PackageInfo.fromPlatform();
     final currentBuildNumber = int.parse(packageInfo.buildNumber);
     if (requiredBuildNumber > currentBuildNumber && context.mounted) {
-      await ConfirmDialog.show(
+      await AppDialog.show(
         context,
         titleString: '緊急アップデートのお願い',
         contentString: '新しいバージョンが公開されました。\nアプリをアップデートしてください。',

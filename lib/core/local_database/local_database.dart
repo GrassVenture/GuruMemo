@@ -91,6 +91,4 @@ LazyDatabase _openConnection() {
 
 /// [AppDatabase]インスタンス用Provider
 @riverpod
-AppDatabase appDatabase(Ref ref) {
-  return AppDatabase();
-}
+AppDatabase appDatabase(AppDatabaseRef ref) => AppDatabase();

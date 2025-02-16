@@ -10,6 +10,7 @@ import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/exception/permission_exception.dart';
 import '../../../core/logger.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
 import '../../../main.dart';
 import '../photo_detail/photo_detail_page.dart';
@@ -36,6 +37,32 @@ class GalleryPage extends HookConsumerWidget {
         );
 
     final tabController = useTabController(initialLength: 6);
+
+    final categories = [
+      'すべて',
+      'ramen',
+      'cafe',
+      'japanese_food',
+      'western_food',
+      'ethnic',
+    ];
+
+    useEffect(
+      () {
+        Future<void> onTabChanged() async {
+          final category = categories[tabController.index];
+
+          ref.read(analyticsServiceProvider).sendEvent(
+            name: 'filter_photo',
+            additionalParams: {'category': category},
+          );
+        }
+
+        tabController.addListener(onTabChanged);
+        return () => tabController.removeListener(onTabChanged);
+      },
+      [tabController],
+    );
 
     return Scaffold(
       appBar: PreferredSize(

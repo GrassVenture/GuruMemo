@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/themes.dart';
 import '../../../../core/widgets/cards/guru_memo_card.dart';
 import '../../../../core/widgets/scalable_photo.dart';
@@ -294,9 +295,12 @@ class CardBack extends ConsumerWidget {
                           ),
                         ),
                         child: TextButton(
-                          onPressed: () {
-                            //　発火するリクエストのメソッドの処理を追加する
-                            _fetchAndShowStoresInfo(context, ref);
+                          onPressed: () async {
+                            await _fetchAndShowStoresInfo(context, ref);
+
+                            ref.read(analyticsServiceProvider).sendEvent(
+                                  name: 'get_store_list',
+                                );
                           },
                           child: Text(
                             '店舗を選び直す',
