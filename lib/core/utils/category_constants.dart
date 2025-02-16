@@ -1,4 +1,4 @@
-final class CategoryConstants {
+abstract final class CategoryConstants {
   static const all = 'すべて';
   static const ramen = 'ramen';
   static const cafe = 'cafe';
