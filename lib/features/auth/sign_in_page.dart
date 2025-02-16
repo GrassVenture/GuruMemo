@@ -117,7 +117,7 @@ class SignInPage extends HookConsumerWidget {
       }
       GoRouter.of(context).go(SwipePhotoPage.routePath);
     } on Exception catch (e) {
-      AppSnackBar.show(context, message: 'サインインに失敗しました: $e');
+      AppSnackBar.show(message: 'サインインに失敗しました: $e');
     } finally {
       isLoading.value = false;
     }

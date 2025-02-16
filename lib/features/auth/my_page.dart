@@ -44,7 +44,6 @@ class MyPage extends ConsumerWidget {
                               );
                           if (context.mounted) {
                             AppSnackBar.show(
-                              context,
                               message: 'アカウントを削除しました',
                             );
                           }

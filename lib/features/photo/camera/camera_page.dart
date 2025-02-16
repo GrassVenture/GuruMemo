@@ -94,7 +94,6 @@ class CameraPage extends HookConsumerWidget {
                                     if (!isCaptureSuccessful &&
                                         context.mounted) {
                                       AppSnackBar.show(
-                                        context,
                                         message: '設定画面で権限を全て許可に設定してください。',
                                         actionLabel: '設定を開く',
                                         onActionPressed: openAppSettings,

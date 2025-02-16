@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import '../../core/logger.dart';
 
-final class ImageHelper {
+abstract final class ImageHelper {
   /// 画像を圧縮する共通メソッド
   static Future<Uint8List?> compress(File file) async {
     try {

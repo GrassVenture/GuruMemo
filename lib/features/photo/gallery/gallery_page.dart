@@ -12,7 +12,7 @@ import '../../../core/exception/permission_exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
-import '../../../main.dart';
+import '../../../core/widgets/app_snack_bar.dart';
 import '../photo_detail/photo_detail_page.dart';
 import '../remote_photo.dart';
 import 'gallery_controller.dart';
@@ -114,14 +114,10 @@ class GalleryPage extends HookConsumerWidget {
 
                   ref.read(imagePickerVisibilityProvider.notifier).show();
                 } on PermissionException catch (e) {
-                  scaffoldMessengerKey.currentState!.showSnackBar(
-                    const SnackBar(
-                      content: Text('写真へのアクセスが許可されていません。設定を確認してください。'),
-                      action: SnackBarAction(
-                        label: '設定を開く',
-                        onPressed: PhotoManager.openSetting,
-                      ),
-                    ),
+                  AppSnackBar.show(
+                    message: '写真へのアクセスが許可されていません。設定を確認してください。',
+                    actionLabel: '設定を開く',
+                    onActionPressed: PhotoManager.openSetting,
                   );
                   logger.e('写真のアクセスが許可されていません: $e');
                 }
