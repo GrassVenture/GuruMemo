@@ -91,8 +91,7 @@ class CameraPage extends HookConsumerWidget {
                                     final isCaptureSuccessful = await ref
                                         .read(cameraStateProvider.notifier)
                                         .takePictureAndSave(context);
-                                    if (!isCaptureSuccessful &&
-                                        context.mounted) {
+                                    if (!isCaptureSuccessful) {
                                       AppSnackBar.show(
                                         message: '設定画面で権限を全て許可に設定してください。',
                                         actionLabel: '設定を開く',
