@@ -11,6 +11,8 @@ abstract class CustomException implements Exception {
 
   @override
   String toString() {
-    return 'CustomException{exceptionCode: ${exceptionCode.exceptionCode}, title: ${exceptionCode.exceptionTitle}, message: ${exceptionCode.exceptionMessage}, info: $info}';
+    return 'CustomException{exceptionCode: ${exceptionCode.exceptionCode}, '
+        'title: ${exceptionCode.exceptionTitle}, '
+        'message: ${exceptionCode.exceptionMessage}, info: $info}';
   }
 }

@@ -22,7 +22,7 @@ class PermissionException extends CustomException {
   }
 }
 
-/// サーバー共通エラーコード
+/// PermissionException共通エラーコード
 enum PermissionExceptionCode implements ExceptionCode {
   permissonException(
     'EX001',
