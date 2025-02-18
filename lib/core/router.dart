@@ -10,6 +10,7 @@ import '../features/auth/sign_in_page.dart';
 import '../features/photo/camera/camera_detail_page.dart';
 import '../features/photo/camera/camera_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
+import '../features/photo/gallery/gallery_photo_picker_page.dart';
 import '../features/photo/photo_detail/photo_detail_page.dart';
 import '../features/root_page.dart';
 import 'services/analytics_service.dart';
@@ -70,6 +71,13 @@ final routerProvider = Provider(
             index: args['index'] as int,
             photoId: args['photoId'] as String,
           );
+        },
+      ),
+      GoRoute(
+        name: GalleryPhotoPickerPage.routeName,
+        path: GalleryPhotoPickerPage.routePath,
+        builder: (context, state) {
+          return const GalleryPhotoPickerPage();
         },
       ),
     ],

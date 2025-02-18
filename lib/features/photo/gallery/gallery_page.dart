@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
+import '../../../core/build_context_extension.dart';
 import '../../../core/exception/permission_exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/services/analytics_service.dart';
@@ -105,26 +106,24 @@ class GalleryPage extends HookConsumerWidget {
           if (isImagePickerVisible) const _ImagePickerOverlay(),
         ],
       ),
-      floatingActionButton: !isImagePickerVisible
-          ? FloatingActionButton(
-              onPressed: () async {
-                final galleryController = ref.read(galleryControllerProvider);
-                try {
-                  await galleryController.checkPermission();
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          final galleryController = ref.read(galleryControllerProvider);
+          try {
+            await galleryController.checkPermission();
 
-                  ref.read(imagePickerVisibilityProvider.notifier).show();
-                } on PermissionException catch (e) {
-                  AppSnackBar.show(
-                    message: '写真へのアクセスが許可されていません。設定を確認してください。',
-                    actionLabel: '設定を開く',
-                    onActionPressed: PhotoManager.openSetting,
-                  );
-                  logger.e('写真のアクセスが許可されていません: $e');
-                }
-              },
-              child: const Icon(Icons.add),
-            )
-          : null,
+            context.go('/gallery_photo_picker_page');
+          } on PermissionException catch (e) {
+            AppSnackBar.show(
+              message: '写真へのアクセスが許可されていません。設定を確認してください。',
+              actionLabel: '設定を開く',
+              onActionPressed: PhotoManager.openSetting,
+            );
+            logger.e('写真のアクセスが許可されていません: $e');
+          }
+        },
+        child: const Icon(Icons.add),
+      ),
     );
   }
 
@@ -288,28 +287,62 @@ class _ImagePickerOverlay extends HookConsumerWidget {
                           }
                         },
                         child: Stack(
+                          alignment: Alignment.center,
                           children: [
                             thumbnailAsync.when(
                               data: (thumbnail) => thumbnail != null
-                                  ? Image.memory(thumbnail, fit: BoxFit.cover)
-                                  : Container(color: Colors.grey),
-                              loading: () => Container(color: Colors.grey),
-                              error: (_, __) => Container(color: Colors.red),
+                                  ? SizedBox.expand(
+                                      child: Image.memory(
+                                        thumbnail,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    )
+                                  : const ColoredBox(color: Colors.grey),
+                              loading: () =>
+                                  const ColoredBox(color: Colors.grey),
+                              error: (_, __) =>
+                                  const ColoredBox(color: Colors.red),
+                            ),
+                            Positioned(
+                              right: 4,
+                              top: 4,
+                              child: Container(
+                                width: 24,
+                                height: 24,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.transparent,
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
+                              ),
                             ),
                             if (isSelected)
                               Positioned(
-                                right: 4,
-                                top: 4,
+                                right: 6,
+                                top: 6,
                                 child: Container(
+                                  width: 20,
+                                  height: 20,
                                   decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: Colors.blue,
+                                    color: Themes.mainOrange,
                                   ),
-                                  padding: const EdgeInsets.all(4),
-                                  child: const Icon(
-                                    Icons.check,
-                                    size: 16,
-                                    color: Colors.white,
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '1',
+                                    style:
+                                        context.textTheme.labelMedium?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                    // TextStyle(
+                                    //   fontSize: 16,
+                                    //   fontWeight: FontWeight.bold,
+                                    //   color: Colors.white,
+                                    // ),
                                   ),
                                 ),
                               ),
