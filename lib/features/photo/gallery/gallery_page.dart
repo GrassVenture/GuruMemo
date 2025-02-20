@@ -112,7 +112,7 @@ class GalleryPage extends HookConsumerWidget {
           try {
             await galleryController.checkPermission();
 
-            context.go('/gallery_photo_picker_page');
+            await context.push('/gallery_photo_picker_page');
           } on PermissionException catch (e) {
             AppSnackBar.show(
               message: '写真へのアクセスが許可されていません。設定を確認してください。',

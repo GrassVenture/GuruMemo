@@ -26,12 +26,12 @@ class PermissionException extends CustomException {
 enum PermissionExceptionCode implements ExceptionCode {
   permissonException(
     'EX001',
-    'permissionException',
+    '',
     '権限エクセプションが発生しました。アプリの権限設定を確認してください。',
   ),
   localStragePermissonException(
-    'ER002',
-    'localStragePermissonException',
+    'EX002',
+    '',
     'ローカルストレージ権限エクセプションが発生しました。アプリの権限設定を確認してください。',
   ),
   ;
