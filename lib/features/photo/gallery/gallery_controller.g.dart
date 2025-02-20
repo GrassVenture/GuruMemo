@@ -6,7 +6,7 @@ part of 'gallery_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchPhotosHash() => r'820d679ad31dd0b0d21a62135147a295c0d45163';
+String _$fetchPhotosHash() => r'29d476857d535ce1a6ca462540ffab714593f4cb';
 
 /// See also [fetchPhotos].
 @ProviderFor(fetchPhotos)
@@ -20,9 +20,10 @@ final fetchPhotosProvider =
   allTransitiveDependencies: null,
 );
 
-// ignore: deprecated_member_use
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef FetchPhotosRef = AutoDisposeFutureProviderRef<List<RemotePhoto>>;
-String _$photoThumbnailHash() => r'08dbc9a666d10372f0229db88704c4b30dc4777c';
+String _$photoThumbnailHash() => r'78c905ce4a1cc463d44a069571474f862da98b3d';
 
 /// Copied from Dart SDK
 class _SystemHash {
@@ -158,7 +159,8 @@ class PhotoThumbnailProvider extends AutoDisposeFutureProvider<Uint8List?> {
   }
 }
 
-// ignore: deprecated_member_use
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 mixin PhotoThumbnailRef on AutoDisposeFutureProviderRef<Uint8List?> {
   /// The parameter `photo` of this provider.
   AssetEntity get photo;
@@ -247,4 +249,4 @@ final classifyLocalPhotoNotifierProvider =
 
 typedef _$ClassifyLocalPhotoNotifier = AutoDisposeAsyncNotifier<void>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

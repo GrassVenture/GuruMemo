@@ -100,7 +100,7 @@ class AppElevatedButton extends StatelessWidget {
               child: InkWell(
                 onTap: onPressed,
                 borderRadius: BorderRadius.circular(40),
-                splashColor: Themes.mainOrange.withOpacity(0.3),
+                splashColor: Themes.mainOrange.withValues(alpha: 0.3),
               ),
             ),
           ),

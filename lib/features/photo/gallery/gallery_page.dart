@@ -13,6 +13,7 @@ import '../../../core/exception/permission_exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
+import '../../../core/utils/category_constants.dart';
 import '../../../core/widgets/app_snack_bar.dart';
 import '../photo_detail/photo_detail_page.dart';
 import '../remote_photo.dart';
@@ -37,21 +38,13 @@ class GalleryPage extends HookConsumerWidget {
           data: (data) => data,
         );
 
-    final tabController = useTabController(initialLength: 6);
-
-    final categories = [
-      'すべて',
-      'ramen',
-      'cafe',
-      'japanese_food',
-      'western_food',
-      'ethnic',
-    ];
+    final tabController =
+        useTabController(initialLength: CategoryConstants.categories.length);
 
     useEffect(
       () {
         Future<void> onTabChanged() async {
-          final category = categories[tabController.index];
+          final category = CategoryConstants.categories[tabController.index];
 
           ref.read(analyticsServiceProvider).sendEvent(
             name: 'filter_photo',
@@ -75,14 +68,9 @@ class GalleryPage extends HookConsumerWidget {
               padding: const EdgeInsets.only(left: 16, bottom: 8),
               controller: tabController,
               isScrollable: true,
-              tabs: const [
-                Tab(text: 'すべて'),
-                Tab(text: 'ラーメン'),
-                Tab(text: 'カフェ'),
-                Tab(text: '和食'),
-                Tab(text: '洋食'),
-                Tab(text: 'エスニック'),
-              ],
+              tabs: CategoryConstants.tabLabels
+                  .map((label) => Tab(text: label))
+                  .toList(),
             ),
           ),
         ),
@@ -90,20 +78,17 @@ class GalleryPage extends HookConsumerWidget {
       body: Stack(
         children: [
           DefaultTabController(
-            length: 6,
+            length: CategoryConstants.categories.length,
             child: TabBarView(
               controller: tabController,
-              children: [
-                _buildPhotoGrid(context, 'すべて', photoUrls),
-                _buildPhotoGrid(context, 'ramen', photoUrls),
-                _buildPhotoGrid(context, 'cafe', photoUrls),
-                _buildPhotoGrid(context, 'japanese_food', photoUrls),
-                _buildPhotoGrid(context, 'western_food', photoUrls),
-                _buildPhotoGrid(context, 'ethnic', photoUrls),
-              ],
+              children: CategoryConstants.categories
+                  .map(
+                    (category) => _buildPhotoGrid(context, category, photoUrls),
+                  )
+                  .toList(),
             ),
           ),
-          if (isImagePickerVisible) const _ImagePickerOverlay(),
+          if (isImagePickerVisible) _ImagePickerOverlay,
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -137,7 +122,7 @@ class GalleryPage extends HookConsumerWidget {
     }
 
     List<RemotePhoto> filteredPhotos;
-    if (category == 'すべて') {
+    if (category == CategoryConstants.all) {
       filteredPhotos = photoUrls;
     } else {
       filteredPhotos =

@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
+import '../../../core/utils/format_address.dart';
 import '../../../core/widgets/app_dialog.dart';
 import '../../auth/auth_controller.dart';
 import '../../store/store.dart';
@@ -80,27 +81,6 @@ class PhotoDetailPage extends HookConsumerWidget {
         userId: userId,
         storeId: storeId,
       );
-    }
-
-    String formatAddress(String fullAddress) {
-      // 変更なし
-      final postalCodeIndex = fullAddress.indexOf('〒');
-
-      // もし '〒' が見つからない場合、そのまま fullAddress を返す
-      if (postalCodeIndex == -1) {
-        return fullAddress;
-      }
-
-      // '〒' の次のスペースが見つからない場合、そのまま fullAddress を返す
-      final spaceIndex = fullAddress.indexOf(' ', postalCodeIndex);
-      if (spaceIndex == -1) {
-        return fullAddress;
-      }
-
-      final postalCode = fullAddress.substring(postalCodeIndex, spaceIndex);
-      final address = fullAddress.substring(spaceIndex + 1);
-
-      return '$postalCode\n$address';
     }
 
     return Scaffold(

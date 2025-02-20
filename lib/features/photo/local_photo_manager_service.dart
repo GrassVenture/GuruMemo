@@ -14,7 +14,7 @@ part 'local_photo_manager_service.g.dart';
 /// [LocalPhotoManagerService]用Provider
 @riverpod
 LocalPhotoManagerService localPhotoManagerService(
-  LocalPhotoManagerServiceRef ref,
+  Ref ref,
 ) {
   return LocalPhotoManagerService._(ref);
 }
