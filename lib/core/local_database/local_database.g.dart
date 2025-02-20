@@ -1021,7 +1021,7 @@ class $AppDatabaseManager {
 // RiverpodGenerator
 // **************************************************************************
 
-String _$appDatabaseHash() => r'e151cda86f5d12245922187e36c675da52ecec4f';
+String _$appDatabaseHash() => r'd45cc0b6c7795466b6a12d864805fefa097f39cd';
 
 /// [AppDatabase]インスタンス用Provider
 ///
@@ -1036,6 +1036,8 @@ final appDatabaseProvider = AutoDisposeProvider<AppDatabase>.internal(
   allTransitiveDependencies: null,
 );
 
-typedef AppDatabaseRef = Ref<AppDatabase>;
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef AppDatabaseRef = AutoDisposeProviderRef<AppDatabase>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

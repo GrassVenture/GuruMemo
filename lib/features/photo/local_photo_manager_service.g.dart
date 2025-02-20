@@ -7,7 +7,7 @@ part of 'local_photo_manager_service.dart';
 // **************************************************************************
 
 String _$localPhotoManagerServiceHash() =>
-    r'a7e66d79cb6152013e0d5d4207194e15253069fa';
+    r'93c455c17188971d7b7d849b6228eed442245037';
 
 /// [LocalPhotoManagerService]用Provider
 ///
@@ -24,8 +24,9 @@ final localPhotoManagerServiceProvider =
   allTransitiveDependencies: null,
 );
 
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef LocalPhotoManagerServiceRef
-    // ignore: deprecated_member_use
     = AutoDisposeProviderRef<LocalPhotoManagerService>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

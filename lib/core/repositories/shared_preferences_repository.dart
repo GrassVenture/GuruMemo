@@ -19,7 +19,7 @@ enum SharedPreferencesKey {
 
 @Riverpod(keepAlive: true)
 SharedPreferencesRepository sharedPreferencesRepository(
-  SharedPreferencesRepositoryRef ref,
+  Ref ref,
 ) {
   return SharedPreferencesRepository._();
 }

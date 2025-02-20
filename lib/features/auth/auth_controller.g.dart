@@ -6,7 +6,7 @@ part of 'auth_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$authedUserStreamHash() => r'cfe52885f81545fd073a8d823ecbb446044c1b9d';
+String _$authedUserStreamHash() => r'1339d5b33422b48a40b1635cc3bce651ef020f5b';
 
 /// [AuthedUser]を購読するProvider
 ///
@@ -22,7 +22,8 @@ final authedUserStreamProvider = AutoDisposeStreamProvider<AuthedUser>.internal(
   allTransitiveDependencies: null,
 );
 
-// ignore: deprecated_member_use
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
 typedef AuthedUserStreamRef = AutoDisposeStreamProviderRef<AuthedUser>;
 // ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
