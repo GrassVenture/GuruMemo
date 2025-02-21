@@ -33,7 +33,7 @@ class LocalPhotoManagerService {
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
       throw const PermissionException(
-        PermissionExceptionCode.localStragePermissonException,
+        PermissionExceptionCode.localStoragePermissionException,
       );
     }
   }

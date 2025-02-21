@@ -15,7 +15,7 @@ class PermissionException extends CustomException {
     // 取得に失敗した場合、一律permissionExceptionとする
     if (exceptionInfo == null) {
       throw const PermissionException(
-        PermissionExceptionCode.permissonException,
+        PermissionExceptionCode.permissionException,
       );
     }
     return PermissionException(exceptionInfo);
@@ -24,12 +24,12 @@ class PermissionException extends CustomException {
 
 /// PermissionException共通エラーコード
 enum PermissionExceptionCode implements ExceptionCode {
-  permissonException(
+  permissionException(
     'EX001',
     '',
     '権限エクセプションが発生しました。アプリの権限設定を確認してください。',
   ),
-  localStragePermissonException(
+  localStoragePermissionException(
     'EX002',
     '',
     'ローカルストレージ権限エクセプションが発生しました。アプリの権限設定を確認してください。',
