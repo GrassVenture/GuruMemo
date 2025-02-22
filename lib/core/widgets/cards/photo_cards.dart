@@ -18,7 +18,7 @@ class _PhotoFileCacheNotifier
   }
 }
 
-final photoFileCacheProvider = AsyncNotifierProvider.family
+final AutoDisposeAsyncNotifierProviderFamily<_PhotoFileCacheNotifier, File, AssetEntity> photoFileCacheProvider = AsyncNotifierProvider.family
     .autoDispose<_PhotoFileCacheNotifier, File, AssetEntity>(
   _PhotoFileCacheNotifier.new,
 );

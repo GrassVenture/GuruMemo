@@ -18,7 +18,7 @@ part 'auth_repository.g.dart';
 /// fromFirestoreではドキュメントidを追加し、toFirestoreではドキュメントidを削除する。
 /// 常にtoFirestoreを経由するために、ドキュメント更新時には
 /// [DocumentReference.update]ではなく[DocumentReference.set]を用いる。
-final authedUsersRef =
+final CollectionReference<AuthedUser> authedUsersRef =
     FirebaseFirestore.instance.collection('users').withConverter<AuthedUser>(
   fromFirestore: (ds, _) {
     final data = ds.data()!;

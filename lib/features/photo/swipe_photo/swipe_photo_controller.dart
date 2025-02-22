@@ -41,7 +41,7 @@ class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   }
 }
 
-final photoCountProvider =
+final AutoDisposeNotifierProvider<_PhotoCountNotifier, PhotoCount?> photoCountProvider =
     NotifierProvider.autoDispose<_PhotoCountNotifier, PhotoCount?>(
   _PhotoCountNotifier.new,
 );
@@ -56,7 +56,7 @@ class _FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
   }
 }
 
-final foodPhotoTotalProvider =
+final AutoDisposeAsyncNotifierProvider<_FoodPhotoTotalNotifier, int> foodPhotoTotalProvider =
     AsyncNotifierProvider.autoDispose<_FoodPhotoTotalNotifier, int>(
   _FoodPhotoTotalNotifier.new,
 );
@@ -178,7 +178,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   }
 }
 
-final photoListProvider =
+final AutoDisposeAsyncNotifierProvider<_PhotoListNotifier, List<AssetEntity>> photoListProvider =
     AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
   _PhotoListNotifier.new,
 );

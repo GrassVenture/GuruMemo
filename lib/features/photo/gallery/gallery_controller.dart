@@ -165,7 +165,7 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
 /// 画像選択画面で選択された画像を管理するProvider
 @riverpod
 class SelectedLocalPhotos extends _$SelectedLocalPhotos {
-  final int _maxSelection = 30;
+  final _maxSelection = 30;
 
   @override
   List<AssetEntity> build() => [];

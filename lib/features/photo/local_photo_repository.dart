@@ -5,7 +5,7 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../../core/local_database/local_database.dart';
 
 /// [LocalPhotoRepository]用プロバイダー
-final localPhotoRepositoryProvider = Provider(LocalPhotoRepository._);
+final Provider<LocalPhotoRepository> localPhotoRepositoryProvider = Provider(LocalPhotoRepository._);
 
 /// ローカルDBに接続して[LocalPhoto]を操作するクラス
 class LocalPhotoRepository {

@@ -11,7 +11,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'core/router.dart';
 import 'core/themes.dart';
 
-final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+final scaffoldMessengerKey =
     GlobalKey<ScaffoldMessengerState>();
 
 Future<void> main() async {

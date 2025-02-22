@@ -13,4 +13,4 @@ enum Flavor {
 }
 
 /// 別ファイルから用いるグローバル変数
-final flavor = Flavor.fromEnvironment;
+final Flavor flavor = Flavor.fromEnvironment;

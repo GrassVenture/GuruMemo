@@ -15,10 +15,10 @@ import '../features/photo/photo_detail/photo_detail_page.dart';
 import '../features/root_page.dart';
 import 'services/analytics_service.dart';
 
-final routerProvider = Provider(
+final routerProvider = Provider<GoRouter>(
   (ref) => GoRouter(
     initialLocation: GalleryPage.routePath,
-    redirect: (context, state) async {
+    redirect: (context, state) {
       ref.read(analyticsServiceProvider).sendScreenView(state.matchedLocation);
       return null;
     },

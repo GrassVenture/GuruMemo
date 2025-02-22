@@ -15,7 +15,7 @@ abstract final class CategoryConstants {
     ethnic,
   ];
 
-  static const List<String> tabLabels = [
+  static const tabLabels = <String>[
     'すべて',
     'ラーメン',
     'カフェ',

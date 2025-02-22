@@ -26,7 +26,7 @@ CollectionReference<Store> storesRef({required String userId}) {
   );
 }
 
-final storeRepositoryProvider = Provider((ref) => StoreRepository._());
+final Provider<StoreRepository> storeRepositoryProvider = Provider((ref) => StoreRepository._());
 
 class StoreRepository {
   StoreRepository._();

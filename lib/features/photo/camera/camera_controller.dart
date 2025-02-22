@@ -117,7 +117,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 }
 
 // カメラコントローラ用のプロバイダー
-final cameraControllerProvider =
+final AutoDisposeFutureProvider<CameraController> cameraControllerProvider =
     FutureProvider.autoDispose<CameraController>((ref) async {
   final cameras = await availableCameras();
 
@@ -145,7 +145,7 @@ final cameraStateProvider =
 });
 
 /// 写真リストを管理するプロバイダー
-final latestPhotoListProvider =
+final AutoDisposeAsyncNotifierProvider<_LatestPhotoNotifier, AssetEntity?> latestPhotoListProvider =
     AsyncNotifierProvider.autoDispose<_LatestPhotoNotifier, AssetEntity?>(
   _LatestPhotoNotifier.new,
 );
