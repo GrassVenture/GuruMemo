@@ -84,23 +84,6 @@ class GalleryPage extends HookConsumerWidget {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          final galleryController = ref.read(galleryControllerProvider);
-          try {
-            await galleryController.checkPermission();
-
-            await context.push('/gallery_photo_picker_page');
-          } on PermissionException {
-            AppSnackBar.show(
-              message: '写真へのアクセスが許可されていません。設定を確認してください。',
-              actionLabel: '設定を開く',
-              onActionPressed: PhotoManager.openSetting,
-            );
-          }
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 
