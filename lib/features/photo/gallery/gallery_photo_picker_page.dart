@@ -45,7 +45,7 @@ class GalleryPhotoPickerPage extends HookConsumerWidget {
             },
             widget: const Icon(Icons.camera_alt, color: Colors.white),
           ),
-          const Gap(16)
+          const Gap(16),
         ],
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(30),

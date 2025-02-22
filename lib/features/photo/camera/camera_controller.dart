@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -35,7 +35,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       }
 
       // 画像をギャラリーに保存
-      final result = await ImageGallerySaver.saveFile(image.path);
+      final result = await ImageGallerySaverPlus.saveFile(image.path);
       logger.i('ギャラリーに画像を保存しました: $result');
 
       // 状態更新
