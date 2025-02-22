@@ -37,16 +37,23 @@ final routerProvider = Provider<GoRouter>(
             builder: (context, state) => const GalleryPage(),
           ),
           GoRoute(
+            name: PhotoPickerPage.routeName,
+            path: PhotoPickerPage.routePath,
+            builder: (context, state) {
+              return const PhotoPickerPage();
+            },
+          ),
+          GoRoute(
             name: MyPage.routeName,
             path: MyPage.routePath,
             builder: (context, state) => const MyPage(),
           ),
-          GoRoute(
-            name: CameraPage.routeName,
-            path: CameraPage.routePath,
-            builder: (context, state) => const CameraPage(),
-          ),
         ],
+      ),
+      GoRoute(
+        name: CameraPage.routeName,
+        path: CameraPage.routePath,
+        builder: (context, state) => const CameraPage(),
       ),
       GoRoute(
         name: CameraDetailPage.routeName,
@@ -71,13 +78,6 @@ final routerProvider = Provider<GoRouter>(
             index: args['index'] as int,
             photoId: args['photoId'] as String,
           );
-        },
-      ),
-      GoRoute(
-        name: GalleryPhotoPickerPage.routeName,
-        path: GalleryPhotoPickerPage.routePath,
-        builder: (context, state) {
-          return const GalleryPhotoPickerPage();
         },
       ),
     ],

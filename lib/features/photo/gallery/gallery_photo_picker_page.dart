@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -13,11 +12,11 @@ import '../../../core/themes.dart';
 import '../../../core/widgets/app_elevated_button.dart';
 import 'gallery_controller.dart';
 
-class GalleryPhotoPickerPage extends HookConsumerWidget {
-  const GalleryPhotoPickerPage({super.key});
+class PhotoPickerPage extends HookConsumerWidget {
+  const PhotoPickerPage({super.key});
 
-  static const routeName = 'gallery_photo_picker_page';
-  static const routePath = '/gallery_photo_picker_page';
+  static const routeName = 'photo_picker_page';
+  static const routePath = '/photo_picker_page';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,13 +29,13 @@ class GalleryPhotoPickerPage extends HookConsumerWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
-        leading: IconButton(
-          iconSize: 24,
-          icon: const Icon(Icons.close),
-          onPressed: () {
-            context.pop();
-          },
-        ),
+        // leading: IconButton(
+        //   iconSize: 24,
+        //   icon: const Icon(Icons.close),
+        //   onPressed: () {
+        //     context.pop();
+        //   },
+        // ),
         actions: [
           AppElevatedButton(
             text: 'カメラを開く',
@@ -186,10 +185,10 @@ class GalleryPhotoPickerPage extends HookConsumerWidget {
                     ? AppElevatedButton(
                         text: '$selectedCount 件を追加',
                         onPressed: () {
-                          // **即座に選択状態をリセット（UI更新）**
+                          // 即座に選択状態をリセット（UI更新）
                           selectedLocalPhotosNotifier.state = <AssetEntity>[];
 
-                          // **非同期で分類処理を実行（バックグラウンド処理）**
+                          // 非同期で分類処理を実行（バックグラウンド処理）
                           Future.microtask(() async {
                             final selectedPhotos = selectedLocalPhotos.toList();
                             final photoListNotifier = ref.read(
