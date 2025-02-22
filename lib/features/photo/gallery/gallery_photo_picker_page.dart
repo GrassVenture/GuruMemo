@@ -44,6 +44,7 @@ class GalleryPhotoPickerPage extends HookConsumerWidget {
               print('ボタンが押されました！');
             },
             widget: const Icon(Icons.camera_alt, color: Colors.white),
+            width: 130,
           ),
           const Gap(16),
         ],
