@@ -43,7 +43,7 @@ dependencies:
   http: ^1.2.1
   image: ^4.2.0
 #  image_gallery_saver: ^2.0.3
-  image_gallery_saver_plus: ^3.0.5
+  image_gallery_saver_plus: ^4.0.0-0.alpha
   image_picker: ^1.1.2
   intl: ^0.20.1
   logger: null
