@@ -37,13 +37,17 @@ if (project.hasProperty('dart-defines')) {
             .split(',')
             .collectEntries { entry ->
                 def pair = new String(entry.decodeBase64(), 'UTF-8').split('=')
-                [(pair.first()): pair.last()]
+                pair.length == 2 ? [(pair.first()): pair.last()] : [:]
             }
 }
 
-task selectGoogleServicesJson(type: Copy) {
+task selectGoogleServicesJson {
+    doFirst {
+        copy {
     from "src/${dartEnvironmentVariables.FLAVOR}/google-services.json"
     into './'
+        }
+    }
 }
 
 tasks.whenTaskAdded { task ->
@@ -119,7 +123,7 @@ flutter {
     source '../..'
 }
 
-def kotlin_version = "1.9.20"
+def kotlin_version = "2.1.10"
 
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
