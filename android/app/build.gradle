@@ -60,8 +60,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace "com.blue_waltz.my_gourmet"
-    // TODO(masaki): Flutterバージョンを3.16系以降にした後に`flutter.compileSdkVersion`へ
-    compileSdkVersion 35
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {
