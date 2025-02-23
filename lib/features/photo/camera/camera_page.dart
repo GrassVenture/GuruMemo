@@ -7,7 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/themes.dart';
 import 'camera_controller.dart';
-import 'camera_preview_page.dart';
+// import 'camera_preview_page.dart';
 
 class CameraPage extends HookConsumerWidget {
   const CameraPage({super.key});
@@ -57,13 +57,13 @@ class CameraPage extends HookConsumerWidget {
             child: GestureDetector(
               onTap: cameraState.isTakingPicture
                   ? null // 撮影中はボタンを無効にする
-                  : () async {
+                  : () {
                       // final image = await ref
                       //     .read(cameraStateProvider.notifier)
                       //     .takePicture(context);
-                      final controller =
-                          await ref.read(cameraControllerProvider.future);
-                      final image = await controller.takePicture();
+                      // final controller =
+                      //     await ref.read(cameraControllerProvider.future);
+                      // final image = await controller.takePicture();
                       // if (!isCaptureSuccessful) {
                       //   AppSnackBar.show(
                       //     message: '設定画面で権限を全て許可に設定してください。',
@@ -73,10 +73,10 @@ class CameraPage extends HookConsumerWidget {
                       //   ref.invalidate(cameraStateProvider);
                       // }
 
-                      await context.pushNamed(
-                        CameraPreviewPage.routeName,
-                        extra: image.path,
-                      );
+                      // await context.pushNamed(
+                      //   CameraPreviewPage.routeName,
+                      //   extra: image.path,
+                      // );
                     },
               child: Container(
                 width: 68,

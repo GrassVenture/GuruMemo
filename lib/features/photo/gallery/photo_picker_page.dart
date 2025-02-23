@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:photo_manager/photo_manager.dart';
+// import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/build_context_extension.dart';
 import '../../../core/logger.dart';
@@ -181,7 +181,8 @@ class PhotoPickerPage extends HookConsumerWidget {
                         text: '$selectedCount 件を追加',
                         onPressed: () {
                           // 即座に選択状態をリセット（UI更新）
-                          selectedLocalPhotosNotifier.state = <AssetEntity>[];
+                          //selectedLocalPhotosNotifier.state =
+                          // <AssetEntity>[];
 
                           // 非同期で分類処理を実行（バックグラウンド処理）
                           Future.microtask(() async {
