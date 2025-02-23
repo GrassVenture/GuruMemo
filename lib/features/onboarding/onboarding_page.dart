@@ -22,7 +22,7 @@ class OnboardingPage extends HookConsumerWidget {
 
     useEffect(
       () {
-        pageController.addListener(() async {
+        pageController.addListener(() {
           final page = pageController.page!.round();
           currentOnboarding.value = page;
 

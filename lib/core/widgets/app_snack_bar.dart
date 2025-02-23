@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../main.dart';
 
 /// 共通SnackBar
 class AppSnackBar extends SnackBar {
@@ -13,8 +14,7 @@ class AppSnackBar extends SnackBar {
           ),
         );
 
-  static void show(
-    BuildContext context, {
+  static void show({
     required String message,
     String? actionLabel,
     VoidCallback? onActionPressed,
@@ -26,7 +26,7 @@ class AppSnackBar extends SnackBar {
           )
         : null;
 
-    ScaffoldMessenger.of(context).showSnackBar(
+    scaffoldMessengerKey.currentState?.showSnackBar(
       AppSnackBar._(message: message, action: action),
     );
   }

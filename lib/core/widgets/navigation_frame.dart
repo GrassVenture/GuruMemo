@@ -10,8 +10,8 @@ import '../../core/themes.dart';
 import '../../features/auth/auth_repository.dart';
 import '../../features/auth/my_page.dart';
 import '../../features/onboarding/onboarding_controller.dart';
-import '../../features/photo/camera/camera_page.dart';
 import '../../features/photo/gallery/gallery_page.dart';
+import '../../features/photo/gallery/photo_picker_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
@@ -22,14 +22,14 @@ class NavigationFrame extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = useState<int>(1);
+    final selectedIndex = useState<int>(0);
 
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final isOnboardingComplete =
               ref.read(isOnboardingCompletedNotifierProvider);
-          selectedIndex.value = !isOnboardingComplete ? 0 : 2;
+          selectedIndex.value = !isOnboardingComplete ? 0 : 0;
         });
         return null;
       },
@@ -92,8 +92,8 @@ class NavigationFrame extends HookConsumerWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           _buildNavItem(
-                            icon: Icons.photo_camera_outlined,
-                            label: 'カメラ',
+                            icon: Icons.photo,
+                            label: 'ギャラリー',
                             index: 0,
                             context: context,
                             isClassifyOnboardingCompleted:
@@ -101,8 +101,8 @@ class NavigationFrame extends HookConsumerWidget {
                             selectedIndex: selectedIndex,
                           ),
                           _buildNavItem(
-                            icon: Icons.photo,
-                            label: 'ギャラリー',
+                            icon: Icons.add,
+                            label: '写真を追加',
                             index: 1,
                             context: context,
                             isClassifyOnboardingCompleted:
@@ -201,9 +201,9 @@ class NavigationFrame extends HookConsumerWidget {
   ) {
     switch (index) {
       case 0:
-        context.go(CameraPage.routePath);
-      case 1:
         context.go(GalleryPage.routePath);
+      case 1:
+        context.go(PhotoPickerPage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }

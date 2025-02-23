@@ -42,12 +42,9 @@ class MyPage extends ConsumerWidget {
                           ref.read(analyticsServiceProvider).sendEvent(
                                 name: 'delete_account',
                               );
-                          if (context.mounted) {
-                            AppSnackBar.show(
-                              context,
-                              message: 'アカウントを削除しました',
-                            );
-                          }
+                          AppSnackBar.show(
+                            message: 'アカウントを削除しました',
+                          );
                         },
                       );
                     },

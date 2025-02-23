@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
+import '../../../core/image_helper.dart';
 import '../../../core/logger.dart';
 import '../../../core/repositories/shared_preferences_repository.dart';
 import '../../../core/timestamp_converter.dart';
@@ -20,7 +18,7 @@ part 'swipe_photo_controller.g.dart';
 
 /// 写真のカウントを管理するProvider
 /// スワイプ画面の上部のカウントに使用
-class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
+class PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   @override
   PhotoCount? build() => null;
 
@@ -43,28 +41,30 @@ class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   }
 }
 
-final photoCountProvider =
-    NotifierProvider.autoDispose<_PhotoCountNotifier, PhotoCount?>(
-  _PhotoCountNotifier.new,
+final AutoDisposeNotifierProvider<PhotoCountNotifier, PhotoCount?>
+    photoCountProvider =
+    NotifierProvider.autoDispose<PhotoCountNotifier, PhotoCount?>(
+  PhotoCountNotifier.new,
 );
 
 /// グルメの登録数を取得するProvider
 /// 分類完了後の 「追加された写真 ＋XXX枚」に使用
-class _FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
+class FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
   @override
-  Future<int> build() async {
+  Future<int> build() {
     // 取得できない場合はデフォルト値設定
     return ref.read(localPhotoRepositoryProvider).getFoodPhotoTotal();
   }
 }
 
-final foodPhotoTotalProvider =
-    AsyncNotifierProvider.autoDispose<_FoodPhotoTotalNotifier, int>(
-  _FoodPhotoTotalNotifier.new,
+final AutoDisposeAsyncNotifierProvider<FoodPhotoTotalNotifier, int>
+    foodPhotoTotalProvider =
+    AsyncNotifierProvider.autoDispose<FoodPhotoTotalNotifier, int>(
+  FoodPhotoTotalNotifier.new,
 );
 
 /// 写真を取得するProvider
-class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
+class PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   /// 初期処理
   @override
   Future<List<AssetEntity>> build() async {
@@ -121,7 +121,7 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
 
           final photoFile = await photo.file;
           if (photoFile != null) {
-            final compressedData = await _compressImage(photoFile);
+            final compressedData = await ImageHelper.compress(photoFile);
             if (compressedData != null) {
               await ref.read(photoRepositoryProvider).registerPhotoData(
                     userId: userId,
@@ -178,23 +178,12 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
     state = const AsyncLoading<List<AssetEntity>>();
     ref.invalidateSelf();
   }
-
-  /// 画像を圧縮するメソッド
-  Future<Uint8List?> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      minWidth: 256,
-      minHeight: 256,
-      quality: 85,
-      keepExif: true,
-    );
-    return result;
-  }
 }
 
-final photoListProvider =
-    AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
-  _PhotoListNotifier.new,
+final AutoDisposeAsyncNotifierProvider<PhotoListNotifier, List<AssetEntity>>
+    photoListProvider =
+    AsyncNotifierProvider.autoDispose<PhotoListNotifier, List<AssetEntity>>(
+  PhotoListNotifier.new,
 );
 
 /// [SharedPreferencesRepository]と連携して、写真分類スタート画面表示フラグを管理するNotifier

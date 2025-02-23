@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
 
@@ -23,6 +23,30 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
   final Ref ref;
 
+  Future<bool> takePicture(BuildContext context) async {
+    state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
+
+    try {
+      final controller = await ref.read(cameraControllerProvider.future);
+      final image = await controller.takePicture();
+      // 権限のリクエストをまとめて行う
+      // if (!(await _ensurePermissions())) {
+      //   return false;
+      // }
+      // 状態更新
+      state = state.copyWith(
+        capturedImage: File(image.path),
+        imageDate: FormatDateTime.dateFmt.format(DateTime.now()),
+      );
+    } on Exception catch (e) {
+      logger.e('写真撮影エラー: $e');
+      return false;
+    } finally {
+      state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
+    }
+    return true;
+  }
+
   Future<bool> takePictureAndSave(BuildContext context) async {
     state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
 
@@ -35,7 +59,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       }
 
       // 画像をギャラリーに保存
-      final result = await ImageGallerySaver.saveFile(image.path);
+      final result = await ImageGallerySaverPlus.saveFile(image.path);
       logger.i('ギャラリーに画像を保存しました: $result');
 
       // 状態更新
@@ -117,7 +141,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 }
 
 // カメラコントローラ用のプロバイダー
-final cameraControllerProvider =
+final AutoDisposeFutureProvider<CameraController> cameraControllerProvider =
     FutureProvider.autoDispose<CameraController>((ref) async {
   final cameras = await availableCameras();
 
@@ -145,13 +169,14 @@ final cameraStateProvider =
 });
 
 /// 写真リストを管理するプロバイダー
-final latestPhotoListProvider =
-    AsyncNotifierProvider.autoDispose<_LatestPhotoNotifier, AssetEntity?>(
-  _LatestPhotoNotifier.new,
+final AutoDisposeAsyncNotifierProvider<LatestPhotoNotifier, AssetEntity?>
+    latestPhotoListProvider =
+    AsyncNotifierProvider.autoDispose<LatestPhotoNotifier, AssetEntity?>(
+  LatestPhotoNotifier.new,
 );
 
 /// 写真を取得するProvider
-class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
+class LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
   /// 初期処理
   @override
   Future<AssetEntity?> build() async {

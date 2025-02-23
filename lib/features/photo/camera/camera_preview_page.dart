@@ -1,23 +1,19 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../../../core/build_context_extension.dart';
 
-class CameraDetailPage extends HookConsumerWidget {
-  const CameraDetailPage({
+class CameraPreviewPage extends HookConsumerWidget {
+  const CameraPreviewPage({
     super.key,
-    required this.imageFile,
-    required this.imageDate,
+    required this.imagePath,
   });
 
-  final File imageFile;
-  final String imageDate;
+  final String imagePath;
 
-  static const routeName = 'camera_detail_page';
-  static const routePath = '/camera_detail_page';
+  static const routeName = 'camera_preview_page';
+  static const routePath = '/camera_preview_page';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -56,25 +52,12 @@ class CameraDetailPage extends HookConsumerWidget {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(16),
                             child: Image.file(
-                              imageFile,
+                              File(imagePath),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                      ),
-                      const Gap(28),
-                      Text(
-                        imageDate,
-                        style: context.textTheme.bodyMedium,
-                        textAlign: TextAlign.center,
-                      ),
-                      const Gap(8),
-                      Text(
-                        '---',
-                        textAlign: TextAlign.center,
-                        style: context.textTheme.bodyMedium,
-                      ),
-                      const Gap(24),
+                      )
                     ],
                   ),
                 ),

@@ -47,12 +47,12 @@ class AuthController {
   }
 
   /// Googleサインイン用メソッド
-  Future<({String accessToken, String userId})> signInWithGoogle() async {
+  Future<({String accessToken, String userId})> signInWithGoogle() {
     return _authRepository.signInWithGoogle();
   }
 
   /// Appleサインイン用メソッド
-  Future<({String accessToken, String userId})> signInWithApple() async {
+  Future<({String accessToken, String userId})> signInWithApple() {
     return _authRepository.signInWithApple();
   }
 }

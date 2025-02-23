@@ -23,8 +23,8 @@ class PhotoDetailPage extends HookConsumerWidget {
     required this.photoId,
   });
 
-  static const String routeName = '/photo_detail';
-  static const String routePath = '/photo_detail';
+  static const routeName = '/photo_detail';
+  static const routePath = '/photo_detail';
 
   final int index;
   final String photoId;

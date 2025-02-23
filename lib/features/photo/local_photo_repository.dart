@@ -5,7 +5,8 @@ import 'package:photo_manager/photo_manager.dart';
 import '../../../core/local_database/local_database.dart';
 
 /// [LocalPhotoRepository]用プロバイダー
-final localPhotoRepositoryProvider = Provider(LocalPhotoRepository._);
+final Provider<LocalPhotoRepository> localPhotoRepositoryProvider =
+    Provider(LocalPhotoRepository._);
 
 /// ローカルDBに接続して[LocalPhoto]を操作するクラス
 class LocalPhotoRepository {
@@ -17,7 +18,7 @@ class LocalPhotoRepository {
   AppDatabase get _db => _ref.read(appDatabaseProvider);
 
   /// 写真リストを取得する
-  Future<List<LocalPhoto>> getAllPhotos() async {
+  Future<List<LocalPhoto>> getAllPhotos() {
     return _db.select(_db.photos).get();
   }
 
@@ -28,7 +29,7 @@ class LocalPhotoRepository {
   }
 
   /// 写真情報を取得する
-  Future<LocalPhotoDetail?> getPhotoDetail() async {
+  Future<LocalPhotoDetail?> getPhotoDetail() {
     return (_db.select(_db.photoDetails)..limit(1)).getSingleOrNull();
   }
 

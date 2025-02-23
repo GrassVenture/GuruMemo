@@ -38,7 +38,8 @@ CollectionReference<RemotePhoto> photosRef({required String userId}) {
   );
 }
 
-final photoRepositoryProvider = Provider((ref) => PhotoRepository._());
+final Provider<PhotoRepository> photoRepositoryProvider =
+    Provider((ref) => PhotoRepository._());
 
 class PhotoRepository {
   PhotoRepository._();

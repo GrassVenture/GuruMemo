@@ -21,14 +21,14 @@ class StoreController {
   /// 写真ダウンロード用メソッド
   Future<List<Store>> getStoresInfo({
     required List<String> areaStoreIds,
-  }) async {
+  }) {
     return _storeRepository.getStoresInfo(areaStoreIds: areaStoreIds);
   }
 
   Future<Store?> getStoreById({
     required String userId,
     required String storeId,
-  }) async {
+  }) {
     return _storeRepository.getStoreById(
       userId: userId,
       storeId: storeId,

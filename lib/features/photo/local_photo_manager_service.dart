@@ -4,6 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../core/exception/permission_exception.dart';
+import '../../core/logger.dart';
 import 'local_photo_repository.dart';
 import 'swipe_photo/swipe_photo_controller.dart';
 
@@ -25,6 +27,16 @@ class LocalPhotoManagerService {
 
   LocalPhotoRepository get _localPhotoRepository =>
       _ref.read(localPhotoRepositoryProvider);
+
+  /// **写真アクセスの権限をチェック**
+  Future<void> checkPermission() async {
+    final permission = await PhotoManager.requestPermissionExtend();
+    if (!permission.isAuth && !permission.hasAccess) {
+      throw const PermissionException(
+        PermissionExceptionCode.localStoragePermissionException,
+      );
+    }
+  }
 
   /// 写真取得
   /// [lastEntity] 最後の写真情報
@@ -84,6 +96,38 @@ class LocalPhotoManagerService {
     final photos = await albums[0].getAssetListPaged(page: 0, size: 100);
 
     return photos;
+  }
+
+  /// 指定した件数・順番で写真を取得
+  /// [limit] 取得件数
+  /// [sortOrder] 並び順（昇順: true / 降順: false）
+  Future<List<AssetEntity>> getFilteredPhotos({
+    required int limit,
+    required bool sortOrder,
+  }) async {
+    try {
+      final albums = await PhotoManager.getAssetPathList(
+        type: RequestType.image,
+        filterOption: FilterOptionGroup(
+          orders: [
+            OrderOption(
+              asc: sortOrder,
+            ),
+          ],
+        ),
+      );
+
+      // 写真が取得できない場合
+      if (albums.isEmpty) {
+        return [];
+      }
+
+      // 指定した件数分の写真を取得
+      return await albums[0].getAssetListPaged(page: 0, size: limit);
+    } on Exception catch (e) {
+      logger.e('Error getting filtered photos: $e');
+      return [];
+    }
   }
 
   /// 最新の写真を取得

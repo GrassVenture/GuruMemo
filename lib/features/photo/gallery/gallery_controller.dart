@@ -9,12 +9,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/exception.dart';
+import '../../../core/image_helper.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../../core/services/analytics_service.dart';
 import '../../auth/auth_controller.dart';
 import '../../auth/authed_user.dart';
+import '../local_photo_manager_service.dart';
 import '../local_photo_repository.dart';
 import '../remote_photo.dart';
 import '../remote_photo_repository.dart';
@@ -119,6 +120,11 @@ class GalleryController {
 
     return file!;
   }
+
+  Future<void> checkPermission() async {
+    final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
+    await localPhotoManagerService.checkPermission();
+  }
 }
 
 @riverpod
@@ -135,23 +141,31 @@ class ImagePickerVisibility extends _$ImagePickerVisibility {
 @riverpod
 class LocalPhotoAssets extends _$LocalPhotoAssets {
   @override
-  Future<List<AssetEntity>> build() async {
+  Future<List<AssetEntity>> build() {
     return _loadLocalPhotos();
   }
 
   Future<List<AssetEntity>> _loadLocalPhotos() async {
-    final albums = await PhotoManager.getAssetPathList(type: RequestType.image);
-    if (albums.isNotEmpty) {
-      return albums[0].getAssetListPaged(page: 0, size: 20000);
+    try {
+      final localPhotoManagerService = ref.read(
+        localPhotoManagerServiceProvider,
+      );
+
+      return localPhotoManagerService.getFilteredPhotos(
+        limit: 20000,
+        sortOrder: false,
+      );
+    } on Exception catch (e) {
+      logger.e('画像選択画面の写真読み込みでエラーが発生しました: $e');
+      return [];
     }
-    return [];
   }
 }
 
 /// 画像選択画面で選択された画像を管理するProvider
 @riverpod
 class SelectedLocalPhotos extends _$SelectedLocalPhotos {
-  final int _maxSelection = 30;
+  final _maxSelection = 30;
 
   @override
   List<AssetEntity> build() => [];
@@ -177,11 +191,9 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
 @riverpod
 class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
   @override
-  FutureOr<void> build() async {
-    final permission = await PhotoManager.requestPermissionExtend();
-    if (!permission.isAuth && !permission.hasAccess) {
-      throw PermissionException();
-    }
+  Future<void> build() async {
+    final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
+    await localPhotoManagerService.checkPermission();
   }
 
   Future<void> classifyPhotoAsFood({
@@ -192,7 +204,8 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
-      throw Exception('サインインされていません');
+      logger.e('サインインされていません');
+      return;
     }
 
     try {
@@ -211,7 +224,7 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
 
         // 画像ファイルの圧縮と送信
         final photoFile = File(image.path);
-        final compressedData = await _compressImage(photoFile);
+        final compressedData = await ImageHelper.compress(photoFile);
 
         if (compressedData != null) {
           await ref.read(photoRepositoryProvider).categorizeFood(
@@ -279,18 +292,6 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
       throw ArgumentError('値がRatio型ではありません: $value');
     }
     return value.numerator / value.denominator;
-  }
-
-  /// 画像を圧縮
-  Future<Uint8List?> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      minWidth: 256,
-      minHeight: 256,
-      quality: 85,
-      keepExif: true,
-    );
-    return result;
   }
 }
 
