@@ -13,6 +13,7 @@ import '../../../store/store.dart';
 import '../../remote_photo_controller.dart';
 
 List<File> shopList = [];
+// ignore: omit_obvious_property_types
 int shopNoSelected = 0; // 初期値を0に設定
 
 Future<void> showShopListDialog(
