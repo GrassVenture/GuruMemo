@@ -9,7 +9,7 @@ import '../../../features/photo/swipe_photo/swipe_photo_controller.dart';
 import '../../themes.dart';
 
 /// 写真のキャッシュを管理するProvider
-class _PhotoFileCacheNotifier
+class PhotoFileCacheNotifier
     extends AutoDisposeFamilyAsyncNotifier<File, AssetEntity> {
   @override
   Future<File> build(AssetEntity assetEntity) async {
@@ -18,9 +18,11 @@ class _PhotoFileCacheNotifier
   }
 }
 
-final AutoDisposeAsyncNotifierProviderFamily<_PhotoFileCacheNotifier, File, AssetEntity> photoFileCacheProvider = AsyncNotifierProvider.family
-    .autoDispose<_PhotoFileCacheNotifier, File, AssetEntity>(
-  _PhotoFileCacheNotifier.new,
+final AutoDisposeAsyncNotifierProviderFamily<PhotoFileCacheNotifier, File,
+        AssetEntity> photoFileCacheProvider =
+    AsyncNotifierProvider.family
+        .autoDispose<PhotoFileCacheNotifier, File, AssetEntity>(
+  PhotoFileCacheNotifier.new,
 );
 
 /// 写真カードリスト

@@ -18,7 +18,7 @@ part 'swipe_photo_controller.g.dart';
 
 /// 写真のカウントを管理するProvider
 /// スワイプ画面の上部のカウントに使用
-class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
+class PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   @override
   PhotoCount? build() => null;
 
@@ -41,15 +41,15 @@ class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   }
 }
 
-final AutoDisposeNotifierProvider<_PhotoCountNotifier, PhotoCount?>
+final AutoDisposeNotifierProvider<PhotoCountNotifier, PhotoCount?>
     photoCountProvider =
-    NotifierProvider.autoDispose<_PhotoCountNotifier, PhotoCount?>(
-  _PhotoCountNotifier.new,
+    NotifierProvider.autoDispose<PhotoCountNotifier, PhotoCount?>(
+  PhotoCountNotifier.new,
 );
 
 /// グルメの登録数を取得するProvider
 /// 分類完了後の 「追加された写真 ＋XXX枚」に使用
-class _FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
+class FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
   @override
   Future<int> build() {
     // 取得できない場合はデフォルト値設定
@@ -57,14 +57,14 @@ class _FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
   }
 }
 
-final AutoDisposeAsyncNotifierProvider<_FoodPhotoTotalNotifier, int>
+final AutoDisposeAsyncNotifierProvider<FoodPhotoTotalNotifier, int>
     foodPhotoTotalProvider =
-    AsyncNotifierProvider.autoDispose<_FoodPhotoTotalNotifier, int>(
-  _FoodPhotoTotalNotifier.new,
+    AsyncNotifierProvider.autoDispose<FoodPhotoTotalNotifier, int>(
+  FoodPhotoTotalNotifier.new,
 );
 
 /// 写真を取得するProvider
-class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
+class PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   /// 初期処理
   @override
   Future<List<AssetEntity>> build() async {
@@ -180,10 +180,10 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   }
 }
 
-final AutoDisposeAsyncNotifierProvider<_PhotoListNotifier, List<AssetEntity>>
+final AutoDisposeAsyncNotifierProvider<PhotoListNotifier, List<AssetEntity>>
     photoListProvider =
-    AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
-  _PhotoListNotifier.new,
+    AsyncNotifierProvider.autoDispose<PhotoListNotifier, List<AssetEntity>>(
+  PhotoListNotifier.new,
 );
 
 /// [SharedPreferencesRepository]と連携して、写真分類スタート画面表示フラグを管理するNotifier

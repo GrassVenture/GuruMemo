@@ -169,14 +169,14 @@ final cameraStateProvider =
 });
 
 /// 写真リストを管理するプロバイダー
-final AutoDisposeAsyncNotifierProvider<_LatestPhotoNotifier, AssetEntity?>
+final AutoDisposeAsyncNotifierProvider<LatestPhotoNotifier, AssetEntity?>
     latestPhotoListProvider =
-    AsyncNotifierProvider.autoDispose<_LatestPhotoNotifier, AssetEntity?>(
-  _LatestPhotoNotifier.new,
+    AsyncNotifierProvider.autoDispose<LatestPhotoNotifier, AssetEntity?>(
+  LatestPhotoNotifier.new,
 );
 
 /// 写真を取得するProvider
-class _LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
+class LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
   /// 初期処理
   @override
   Future<AssetEntity?> build() async {
