@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -10,6 +11,7 @@ import '../../../core/logger.dart';
 import '../../../core/themes.dart';
 
 import '../../../core/widgets/app_elevated_button.dart';
+import '../camera/camera_page.dart';
 import 'gallery_controller.dart';
 
 class PhotoPickerPage extends HookConsumerWidget {
@@ -40,7 +42,7 @@ class PhotoPickerPage extends HookConsumerWidget {
           AppElevatedButton(
             text: 'カメラを開く',
             onPressed: () {
-              print('ボタンが押されました！');
+              context.push(CameraPage.routePath);
             },
             widget: const Icon(Icons.camera_alt, color: Colors.white),
             width: 130,

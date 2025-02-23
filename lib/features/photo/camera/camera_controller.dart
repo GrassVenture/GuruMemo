@@ -23,6 +23,30 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
   final Ref ref;
 
+  Future<bool> takePicture(BuildContext context) async {
+    state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
+
+    try {
+      final controller = await ref.read(cameraControllerProvider.future);
+      final image = await controller.takePicture();
+      // 権限のリクエストをまとめて行う
+      // if (!(await _ensurePermissions())) {
+      //   return false;
+      // }
+      // 状態更新
+      state = state.copyWith(
+        capturedImage: File(image.path),
+        imageDate: FormatDateTime.dateFmt.format(DateTime.now()),
+      );
+    } on Exception catch (e) {
+      logger.e('写真撮影エラー: $e');
+      return false;
+    } finally {
+      state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
+    }
+    return true;
+  }
+
   Future<bool> takePictureAndSave(BuildContext context) async {
     state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
 
@@ -145,7 +169,8 @@ final cameraStateProvider =
 });
 
 /// 写真リストを管理するプロバイダー
-final AutoDisposeAsyncNotifierProvider<_LatestPhotoNotifier, AssetEntity?> latestPhotoListProvider =
+final AutoDisposeAsyncNotifierProvider<_LatestPhotoNotifier, AssetEntity?>
+    latestPhotoListProvider =
     AsyncNotifierProvider.autoDispose<_LatestPhotoNotifier, AssetEntity?>(
   _LatestPhotoNotifier.new,
 );

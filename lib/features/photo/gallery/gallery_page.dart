@@ -3,14 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:photo_manager/photo_manager.dart';
 
-import '../../../core/exception/permission_exception.dart';
 import '../../../core/logger.dart';
 import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
 import '../../../core/utils/category_constants.dart';
-import '../../../core/widgets/app_snack_bar.dart';
 import '../photo_detail/photo_detail_page.dart';
 import '../remote_photo.dart';
 import 'gallery_controller.dart';

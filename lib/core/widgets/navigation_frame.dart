@@ -11,7 +11,7 @@ import '../../features/auth/auth_repository.dart';
 import '../../features/auth/my_page.dart';
 import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/gallery/gallery_page.dart';
-import '../../features/photo/gallery/gallery_photo_picker_page.dart';
+import '../../features/photo/gallery/photo_picker_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
