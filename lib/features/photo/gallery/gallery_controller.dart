@@ -191,7 +191,7 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
 @riverpod
 class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
   @override
-  FutureOr<void> build() async {
+  Future<void> build() async {
     final localPhotoManagerService = ref.read(localPhotoManagerServiceProvider);
     await localPhotoManagerService.checkPermission();
   }
