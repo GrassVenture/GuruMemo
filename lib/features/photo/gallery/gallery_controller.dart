@@ -141,7 +141,7 @@ class ImagePickerVisibility extends _$ImagePickerVisibility {
 @riverpod
 class LocalPhotoAssets extends _$LocalPhotoAssets {
   @override
-  Future<List<AssetEntity>> build() async {
+  Future<List<AssetEntity>> build() {
     return _loadLocalPhotos();
   }
 

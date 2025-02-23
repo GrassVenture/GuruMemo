@@ -39,7 +39,7 @@ class SharedPreferencesRepository {
   Future<bool> setBool({
     required SharedPreferencesKey key,
     required bool value,
-  }) async {
+  }) {
     return _sharedPreferences.setBool(key.name, value);
   }
 

@@ -31,13 +31,6 @@ class PhotoPickerPage extends HookConsumerWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
-        // leading: IconButton(
-        //   iconSize: 24,
-        //   icon: const Icon(Icons.close),
-        //   onPressed: () {
-        //     context.pop();
-        //   },
-        // ),
         actions: [
           AppElevatedButton(
             text: 'カメラを開く',

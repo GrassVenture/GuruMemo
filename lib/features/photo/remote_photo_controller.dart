@@ -23,14 +23,14 @@ class RemotePhotoController {
   Future<RemotePhoto?> downloadPhoto({
     required String userId,
     required String photoId,
-  }) async {
+  }) {
     return _photoRepository.downloadPhoto(userId: userId, photoId: photoId);
   }
 
   Future<String> getStoreNameByStoreId({
     required String userId,
     required String storeId,
-  }) async {
+  }) {
     return _photoRepository.getStoreNameByStoreId(
       userId: userId,
       storeId: storeId,
@@ -40,7 +40,7 @@ class RemotePhotoController {
   Future<RemotePhoto?> getPhotoById({
     required String userId,
     required String photoId,
-  }) async {
+  }) {
     return _photoRepository.getPhotoById(
       userId: userId,
       photoId: photoId,
