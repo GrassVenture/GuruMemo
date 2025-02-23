@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,10 +9,6 @@ import '../../../../core/widgets/app_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store.dart';
 import '../../remote_photo_controller.dart';
-
-List<File> shopList = [];
-// ignore: omit_obvious_property_types
-int shopNoSelected = 0; // 初期値を0に設定
 
 Future<void> showShopListDialog(
   BuildContext context, {
@@ -28,6 +22,7 @@ Future<void> showShopListDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
+      var shopNoSelected = 0; // 初期値を0に設定
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
