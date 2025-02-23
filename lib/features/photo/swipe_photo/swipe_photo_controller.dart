@@ -41,7 +41,8 @@ class _PhotoCountNotifier extends AutoDisposeNotifier<PhotoCount?> {
   }
 }
 
-final AutoDisposeNotifierProvider<_PhotoCountNotifier, PhotoCount?> photoCountProvider =
+final AutoDisposeNotifierProvider<_PhotoCountNotifier, PhotoCount?>
+    photoCountProvider =
     NotifierProvider.autoDispose<_PhotoCountNotifier, PhotoCount?>(
   _PhotoCountNotifier.new,
 );
@@ -50,13 +51,14 @@ final AutoDisposeNotifierProvider<_PhotoCountNotifier, PhotoCount?> photoCountPr
 /// 分類完了後の 「追加された写真 ＋XXX枚」に使用
 class _FoodPhotoTotalNotifier extends AutoDisposeAsyncNotifier<int> {
   @override
-  Future<int> build() async {
+  Future<int> build() {
     // 取得できない場合はデフォルト値設定
     return ref.read(localPhotoRepositoryProvider).getFoodPhotoTotal();
   }
 }
 
-final AutoDisposeAsyncNotifierProvider<_FoodPhotoTotalNotifier, int> foodPhotoTotalProvider =
+final AutoDisposeAsyncNotifierProvider<_FoodPhotoTotalNotifier, int>
+    foodPhotoTotalProvider =
     AsyncNotifierProvider.autoDispose<_FoodPhotoTotalNotifier, int>(
   _FoodPhotoTotalNotifier.new,
 );
@@ -178,7 +180,8 @@ class _PhotoListNotifier extends AutoDisposeAsyncNotifier<List<AssetEntity>> {
   }
 }
 
-final AutoDisposeAsyncNotifierProvider<_PhotoListNotifier, List<AssetEntity>> photoListProvider =
+final AutoDisposeAsyncNotifierProvider<_PhotoListNotifier, List<AssetEntity>>
+    photoListProvider =
     AsyncNotifierProvider.autoDispose<_PhotoListNotifier, List<AssetEntity>>(
   _PhotoListNotifier.new,
 );
