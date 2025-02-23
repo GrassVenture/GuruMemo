@@ -6,10 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/themes.dart';
-import '../../../core/build_context_extension.dart';
-import '../../../core/widgets/app_snack_bar.dart';
 import 'camera_controller.dart';
-import 'camera_detail_page.dart';
 import 'camera_preview_page.dart';
 
 class CameraPage extends HookConsumerWidget {
