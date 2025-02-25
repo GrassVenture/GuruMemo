@@ -20,18 +20,17 @@ CameraState _$CameraStateFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$CameraState {
-  /// 撮影された画像ファイル
-  @FileConverter()
-  File? get capturedImage => throw _privateConstructorUsedError;
+  ///初期化フラグ
+  bool get isInitialized => throw _privateConstructorUsedError;
+
+  ///撮影した画像のパス
+  String? get capturedImagePath => throw _privateConstructorUsedError;
 
   /// 画像の緯度
   double? get latitude => throw _privateConstructorUsedError;
 
   /// 画像の経度
   double? get longitude => throw _privateConstructorUsedError;
-
-  /// 撮影日時
-  String? get imageDate => throw _privateConstructorUsedError;
 
   /// 撮影中のフラグ
   bool get isTakingPicture => throw _privateConstructorUsedError;
@@ -53,10 +52,10 @@ abstract class $CameraStateCopyWith<$Res> {
       _$CameraStateCopyWithImpl<$Res, CameraState>;
   @useResult
   $Res call(
-      {@FileConverter() File? capturedImage,
+      {bool isInitialized,
+      String? capturedImagePath,
       double? latitude,
       double? longitude,
-      String? imageDate,
       bool isTakingPicture});
 }
 
@@ -75,17 +74,21 @@ class _$CameraStateCopyWithImpl<$Res, $Val extends CameraState>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? capturedImage = freezed,
+    Object? isInitialized = null,
+    Object? capturedImagePath = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? imageDate = freezed,
     Object? isTakingPicture = null,
   }) {
     return _then(_value.copyWith(
-      capturedImage: freezed == capturedImage
-          ? _value.capturedImage
-          : capturedImage // ignore: cast_nullable_to_non_nullable
-              as File?,
+      isInitialized: null == isInitialized
+          ? _value.isInitialized
+          : isInitialized // ignore: cast_nullable_to_non_nullable
+              as bool,
+      capturedImagePath: freezed == capturedImagePath
+          ? _value.capturedImagePath
+          : capturedImagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -94,10 +97,6 @@ class _$CameraStateCopyWithImpl<$Res, $Val extends CameraState>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      imageDate: freezed == imageDate
-          ? _value.imageDate
-          : imageDate // ignore: cast_nullable_to_non_nullable
-              as String?,
       isTakingPicture: null == isTakingPicture
           ? _value.isTakingPicture
           : isTakingPicture // ignore: cast_nullable_to_non_nullable
@@ -115,10 +114,10 @@ abstract class _$$CameraStateImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {@FileConverter() File? capturedImage,
+      {bool isInitialized,
+      String? capturedImagePath,
       double? latitude,
       double? longitude,
-      String? imageDate,
       bool isTakingPicture});
 }
 
@@ -135,17 +134,21 @@ class __$$CameraStateImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? capturedImage = freezed,
+    Object? isInitialized = null,
+    Object? capturedImagePath = freezed,
     Object? latitude = freezed,
     Object? longitude = freezed,
-    Object? imageDate = freezed,
     Object? isTakingPicture = null,
   }) {
     return _then(_$CameraStateImpl(
-      capturedImage: freezed == capturedImage
-          ? _value.capturedImage
-          : capturedImage // ignore: cast_nullable_to_non_nullable
-              as File?,
+      isInitialized: null == isInitialized
+          ? _value.isInitialized
+          : isInitialized // ignore: cast_nullable_to_non_nullable
+              as bool,
+      capturedImagePath: freezed == capturedImagePath
+          ? _value.capturedImagePath
+          : capturedImagePath // ignore: cast_nullable_to_non_nullable
+              as String?,
       latitude: freezed == latitude
           ? _value.latitude
           : latitude // ignore: cast_nullable_to_non_nullable
@@ -154,10 +157,6 @@ class __$$CameraStateImplCopyWithImpl<$Res>
           ? _value.longitude
           : longitude // ignore: cast_nullable_to_non_nullable
               as double?,
-      imageDate: freezed == imageDate
-          ? _value.imageDate
-          : imageDate // ignore: cast_nullable_to_non_nullable
-              as String?,
       isTakingPicture: null == isTakingPicture
           ? _value.isTakingPicture
           : isTakingPicture // ignore: cast_nullable_to_non_nullable
@@ -170,20 +169,24 @@ class __$$CameraStateImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$CameraStateImpl extends _CameraState {
   const _$CameraStateImpl(
-      {@FileConverter() this.capturedImage,
+      {this.isInitialized = false,
+      this.capturedImagePath,
       this.latitude,
       this.longitude,
-      this.imageDate,
       this.isTakingPicture = false})
       : super._();
 
   factory _$CameraStateImpl.fromJson(Map<String, dynamic> json) =>
       _$$CameraStateImplFromJson(json);
 
-  /// 撮影された画像ファイル
+  ///初期化フラグ
   @override
-  @FileConverter()
-  final File? capturedImage;
+  @JsonKey()
+  final bool isInitialized;
+
+  ///撮影した画像のパス
+  @override
+  final String? capturedImagePath;
 
   /// 画像の緯度
   @override
@@ -193,10 +196,6 @@ class _$CameraStateImpl extends _CameraState {
   @override
   final double? longitude;
 
-  /// 撮影日時
-  @override
-  final String? imageDate;
-
   /// 撮影中のフラグ
   @override
   @JsonKey()
@@ -204,7 +203,7 @@ class _$CameraStateImpl extends _CameraState {
 
   @override
   String toString() {
-    return 'CameraState(capturedImage: $capturedImage, latitude: $latitude, longitude: $longitude, imageDate: $imageDate, isTakingPicture: $isTakingPicture)';
+    return 'CameraState(isInitialized: $isInitialized, capturedImagePath: $capturedImagePath, latitude: $latitude, longitude: $longitude, isTakingPicture: $isTakingPicture)';
   }
 
   @override
@@ -212,22 +211,22 @@ class _$CameraStateImpl extends _CameraState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$CameraStateImpl &&
-            (identical(other.capturedImage, capturedImage) ||
-                other.capturedImage == capturedImage) &&
+            (identical(other.isInitialized, isInitialized) ||
+                other.isInitialized == isInitialized) &&
+            (identical(other.capturedImagePath, capturedImagePath) ||
+                other.capturedImagePath == capturedImagePath) &&
             (identical(other.latitude, latitude) ||
                 other.latitude == latitude) &&
             (identical(other.longitude, longitude) ||
                 other.longitude == longitude) &&
-            (identical(other.imageDate, imageDate) ||
-                other.imageDate == imageDate) &&
             (identical(other.isTakingPicture, isTakingPicture) ||
                 other.isTakingPicture == isTakingPicture));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
-  int get hashCode => Object.hash(runtimeType, capturedImage, latitude,
-      longitude, imageDate, isTakingPicture);
+  int get hashCode => Object.hash(runtimeType, isInitialized, capturedImagePath,
+      latitude, longitude, isTakingPicture);
 
   /// Create a copy of CameraState
   /// with the given fields replaced by the non-null parameter values.
@@ -247,20 +246,23 @@ class _$CameraStateImpl extends _CameraState {
 
 abstract class _CameraState extends CameraState {
   const factory _CameraState(
-      {@FileConverter() final File? capturedImage,
+      {final bool isInitialized,
+      final String? capturedImagePath,
       final double? latitude,
       final double? longitude,
-      final String? imageDate,
       final bool isTakingPicture}) = _$CameraStateImpl;
   const _CameraState._() : super._();
 
   factory _CameraState.fromJson(Map<String, dynamic> json) =
       _$CameraStateImpl.fromJson;
 
-  /// 撮影された画像ファイル
+  ///初期化フラグ
   @override
-  @FileConverter()
-  File? get capturedImage;
+  bool get isInitialized;
+
+  ///撮影した画像のパス
+  @override
+  String? get capturedImagePath;
 
   /// 画像の緯度
   @override
@@ -269,10 +271,6 @@ abstract class _CameraState extends CameraState {
   /// 画像の経度
   @override
   double? get longitude;
-
-  /// 撮影日時
-  @override
-  String? get imageDate;
 
   /// 撮影中のフラグ
   @override

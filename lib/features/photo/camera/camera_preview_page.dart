@@ -1,29 +1,40 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class CameraPreviewPage extends HookConsumerWidget {
-  const CameraPreviewPage({
-    super.key,
-    required this.imagePath,
-  });
+import '../../../core/widgets/app_elevated_button.dart';
+import 'camera_controller.dart';
+import 'camera_state.dart';
 
-  final String imagePath;
+class CameraPreviewPage extends HookConsumerWidget {
+  const CameraPreviewPage({super.key, required this.cameraState});
+
+  final CameraState cameraState;
 
   static const routeName = 'camera_preview_page';
   static const routePath = '/camera_preview_page';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // final cameraState = ref.watch(cameraStateProvider);
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new),
-          onPressed: () => context.pop(),
+        leading: Padding(
+          padding: const EdgeInsets.all(16),
+          child: IconButton(
+            iconSize: 24,
+            icon: const Icon(
+              Icons.close,
+              color: Colors.grey,
+            ),
+            onPressed: () {
+              context.pop();
+            },
+          ),
         ),
-        foregroundColor: Colors.black,
       ),
       body: Center(
         child: Padding(
@@ -31,37 +42,29 @@ class CameraPreviewPage extends HookConsumerWidget {
           child: Column(
             children: [
               Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      width: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(28),
+                  child: ClipRRect(
+                    child: Image.file(
+                      File(cameraState.capturedImagePath!),
+                      fit: BoxFit.cover,
                     ),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Column(
-                    children: [
-                      Expanded(
-                        child: DecoratedBox(
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              width: 2,
-                            ),
-                            borderRadius: BorderRadius.circular(16),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(16),
-                            child: Image.file(
-                              File(imagePath),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
                   ),
                 ),
               ),
+              const Gap(92),
+              AppElevatedButton(
+                text: 'この写真を追加',
+                onPressed: () {},
+                widget: const Icon(Icons.camera_alt, color: Colors.white),
+              ),
+              const Gap(12),
+              AppElevatedButton(
+                text: '撮り直す',
+                onPressed: () {},
+                widget: const Icon(Icons.camera_alt, color: Colors.white),
+              ),
+              const Gap(64),
             ],
           ),
         ),

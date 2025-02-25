@@ -8,19 +8,18 @@ part of 'camera_state.dart';
 
 _$CameraStateImpl _$$CameraStateImplFromJson(Map<String, dynamic> json) =>
     _$CameraStateImpl(
-      capturedImage:
-          const FileConverter().fromJson(json['capturedImage'] as String?),
+      isInitialized: json['isInitialized'] as bool? ?? false,
+      capturedImagePath: json['capturedImagePath'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
-      imageDate: json['imageDate'] as String?,
       isTakingPicture: json['isTakingPicture'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$CameraStateImplToJson(_$CameraStateImpl instance) =>
     <String, dynamic>{
-      'capturedImage': const FileConverter().toJson(instance.capturedImage),
+      'isInitialized': instance.isInitialized,
+      'capturedImagePath': instance.capturedImagePath,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
-      'imageDate': instance.imageDate,
       'isTakingPicture': instance.isTakingPicture,
     };
