@@ -47,44 +47,68 @@ class CameraPage extends HookConsumerWidget {
         children: [
           // カメラプレビューの表示
           Positioned.fill(
-            child: cameraState.when(
-              data: (state) {
-                if (state.isInitialized) {
-                  return CameraPreview(cameraNotifier.cameraController!);
-                } else {
-                  return const Center(child: Text('カメラを初期化しています...'));
-                }
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => const Center(
-                child: Text('カメラの初期化に失敗しました。'),
-              ),
-            ),
+            child: ref.watch(cameraControllerProvider).when(
+                  data: CameraPreview.new,
+                  error: (err, stack) => const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'カメラの初期化に失敗しました。\n'
+                          '設定画面で権限を許可してください。',
+                          textAlign: TextAlign.center,
+                        ),
+                        Gap(16), // スペースを追加
+                        FractionallySizedBox(
+                          widthFactor: 0.5, // 横幅を親要素の半分に設定
+                          child: ElevatedButton(
+                            onPressed: openAppSettings,
+                            child: Text('設定を開く'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  loading: () => const Center(
+                    child: Text('カメラを準備中です...'),
+                  ),
+                ),
           ),
           // 撮影ボタンの配置
           Positioned(
             bottom: 56,
             left: MediaQuery.of(context).size.width / 2 - 34,
             child: GestureDetector(
-              onTap: cameraState.maybeWhen(
-                data: (state) => state.isTakingPicture
-                    ? null
-                    : () async {
-                        try {
-                          await cameraNotifier.takePicture();
-                          print("成功");
-                          // 撮影後の処理（プレビュー画面への遷移など）
-                        } catch (e) {
-                          // エラーハンドリング
-                        }
-                      },
-                orElse: () => null,
-              ),
+              onTap: cameraState.isTakingPicture
+                  ? null // 撮影中はボタンを無効にする
+                  : () async {
+                      // final image = await ref
+                      //     .read(cameraStateProvider.notifier)
+                      //     .takePicture(context);
+                      final controller =
+                          await ref.read(cameraControllerProvider.future);
+                      final image = await controller.takePicture();
+                      // if (!isCaptureSuccessful) {
+                      //   AppSnackBar.show(
+                      //     message: '設定画面で権限を全て許可に設定してください。',
+                      //     actionLabel: '設定を開く',
+                      //     onActionPressed: openAppSettings,
+                      //   );
+                      //   ref.invalidate(cameraStateProvider);
+                      // }
+                      if (!context.mounted) {
+                        return;
+                      }
+                      await context.pushNamed(
+                        CameraPreviewPage.routeName,
+                        extra: image.path,
+                      );
+                    },
               child: Container(
                 width: 68,
                 height: 68,
                 decoration: const BoxDecoration(
-                  color: Colors.orange,
+                  color: Themes.mainOrange,
                   shape: BoxShape.circle,
                 ),
               ),

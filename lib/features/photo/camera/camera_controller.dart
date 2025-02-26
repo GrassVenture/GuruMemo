@@ -19,75 +19,70 @@ import '../local_photo_manager_service.dart';
 import '../remote_photo_repository.dart';
 import 'camera_state.dart';
 
-part 'camera_controller.g.dart';
+class CameraStateNotifier extends StateNotifier<CameraState> {
+  CameraStateNotifier(this.ref) : super(const CameraState());
 
-@riverpod
-class CameraStateNotifier extends _$CameraStateNotifier {
-  CameraController? _cameraController;
+  final Ref ref;
 
-  // ignore: avoid_public_notifier_properties
-  CameraController? get cameraController => _cameraController;
-
-  Future<CameraState> build() async {
-    // 初期状態を返す
-    return const CameraState();
-  }
-
-  Future<void> initializeCamera() async {
-    try {
-      final cameras = await availableCameras();
-      if (cameras.isNotEmpty) {
-        _cameraController = CameraController(
-          cameras.first,
-          ResolutionPreset.high,
-        );
-        await _cameraController?.initialize();
-        state = AsyncValue.data(state.value!.copyWith(isInitialized: true));
-      } else {
-        state = AsyncValue.data(state.value!.copyWith(isInitialized: false));
-      }
-    } catch (e) {
-      state = AsyncValue.data(state.value!.copyWith(isInitialized: false));
-    }
-  }
-
-  Future<void> disposeCamera() async {
-    await _cameraController?.dispose();
-  }
-
-  Future<void> takePicture() async {
-    state = AsyncValue.data(state.value!.copyWith(isTakingPicture: true));
-
-    // final hasPermissions = await _ensurePermissions();
-    // if (!hasPermissions) {
-    //   state = state.copyWith(isTakingPicture: false);
-    //   throw Exception('必要な権限がありません');
-    // }
+  Future<bool> takePicture(BuildContext context) async {
+    state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
 
     final position = await _getCurrentPosition();
     final latitude = position?.latitude;
     final longitude = position?.longitude;
 
-    if (latitude == null || longitude == null) {
-      state = AsyncValue.data(state.value!.copyWith(isTakingPicture: false));
-      throw Exception('位置情報の取得に失敗しました');
-    }
-
     try {
-      final image = await _cameraController?.takePicture();
-      state = AsyncValue.data(state.value!.copyWith(
-        capturedImagePath: image?.path,
+      final controller = await ref.read(cameraControllerProvider.future);
+      final image = await controller.takePicture();
+      // 権限のリクエストをまとめて行う
+      // if (!(await _ensurePermissions())) {
+      //   return false;
+      // }
+      // 状態更新
+      state = state.copyWith(
+        capturedImage: File(image.path),
         latitude: latitude,
         longitude: longitude,
-      ));
-      print("トライ成功");
-    } catch (e) {
-      throw Exception('写真撮影エラー: $e');
+      );
+    } on Exception catch (e) {
+      logger.e('写真撮影エラー: $e');
+      return false;
     } finally {
-      state = AsyncValue.data(state.value!.copyWith(isTakingPicture: false));
+      state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
     }
+    return true;
   }
 
+  Future<bool> takePictureAndSave(BuildContext context) async {
+    state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
+
+    try {
+      final controller = await ref.read(cameraControllerProvider.future);
+      final image = await controller.takePicture();
+      // 権限のリクエストをまとめて行う
+      if (!(await _ensurePermissions())) {
+        return false;
+      }
+
+      // 画像をギャラリーに保存
+      final result = await ImageGallerySaverPlus.saveFile(image.path);
+      logger.i('ギャラリーに画像を保存しました: $result');
+
+      // 状態更新
+      state = state.copyWith(
+        capturedImage: File(image.path),
+        imageDate: FormatDateTime.dateFmt.format(DateTime.now()),
+      );
+    } on Exception catch (e) {
+      logger.e('写真撮影エラー: $e');
+      return false;
+    } finally {
+      state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
+    }
+    return true;
+  }
+
+  // 位置情報の取得
   Future<Position?> _getCurrentPosition() async {
     try {
       const locationSettings = LocationSettings(
@@ -106,7 +101,9 @@ class CameraStateNotifier extends _$CameraStateNotifier {
     }
   }
 
+  // 権限の確認とリクエスト
   Future<bool> _ensurePermissions() async {
+    // 位置情報の権限をチェック
     var locationPermission = await Geolocator.checkPermission();
     if (locationPermission == LocationPermission.denied ||
         locationPermission == LocationPermission.deniedForever) {
@@ -145,7 +142,9 @@ class CameraStateNotifier extends _$CameraStateNotifier {
           statuses[Permission.location]!.isPermanentlyDenied ||
           statuses[Permission.microphone]!.isPermanentlyDenied ||
           locationPermission == LocationPermission.deniedForever) {
-        return false;
+        // TODO(sho): このままだと、権限が足りてなくても通ってしまうので、あとでここはfalseに戻す
+        // return false;
+        return true;
       }
 
       if (statuses[Permission.camera]!.isGranted &&
@@ -186,6 +185,12 @@ final AutoDisposeFutureProvider<CameraController> cameraControllerProvider =
 
   await controller.initialize();
   return controller;
+});
+
+// カメラ状態を管理するためのStateNotifierプロバイダー
+final cameraStateProvider =
+    StateNotifierProvider<CameraStateNotifier, CameraState>((ref) {
+  return CameraStateNotifier(ref);
 });
 
 // /// 写真リストを管理するプロバイダー
