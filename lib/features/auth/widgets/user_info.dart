@@ -9,17 +9,31 @@ class UserInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const CircleAvatar(
-          radius: 40,
-          backgroundColor: Colors.grey,
-          child: Icon(Icons.person, size: 40, color: Colors.white),
+        const Text(
+          'ログイン中のアカウント',
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey,
+            fontWeight: FontWeight.bold,
+          ),
         ),
-        const SizedBox(width: 16),
-        Text(
-          email,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        const SizedBox(height: 15),
+        Row(
+          children: [
+            const CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.grey,
+              child: Icon(Icons.person, size: 40, color: Colors.white),
+            ),
+            const SizedBox(width: 16),
+            Text(
+              email,
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
       ],
     );
