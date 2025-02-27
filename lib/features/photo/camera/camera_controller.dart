@@ -33,17 +33,14 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
     try {
       final controller = await ref.read(cameraControllerProvider.future);
-      final image = await controller.takePicture();
       // 権限のリクエストをまとめて行う
-      // if (!(await _ensurePermissions())) {
-      //   return false;
-      // }
+      if (!(await _ensurePermissions())) {
+        return false;
+      }
+      final image = await controller.takePicture();
+
       // 状態更新
-      state = state.copyWith(
-        capturedImage: File(image.path),
-        latitude: latitude,
-        longitude: longitude,
-      );
+      state = state.copyWith(capturedImagePath: image.path);
     } on Exception catch (e) {
       logger.e('写真撮影エラー: $e');
       return false;
@@ -70,8 +67,7 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
 
       // 状態更新
       state = state.copyWith(
-        capturedImage: File(image.path),
-        imageDate: FormatDateTime.dateFmt.format(DateTime.now()),
+        capturedImagePath: image.path,
       );
     } on Exception catch (e) {
       logger.e('写真撮影エラー: $e');
@@ -193,109 +189,118 @@ final cameraStateProvider =
   return CameraStateNotifier(ref);
 });
 
-// /// 写真リストを管理するプロバイダー
-// final AutoDisposeAsyncNotifierProvider<LatestPhotoNotifier, AssetEntity?>
-//     latestPhotoListProvider =
-//     AsyncNotifierProvider.autoDispose<LatestPhotoNotifier, AssetEntity?>(
-//   LatestPhotoNotifier.new,
-// );
+/// 写真リストを管理するプロバイダー
+final AutoDisposeAsyncNotifierProvider<ClassifyLatestPhotoNotifier,
+        AssetEntity?> latestPhotoListProvider =
+    AsyncNotifierProvider.autoDispose<ClassifyLatestPhotoNotifier,
+        AssetEntity?>(
+  ClassifyLatestPhotoNotifier.new,
+);
 
-/// 写真を取得するProvider
-// class LatestPhotoNotifier extends AutoDisposeAsyncNotifier<AssetEntity?> {
-//   /// 初期処理
-//   @override
-//   Future<AssetEntity?> build() async {
-//     // パーミッション確認
-//     final permission = await PhotoManager.requestPermissionExtend();
-//     if (!permission.isAuth && !permission.hasAccess) {
-//       throw PermissionException();
-//     }
-//
-//     return null;
-//   }
-//
-//   Future<void> swipeRight({bool isFood = true}) async {
-//     await PhotoManager.clearFileCache();
-//     await PhotoManager.getAssetPathList();
-//     final latestPhoto =
-//         await ref.read(localPhotoManagerServiceProvider).getLatestPhoto();
-//     state = AsyncValue.data(latestPhoto);
-//
-//     final value = state.valueOrNull;
-//     if (value == null || state.asData == null) {
-//       return;
-//     }
-//
-//     if (state.hasError) {
-//       return;
-//     }
-//
-//     final photo = state.asData!.value;
-//
-//     final modifiedPhotoId = photo!.id.replaceAll('/', '-');
-//
-//     try {
-//       final userId = ref.read(userIdProvider);
-//
-//       if (userId != null) {
-//         final position = await _getCurrentPosition();
-//         final latitude = position?.latitude;
-//         final longitude = position?.longitude;
-//
-//         if (latitude != null && longitude != null) {
-//           await ref.read(photoRepositoryProvider).registerStoreInfo(
-//                 photoId: modifiedPhotoId,
-//                 userId: userId,
-//                 latitude: latitude,
-//                 longitude: longitude,
-//               );
-//           logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
-//               '緯度: $latitude, 経度: $longitude');
-//         }
-//
-//         // 写真データの取得と圧縮
-//         final photoFile = await photo.file;
-//         if (photoFile != null) {
-//           final compressedData = await _compressImage(photoFile);
-//           if (compressedData != null) {
-//             await ref.read(photoRepositoryProvider).categorizeFood(
-//                   userId: userId,
-//                   photoId: modifiedPhotoId,
-//                   photoData: compressedData,
-//                 );
-//             logger.i('圧縮写真データをサーバーに送信しました: $modifiedPhotoId');
-//           }
-//         }
-//       } else {
-//         throw Exception('User not signed in');
-//       }
-//     } on Exception catch (e, stacktrace) {
-//       state = AsyncValue.error(e, stacktrace);
-//       logger.e('写真の登録中にエラーが発生しました: $e');
-//       return;
-//     }
-//
-//     // 最後の写真までスワイプした場合
-//     state = const AsyncValue<AssetEntity?>.loading();
-//   }
-//
-//
-//
-//   /// 強制リフレッシュ
-//   void forceRefresh() {
-//     state = const AsyncLoading<AssetEntity?>();
-//     ref.invalidateSelf();
-//   }
-//
-//   /// 画像を圧縮するメソッド
-//   Future<Uint8List?> _compressImage(File file) async {
-//     final result = await FlutterImageCompress.compressWithFile(
-//       file.absolute.path,
-//       minWidth: 256,
-//       minHeight: 256,
-//       quality: 85,
-//       keepExif: true,
-//     );
-//     return result;
-//   }
-// }
+/// 最新１枚の写真を食べ物に分類するProvider
+class ClassifyLatestPhotoNotifier
+    extends AutoDisposeAsyncNotifier<AssetEntity?> {
+  @override
+  Future<AssetEntity?> build() async {
+    // パーミッション確認
+    final permission = await PhotoManager.requestPermissionExtend();
+    if (!permission.isAuth && !permission.hasAccess) {
+      throw PermissionException();
+    }
+
+    return null;
+  }
+
+  Future<void> classifyPhotoAsFood() async {
+    await PhotoManager.clearFileCache();
+    await PhotoManager.getAssetPathList();
+    final latestPhoto =
+        await ref.read(localPhotoManagerServiceProvider).getLatestPhoto();
+    state = AsyncValue.data(latestPhoto);
+
+    final value = state.valueOrNull;
+    if (value == null || state.asData == null) {
+      return;
+    }
+
+    if (state.hasError) {
+      return;
+    }
+
+    final photo = state.asData!.value;
+
+    final modifiedPhotoId = photo!.id.replaceAll('/', '-');
+
+    try {
+      final userId = ref.read(userIdProvider);
+
+      if (userId != null) {
+        final position = await _getCurrentPosition();
+        final latitude = position?.latitude;
+        final longitude = position?.longitude;
+
+        if (latitude != null && longitude != null) {
+          await ref.read(photoRepositoryProvider).registerStoreInfo(
+                photoId: modifiedPhotoId,
+                userId: userId,
+                latitude: latitude,
+                longitude: longitude,
+              );
+          logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
+              '緯度: $latitude, 経度: $longitude');
+        }
+
+        // 写真データの取得と圧縮
+        final photoFile = await photo.file;
+        if (photoFile != null) {
+          final compressedData = await _compressImage(photoFile);
+          if (compressedData != null) {
+            await ref.read(photoRepositoryProvider).categorizeFood(
+                  userId: userId,
+                  photoId: modifiedPhotoId,
+                  photoData: compressedData,
+                );
+            logger.i('圧縮写真データをサーバーに送信しました: $modifiedPhotoId');
+          }
+        }
+      } else {
+        throw Exception('User not signed in');
+      }
+    } on Exception catch (e, stacktrace) {
+      state = AsyncValue.error(e, stacktrace);
+      logger.e('写真の登録中にエラーが発生しました: $e');
+      return;
+    }
+  }
+
+  // 位置情報の取得
+  Future<Position?> _getCurrentPosition() async {
+    try {
+      const locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.high,
+        distanceFilter: 100,
+      );
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: locationSettings,
+      );
+
+      return position;
+    } on Exception catch (e) {
+      logger.e('位置情報の取得に失敗しました: $e');
+      return null;
+    }
+  }
+
+  /// 画像を圧縮するメソッド
+  Future<Uint8List?> _compressImage(File file) async {
+    final result = await FlutterImageCompress.compressWithFile(
+      file.absolute.path,
+      minWidth: 256,
+      minHeight: 256,
+      quality: 85,
+      keepExif: true,
+    );
+    return result;
+  }
+}

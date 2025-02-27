@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -9,10 +7,9 @@ import '../features/auth/my_page.dart';
 import '../features/auth/sign_in_page.dart';
 import '../features/photo/camera/camera_page.dart';
 import '../features/photo/camera/camera_preview_page.dart';
-import '../features/photo/camera/camera_state.dart';
 import '../features/photo/gallery/gallery_page.dart';
-import '../features/photo/photo_picker/photo_picker_page.dart';
 import '../features/photo/photo_detail/photo_detail_page.dart';
+import '../features/photo/photo_picker/photo_picker_page.dart';
 import '../features/root_page.dart';
 import 'services/analytics_service.dart';
 
@@ -60,8 +57,8 @@ final routerProvider = Provider<GoRouter>(
         name: CameraPreviewPage.routeName,
         path: CameraPreviewPage.routePath,
         builder: (context, state) {
-          final cameraState = state.extra! as CameraState;
-          return CameraPreviewPage(cameraState: cameraState);
+          final imagePath = state.extra! as String;
+          return CameraPreviewPage(imagePath: imagePath);
         },
       ),
       GoRoute(

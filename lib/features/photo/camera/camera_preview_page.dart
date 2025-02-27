@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -6,20 +7,21 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../core/widgets/app_elevated_button.dart';
+import '../gallery/gallery_page.dart';
+import '../local_photo_repository.dart';
 import 'camera_controller.dart';
-import 'camera_state.dart';
+import 'camera_page.dart';
 
 class CameraPreviewPage extends HookConsumerWidget {
-  const CameraPreviewPage({super.key, required this.cameraState});
+  const CameraPreviewPage({super.key, required this.imagePath});
 
-  final CameraState cameraState;
+  final String imagePath;
 
   static const routeName = 'camera_preview_page';
   static const routePath = '/camera_preview_page';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final cameraState = ref.watch(cameraStateProvider);
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -46,7 +48,7 @@ class CameraPreviewPage extends HookConsumerWidget {
                   padding: const EdgeInsets.all(28),
                   child: ClipRRect(
                     child: Image.file(
-                      File(cameraState.capturedImagePath!),
+                      File(imagePath),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -55,7 +57,18 @@ class CameraPreviewPage extends HookConsumerWidget {
               const Gap(92),
               AppElevatedButton(
                 text: 'この写真を追加',
-                onPressed: () {},
+                onPressed: () async {
+                  print('画像サイズ: ${File(imagePath).lengthSync()} バイト');
+                  await ref
+                      .read(localPhotoRepositoryProvider)
+                      .savePhotoByImagePath(imagePath);
+                  unawaited(ref
+                      .read(latestPhotoListProvider.notifier)
+                      .classifyPhotoAsFood());
+                  await context.push(
+                    CameraPage.routePath,
+                  );
+                },
                 widget: const Icon(Icons.camera_alt, color: Colors.white),
               ),
               const Gap(12),

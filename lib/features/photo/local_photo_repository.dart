@@ -1,5 +1,7 @@
 import 'package:drift/drift.dart';
+import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/local_database/local_database.dart';
@@ -31,6 +33,16 @@ class LocalPhotoRepository {
   /// 写真情報を取得する
   Future<LocalPhotoDetail?> getPhotoDetail() {
     return (_db.select(_db.photoDetails)..limit(1)).getSingleOrNull();
+  }
+
+  ///imagePathで写真を保存する
+  Future<void> savePhotoByImagePath(String imagePath) async {
+    try {
+      await GallerySaver.saveImage(imagePath);
+      print('画像の保存に成功しました: $imagePath');
+    } catch (e) {
+      print('エラーが発生しました: $e');
+    }
   }
 
   /// グルメ分類合計枚数を取得する
