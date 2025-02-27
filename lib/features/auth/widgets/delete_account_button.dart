@@ -12,10 +12,9 @@ class DeleteAccountButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Align(
-      alignment: Alignment.topLeft,
+    return Center(
       child: Padding(
-        padding: const EdgeInsets.only(left: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 16),
         child: TextButton(
           onPressed: () async {
             await AppDialog.show(
