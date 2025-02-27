@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'widgets/delete_account_button.dart';
+import 'widgets/logout_button.dart';
 
 /// マイページ
 class MyPage extends ConsumerWidget {
@@ -16,22 +17,12 @@ class MyPage extends ConsumerWidget {
       // サインインのリスト部分の設定
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
+        child: const Column(
           children: [
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.only(top: 160),
-                children: const [
-                  DeleteAccountButton(),
-                  Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
+            SizedBox(height: 160),
+            LogoutButton(),
+            SizedBox(height: 20),
+            DeleteAccountButton(),
           ],
         ),
       ),
