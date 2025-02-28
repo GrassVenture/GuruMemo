@@ -1,18 +1,13 @@
-import 'dart:io';
-import 'dart:typed_data';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/date_utils.dart';
 import '../../../core/exception.dart';
+import '../../../core/image_helper.dart';
 import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
 import '../local_photo_manager_service.dart';
@@ -23,32 +18,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
   CameraStateNotifier(this.ref) : super(const CameraState());
 
   final Ref ref;
-
-  Future<bool> takePicture(BuildContext context) async {
-    state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
-
-    final position = await _getCurrentPosition();
-    final latitude = position?.latitude;
-    final longitude = position?.longitude;
-
-    try {
-      final controller = await ref.read(cameraControllerProvider.future);
-      // 権限のリクエストをまとめて行う
-      if (!(await _ensurePermissions())) {
-        return false;
-      }
-      final image = await controller.takePicture();
-
-      // 状態更新
-      state = state.copyWith(capturedImagePath: image.path);
-    } on Exception catch (e) {
-      logger.e('写真撮影エラー: $e');
-      return false;
-    } finally {
-      state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
-    }
-    return true;
-  }
 
   Future<bool> takePictureAndSave(BuildContext context) async {
     state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
@@ -76,25 +45,6 @@ class CameraStateNotifier extends StateNotifier<CameraState> {
       state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
     }
     return true;
-  }
-
-  // 位置情報の取得
-  Future<Position?> _getCurrentPosition() async {
-    try {
-      const locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.high,
-        distanceFilter: 100,
-      );
-
-      final position = await Geolocator.getCurrentPosition(
-        locationSettings: locationSettings,
-      );
-
-      return position;
-    } on Exception catch (e) {
-      logger.e('位置情報の取得に失敗しました: $e');
-      return null;
-    }
   }
 
   // 権限の確認とリクエスト
@@ -212,64 +162,51 @@ class ClassifyLatestPhotoNotifier
   }
 
   Future<void> classifyPhotoAsFood() async {
-    await PhotoManager.clearFileCache();
-    await PhotoManager.getAssetPathList();
-    final latestPhoto =
-        await ref.read(localPhotoManagerServiceProvider).getLatestPhoto();
-    state = AsyncValue.data(latestPhoto);
-
-    final value = state.valueOrNull;
-    if (value == null || state.asData == null) {
-      return;
-    }
-
-    if (state.hasError) {
-      return;
-    }
-
-    final photo = state.asData!.value;
-
-    final modifiedPhotoId = photo!.id.replaceAll('/', '-');
-
     try {
+      await PhotoManager.clearFileCache();
+      await PhotoManager.getAssetPathList();
+
+      final latestPhoto =
+          await ref.read(localPhotoManagerServiceProvider).getLatestPhoto();
+      if (latestPhoto == null) {
+        logger.w('No latest photo found.');
+        return;
+      }
+
+      final modifiedPhotoId = latestPhoto.id.replaceAll('/', '-');
+
       final userId = ref.read(userIdProvider);
-
-      if (userId != null) {
-        final position = await _getCurrentPosition();
-        final latitude = position?.latitude;
-        final longitude = position?.longitude;
-
-        if (latitude != null && longitude != null) {
-          await ref.read(photoRepositoryProvider).registerStoreInfo(
-                photoId: modifiedPhotoId,
-                userId: userId,
-                latitude: latitude,
-                longitude: longitude,
-              );
-          logger.i('写真情報をサーバーに登録しました: $modifiedPhotoId, '
-              '緯度: $latitude, 経度: $longitude');
-        }
-
-        // 写真データの取得と圧縮
-        final photoFile = await photo.file;
-        if (photoFile != null) {
-          final compressedData = await _compressImage(photoFile);
-          if (compressedData != null) {
-            await ref.read(photoRepositoryProvider).categorizeFood(
-                  userId: userId,
-                  photoId: modifiedPhotoId,
-                  photoData: compressedData,
-                );
-            logger.i('圧縮写真データをサーバーに送信しました: $modifiedPhotoId');
-          }
-        }
-      } else {
+      if (userId == null) {
         throw Exception('User not signed in');
       }
+
+      final position = await _getCurrentPosition();
+      final latitude = position?.latitude;
+      final longitude = position?.longitude;
+
+      if (latitude != null && longitude != null) {
+        await ref.read(photoRepositoryProvider).registerStoreInfo(
+              photoId: modifiedPhotoId,
+              userId: userId,
+              latitude: latitude,
+              longitude: longitude,
+            );
+      }
+
+      final photoFile = await latestPhoto.file;
+      if (photoFile != null) {
+        final compressedData = await ImageHelper.compress(photoFile);
+        if (compressedData != null) {
+          await ref.read(photoRepositoryProvider).categorizeFood(
+                userId: userId,
+                photoId: modifiedPhotoId,
+                photoData: compressedData,
+              );
+          logger.i('圧縮写真データをサーバーに送信しました: $modifiedPhotoId');
+        }
+      }
     } on Exception catch (e, stacktrace) {
-      state = AsyncValue.error(e, stacktrace);
-      logger.e('写真の登録中にエラーが発生しました: $e');
-      return;
+      logger.e('写真の登録中にエラーが発生しました: $e\n$stacktrace');
     }
   }
 
@@ -290,17 +227,5 @@ class ClassifyLatestPhotoNotifier
       logger.e('位置情報の取得に失敗しました: $e');
       return null;
     }
-  }
-
-  /// 画像を圧縮するメソッド
-  Future<Uint8List?> _compressImage(File file) async {
-    final result = await FlutterImageCompress.compressWithFile(
-      file.absolute.path,
-      minWidth: 256,
-      minHeight: 256,
-      quality: 85,
-      keepExif: true,
-    );
-    return result;
   }
 }

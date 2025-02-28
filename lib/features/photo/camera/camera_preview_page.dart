@@ -10,7 +10,6 @@ import '../../../core/widgets/app_elevated_button.dart';
 import '../gallery/gallery_page.dart';
 import '../local_photo_repository.dart';
 import 'camera_controller.dart';
-import 'camera_page.dart';
 
 class CameraPreviewPage extends HookConsumerWidget {
   const CameraPreviewPage({super.key, required this.imagePath});
@@ -65,9 +64,8 @@ class CameraPreviewPage extends HookConsumerWidget {
                   unawaited(ref
                       .read(latestPhotoListProvider.notifier)
                       .classifyPhotoAsFood());
-                  await context.push(
-                    CameraPage.routePath,
-                  );
+                  if (!context.mounted) return;
+                  context.go(GalleryPage.routePath);
                 },
                 widget: const Icon(Icons.camera_alt, color: Colors.white),
               ),
