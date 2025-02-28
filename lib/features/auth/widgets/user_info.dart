@@ -25,9 +25,8 @@ class UserInfo extends ConsumerWidget {
         Row(
           children: [
             const CircleAvatar(
-              radius: 40,
+              radius: 30,
               backgroundColor: Colors.grey,
-              child: Icon(Icons.person, size: 40, color: Colors.white),
             ),
             const SizedBox(width: 16),
             Text(
