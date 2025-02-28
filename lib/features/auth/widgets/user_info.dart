@@ -1,21 +1,14 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+
+import '../auth_controller.dart';
 
 class UserInfo extends ConsumerWidget {
   const UserInfo({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = FirebaseAuth.instance.currentUser!;
-
-    var email = user.email;
-    for (final providerProfile in user.providerData) {
-      if (providerProfile.email != null) {
-        email = providerProfile.email;
-        break;
-      }
-    }
+    final user = ref.watch(firebaseUserProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,7 +31,7 @@ class UserInfo extends ConsumerWidget {
             ),
             const SizedBox(width: 16),
             Text(
-              email!,
+              user?.email ?? '',
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ],
