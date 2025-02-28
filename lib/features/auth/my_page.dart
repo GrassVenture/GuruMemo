@@ -20,7 +20,7 @@ class MyPage extends ConsumerWidget {
         child: const Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            UserInfo(email: 'mail@example.com'), // ユーザー情報を表示
+            UserInfo(), // ユーザー情報を表示
             SizedBox(height: 40),
             LogoutButton(), // ログアウトボタン
             SizedBox(height: 20),

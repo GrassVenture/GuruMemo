@@ -1,14 +1,22 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class UserInfo extends StatelessWidget {
-  const UserInfo({
-    super.key,
-    required this.email, // メールアドレスを外部から受け取る
-  });
-  final String email;
+class UserInfo extends ConsumerWidget {
+  const UserInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = FirebaseAuth.instance.currentUser!;
+
+    var email = user.email;
+    for (final providerProfile in user.providerData) {
+      if (providerProfile.email != null) {
+        email = providerProfile.email;
+        break;
+      }
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -30,7 +38,7 @@ class UserInfo extends StatelessWidget {
             ),
             const SizedBox(width: 16),
             Text(
-              email,
+              email!,
               style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
           ],
