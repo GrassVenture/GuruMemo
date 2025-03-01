@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/themes.dart';
 import '../../../core/widgets/app_elevated_button.dart';
 import '../gallery/gallery_page.dart';
 import '../local_photo_repository.dart';
@@ -57,23 +58,33 @@ class CameraPreviewPage extends HookConsumerWidget {
               AppElevatedButton(
                 text: 'この写真を追加',
                 onPressed: () async {
-                  print('画像サイズ: ${File(imagePath).lengthSync()} バイト');
                   await ref
                       .read(localPhotoRepositoryProvider)
                       .savePhotoByImagePath(imagePath);
                   unawaited(ref
                       .read(latestPhotoListProvider.notifier)
                       .classifyPhotoAsFood());
-                  if (!context.mounted) return;
+                  if (!context.mounted) {
+                    return;
+                  }
                   context.go(GalleryPage.routePath);
                 },
                 widget: const Icon(Icons.camera_alt, color: Colors.white),
               ),
               const Gap(12),
-              AppElevatedButton(
-                text: '撮り直す',
-                onPressed: () {},
-                widget: const Icon(Icons.camera_alt, color: Colors.white),
+              TextButton(
+                onPressed: () {
+                  context.pop();
+                },
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  minimumSize: const Size(76, 32),
+                  shape: const RoundedRectangleBorder(),
+                ),
+                child: const Text(
+                  '撮り直す',
+                  style: TextStyle(color: Themes.mainOrange),
+                ),
               ),
               const Gap(64),
             ],
