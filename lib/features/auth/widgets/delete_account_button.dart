@@ -33,9 +33,12 @@ class DeleteAccountButton extends ConsumerWidget {
               },
             );
           },
-          child: const Text(
+          child: Text(
             'アカウントを削除',
-            style: TextStyle(color: Themes.errorAlertColor, fontSize: 16),
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  fontSize: 18,
+                  color: Themes.errorAlertColor,
+                ),
           ),
         ),
       ),

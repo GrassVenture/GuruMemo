@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
+import '../../../core/themes.dart';
 import '../auth_controller.dart';
 
 class UserInfo extends ConsumerWidget {
@@ -14,25 +14,26 @@ class UserInfo extends ConsumerWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'ログイン中のアカウント',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.grey,
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Themes.gray.shade600,
+              ),
         ),
         const Gap(15),
         Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               radius: 30,
-              backgroundColor: Colors.grey,
+              backgroundColor: Themes.gray.shade400,
             ),
             const Gap(16),
             Text(
               user?.email ?? '',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ],
         ),
