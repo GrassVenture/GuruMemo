@@ -1,22 +1,30 @@
+import 'package:async/async.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/themes.dart';
+import '../../../core/permission/permission_handler.dart';
 import 'camera_controller.dart';
 import 'camera_preview_page.dart';
 
 class CameraPage extends HookConsumerWidget {
-  const CameraPage({super.key});
+  CameraPage({super.key});
 
   static const routeName = 'camera_page';
   static const routePath = '/camera_page';
 
+  final _permission = PermissionHandler();
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final cacheStrategy = useState(AsyncCache<dynamic>.ephemeral());
+    final cameraState = ref.watch(cameraControllerProvider);
+
     return Scaffold(
       body: Stack(
         children: [
@@ -32,7 +40,7 @@ class CameraPage extends HookConsumerWidget {
                           '設定画面で権限を許可してください。',
                           textAlign: TextAlign.center,
                         ),
-                        Gap(16), // スペースを追加
+                        Gap(16),
                         FractionallySizedBox(
                           widthFactor: 0.5, // 横幅を親要素の半分に設定
                           child: ElevatedButton(
@@ -49,42 +57,49 @@ class CameraPage extends HookConsumerWidget {
                 ),
           ),
           // 撮影ボタンの配置
-          Positioned(
-            bottom: 56,
-            left: MediaQuery.of(context).size.width / 2 - 34,
-            child: GestureDetector(
-              onTap: () async {
-                final controller =
-                    await ref.read(cameraControllerProvider.future);
-                final image = await controller.takePicture();
+          if (cameraState is AsyncData<CameraController>)
+            Positioned(
+              bottom: 56,
+              left: MediaQuery.of(context).size.width / 2 - 34,
+              child: GestureDetector(
+                onTap: () => cacheStrategy.value.fetch(() async {
+                  await _permission.requestPermissions([
+                    Permission.camera,
+                    Permission.microphone,
+                    Permission.location,
+                    Permission.photos
+                  ]);
 
-                if (!context.mounted) {
-                  return;
-                }
-                await context.pushNamed(
-                  CameraPreviewPage.routeName,
-                  extra: image.path,
-                );
-              },
-              child: Container(
-                width: 68,
-                height: 68,
-                decoration: const BoxDecoration(
-                  color: Themes.mainOrange,
-                  shape: BoxShape.circle,
+                  final controller =
+                      await ref.read(cameraControllerProvider.future);
+                  final image = await controller.takePicture();
+
+                  if (!context.mounted) {
+                    return;
+                  }
+                  await context.pushNamed(
+                    CameraPreviewPage.routeName,
+                    extra: image.path,
+                  );
+                }),
+                child: Container(
+                  width: 68,
+                  height: 68,
+                  decoration: const BoxDecoration(
+                    color: Themes.mainOrange,
+                    shape: BoxShape.circle,
+                  ),
                 ),
               ),
             ),
-          ),
-          // 閉じるボタンの配置
+
           Positioned(
             top: 60,
             left: 16,
             child: IconButton(
-              icon: const Icon(Icons.close, color: Colors.grey),
+              icon: const Icon(Icons.close, color: Themes.gray),
               onPressed: () {
-                /// TODO 後で直す
-                Navigator.of(context).pop();
+                context.pop();
               },
             ),
           ),
