@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../core/build_context_extension.dart';
 import '../../../core/logger.dart';
+import '../../../core/permission/permission_handler.dart';
 import '../../../core/themes.dart';
 
 import '../../../core/widgets/app_elevated_button.dart';
@@ -14,10 +15,12 @@ import '../camera/camera_page.dart';
 import 'photo_picker_controller.dart';
 
 class PhotoPickerPage extends HookConsumerWidget {
-  const PhotoPickerPage({super.key});
+  PhotoPickerPage({super.key});
 
   static const routeName = 'photo_picker_page';
   static const routePath = '/photo_picker_page';
+
+  final _permission = PermissionHandler();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,8 +36,16 @@ class PhotoPickerPage extends HookConsumerWidget {
         actions: [
           AppElevatedButton(
             text: 'カメラを開く',
-            onPressed: () {
-              context.push(CameraPage.routePath);
+            onPressed: () async {
+              final granted = await _permission.requestPermissions([
+                Permission.camera,
+                Permission.microphone,
+              ]);
+
+              if (!granted || !context.mounted) {
+                return;
+              }
+              await context.push(CameraPage.routePath);
             },
             widget: const Icon(Icons.camera_alt, color: Colors.white),
             width: 130,
@@ -49,7 +60,7 @@ class PhotoPickerPage extends HookConsumerWidget {
               alignment: Alignment.centerLeft,
               child: Text(
                 '最近の項目',
-                style: Theme.of(context).textTheme.labelMedium, // スタイル適用
+                style: Theme.of(context).textTheme.labelMedium,
               ),
             ),
           ),
