@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'widgets/delete_account_button.dart';
@@ -21,9 +22,9 @@ class MyPage extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             UserInfo(), // ユーザー情報を表示
-            SizedBox(height: 40),
+            Gap(40),
             LogoutButton(), // ログアウトボタン
-            SizedBox(height: 20),
+            Gap(20),
             DeleteAccountButton(), // アカウント削除ボタン
           ],
         ),
