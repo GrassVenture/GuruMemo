@@ -10,6 +10,7 @@ environment:
 
 dependencies:
   appinio_swiper: ^2.1.1
+  async: ^2.12.0
   cached_network_image: ^3.4.0
   camera: ^0.10.6
   cloud_firestore: ^5.2.1
