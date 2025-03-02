@@ -16,9 +16,9 @@ class LogoutButton extends ConsumerWidget {
       child: AppElevatedButton(
         text: 'ログアウト',
         onPressed: () async {
+          ref.read(analyticsServiceProvider).sendEvent(name: 'sign_out');
           // ログアウト処理を行い、ログイン画面へリダイレクトされる
           await ref.read(authControllerProvider).signOut();
-          ref.read(analyticsServiceProvider).sendEvent(name: 'sign_out');
         },
         backgroundColor: Themes.mainOrange,
         borderColor: Themes.gray.shade900,

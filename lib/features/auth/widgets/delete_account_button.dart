@@ -25,11 +25,11 @@ class DeleteAccountButton extends ConsumerWidget {
               positiveButtonString: '削除',
               isDestructiveAction: true,
               onConfirmed: () async {
-                // アカウントが削除された後、ログイン画面へリダイレクトされる
-                await ref.read(authControllerProvider).deleteUserAccount();
                 ref
                     .read(analyticsServiceProvider)
                     .sendEvent(name: 'delete_account');
+                // アカウントが削除された後、ログイン画面へリダイレクトされる
+                await ref.read(authControllerProvider).deleteUserAccount();
                 AppSnackBar.show(message: 'アカウントを削除しました');
               },
             );

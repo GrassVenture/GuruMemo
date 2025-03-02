@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
@@ -20,9 +21,6 @@ class SignInPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // State Hookを使用して、UIがリビルドされても状態を保持する
-    final isLoading = useState(false);
-
     return Scaffold(
       body: ColoredBox(
         color: Themes.mainOrange,
@@ -40,7 +38,6 @@ class SignInPage extends HookConsumerWidget {
             const Spacer(),
             // Googleで続けるボタン
             _buildSignInButton(
-              isLoading: isLoading,
               context: context,
               ref: ref,
               label: 'Googleで続ける',
@@ -52,7 +49,6 @@ class SignInPage extends HookConsumerWidget {
             const Gap(20),
             // Appleで続けるボタン
             _buildSignInButton(
-              isLoading: isLoading,
               context: context,
               ref: ref,
               label: 'Appleで続ける',
@@ -68,9 +64,9 @@ class SignInPage extends HookConsumerWidget {
     );
   }
 
+  // TODO(masaki): AppElevatedButton との共通化 or プライベートクラス化
   /// サインインボタンの共通化メソッド
   Widget _buildSignInButton({
-    required ValueNotifier<bool> isLoading,
     required BuildContext context,
     required WidgetRef ref,
     required String label,
@@ -79,12 +75,15 @@ class SignInPage extends HookConsumerWidget {
     required Color foregroundColor,
     required Future<void> Function() signInMethod,
   }) {
+    // 多重を実行防止するためのキャッシュ
+    final asyncCache = useState(AsyncCache<dynamic>.ephemeral());
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: ElevatedButton.icon(
-        onPressed: isLoading.value
-            ? () {}
-            : () => _handleSignIn(isLoading, signInMethod, context, ref),
+        onPressed: () {
+          asyncCache.value
+              .fetch(() => _handleSignIn(signInMethod, context, ref));
+        },
         icon: Image.asset(
           iconPath,
           width: 24,
@@ -104,13 +103,11 @@ class SignInPage extends HookConsumerWidget {
 
   /// サインイン処理の共通化
   Future<void> _handleSignIn(
-    ValueNotifier<bool> isLoading,
     Future<void> Function() signIn,
     BuildContext context,
     WidgetRef ref,
   ) async {
     try {
-      isLoading.value = true;
       await signIn();
       if (!context.mounted) {
         return;
@@ -119,8 +116,6 @@ class SignInPage extends HookConsumerWidget {
       context.go(GalleryPage.routePath);
     } on Exception catch (e) {
       AppSnackBar.show(message: 'サインインに失敗しました: $e');
-    } finally {
-      isLoading.value = false;
     }
   }
 }
