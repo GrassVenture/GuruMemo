@@ -24,7 +24,7 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
     return _loadLocalPhotos();
   }
 
-  Future<List<AssetEntity>> _loadLocalPhotos() async {
+  Future<List<AssetEntity>> _loadLocalPhotos() {
     try {
       final localPhotoManagerService = ref.read(
         localPhotoManagerServiceProvider,
@@ -34,9 +34,10 @@ class LocalPhotoAssets extends _$LocalPhotoAssets {
         limit: 20000,
         sortOrder: false,
       );
-    } on Exception catch (e) {
+    } on Exception catch (e, stackTrace) {
       logger.e('画像選択画面の写真読み込みでエラーが発生しました: $e');
-      return [];
+      state = AsyncValue.error(e, stackTrace);
+      rethrow;
     }
   }
 }
