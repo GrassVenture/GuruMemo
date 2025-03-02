@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/services/analytics_service.dart';
@@ -6,6 +7,7 @@ import '../../core/themes.dart';
 import '../../core/widgets/app_dialog.dart';
 import '../../core/widgets/app_snack_bar.dart';
 import 'auth_controller.dart';
+import 'sign_in_page.dart';
 
 /// マイページ
 class MyPage extends ConsumerWidget {
@@ -39,12 +41,11 @@ class MyPage extends ConsumerWidget {
                           await ref
                               .read(authControllerProvider)
                               .deleteUserAccount();
-                          ref.read(analyticsServiceProvider).sendEvent(
-                                name: 'delete_account',
-                              );
-                          AppSnackBar.show(
-                            message: 'アカウントを削除しました',
-                          );
+                          ref
+                              .read(analyticsServiceProvider)
+                              .sendEvent(name: 'delete_account');
+                          GoRouter.of(context).go(SignInPage.routePath);
+                          AppSnackBar.show(message: 'アカウントを削除しました');
                         },
                       );
                     },
