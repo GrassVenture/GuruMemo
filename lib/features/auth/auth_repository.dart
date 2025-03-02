@@ -47,10 +47,6 @@ class AuthRepository {
   FirebaseAuth get auth => _auth;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  bool isSignedIn() {
-    return _auth.currentUser != null;
-  }
-
   // Googleサインインのメソッド
   Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(
