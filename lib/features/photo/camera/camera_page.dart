@@ -64,7 +64,7 @@ class CameraPage extends HookConsumerWidget {
               left: MediaQuery.of(context).size.width / 2 - 34,
               child: GestureDetector(
                 onTap: () => cacheStrategy.value.fetch(() async {
-                  await _permission.requestPermissions([
+                  final granted = await _permission.requestPermissions([
                     Permission.camera,
                     Permission.microphone,
                     Permission.location,
@@ -75,7 +75,7 @@ class CameraPage extends HookConsumerWidget {
                       await ref.read(cameraControllerProvider.future);
                   final image = await controller.takePicture();
 
-                  if (!context.mounted) {
+                  if (!granted || !context.mounted) {
                     return;
                   }
                   await context.pushNamed(
