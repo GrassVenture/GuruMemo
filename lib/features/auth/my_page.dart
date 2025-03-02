@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../core/services/analytics_service.dart';
-import '../../core/themes.dart';
-import '../../core/widgets/app_dialog.dart';
-import '../../core/widgets/app_snack_bar.dart';
-import 'auth_controller.dart';
+import 'widgets/delete_account_button.dart';
+import 'widgets/logout_button.dart';
+import 'widgets/user_info.dart';
 
 /// マイページ
 class MyPage extends ConsumerWidget {
@@ -17,51 +16,16 @@ class MyPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      // サインインのリスト部分の設定
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
+        child: const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.only(top: 160),
-                children: [
-                  ListTile(
-                    onTap: () async {
-                      await AppDialog.show(
-                        context,
-                        hasCancelButton: true,
-                        titleString: '本当にアカウントを削除しますか？',
-                        contentString: 'この操作はもとに戻せません。',
-                        positiveButtonString: '削除',
-                        isDestructiveAction: true,
-                        onConfirmed: () async {
-                          await ref
-                              .read(authControllerProvider)
-                              .deleteUserAccount();
-                          ref.read(analyticsServiceProvider).sendEvent(
-                                name: 'delete_account',
-                              );
-                          AppSnackBar.show(
-                            message: 'アカウントを削除しました',
-                          );
-                        },
-                      );
-                    },
-                    title: const Text(
-                      'アカウントを削除',
-                      style: TextStyle(color: Themes.errorAlertColor),
-                    ),
-                  ),
-                  const Divider(
-                    thickness: 1,
-                    indent: 20,
-                    endIndent: 20,
-                    color: Colors.white,
-                  ),
-                ],
-              ),
-            ),
+            UserInfo(), // ユーザー情報を表示
+            Gap(40),
+            LogoutButton(), // ログアウトボタン
+            Gap(20),
+            DeleteAccountButton(), // アカウント削除ボタン
           ],
         ),
       ),

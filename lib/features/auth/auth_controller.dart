@@ -17,6 +17,11 @@ final _authProvider =
 final _userProvider =
     StreamProvider<User?>((ref) => ref.watch(_authProvider).userChanges());
 
+/// [FirebaseAuth]のcurrentUserを取得するProvider
+final firebaseUserProvider = Provider<User?>((ref) {
+  return ref.watch(_authProvider).currentUser;
+});
+
 /// userIdを管理するProvider
 ///
 /// [_userProvider]をwatchしているため、認証状態の変更を検知する
