@@ -118,10 +118,9 @@ class OnboardingPage extends HookConsumerWidget {
                               curve: Curves.easeInOut,
                             );
                           } else {
-                            // TODO(kim): アナリティクスマージ後にコメントアウトを解除
-                            // ref
-                            //     .read(analyticsServiceProvider)
-                            //     .sendEvent(name: 'complete_onboarding');
+                            ref
+                                .read(analyticsServiceProvider)
+                                .sendEvent(name: 'complete_onboarding');
                             await ref
                                 .read(
                                   isOnboardingCompletedNotifierProvider
