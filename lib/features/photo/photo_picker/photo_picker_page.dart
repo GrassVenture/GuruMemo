@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../core/build_context_extension.dart';
 import '../../../core/logger.dart';
 import '../../../core/permission/permission_handler.dart';
 import '../../../core/themes.dart';
@@ -24,6 +24,17 @@ class PhotoPickerPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    useEffect(() {
+      Future.microtask(() async {
+        await _permission.requestPermissions([
+          Permission.location,
+          Permission.photos,
+        ]);
+      });
+
+      return null;
+    }, []);
+
     final localPhotoAssets = ref.watch(localPhotoAssetsProvider);
     final selectedLocalPhotosNotifier =
         ref.watch(selectedLocalPhotosProvider.notifier);
@@ -137,13 +148,9 @@ class PhotoPickerPage extends HookConsumerWidget {
                                   color: Themes.mainOrange,
                                 ),
                                 alignment: Alignment.center,
-                                child: Text(
-                                  '1',
-                                  style:
-                                      context.textTheme.labelMedium?.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
+                                child: const Icon(
+                                  Icons.check,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -160,19 +167,23 @@ class PhotoPickerPage extends HookConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text(
-                    '写真へのアクセスが許可されていません。\n'
-                    '設定画面を確認してください。',
+                    '写真を読み込めませんでした。\n'
+                    '権限を確認するか、再試行してください。',
                     textAlign: TextAlign.center,
                   ),
                   const Gap(16),
-                  FractionallySizedBox(
-                    widthFactor: 0.5,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        await openAppSettings();
-                      },
-                      child: const Text('設定を開く'),
-                    ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      await openAppSettings();
+                    },
+                    child: const Text('設定を開く'),
+                  ),
+                  const Gap(8),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.invalidate(localPhotoAssetsProvider); // もう一度読み込みを試す
+                    },
+                    child: const Text('再試行'),
                   ),
                 ],
               ),
