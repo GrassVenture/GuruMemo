@@ -115,7 +115,7 @@ class SignInPage extends HookConsumerWidget {
       if (!context.mounted) {
         return;
       }
-      GoRouter.of(context).go(GalleryPage.routePath);
+      context.go(GalleryPage.routePath);
     } on Exception catch (e) {
       AppSnackBar.show(message: 'サインインに失敗しました: $e');
     } finally {
