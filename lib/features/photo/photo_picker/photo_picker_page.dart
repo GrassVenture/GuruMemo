@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
@@ -12,6 +14,7 @@ import '../../../core/themes.dart';
 
 import '../../../core/widgets/app_elevated_button.dart';
 import '../camera/camera_page.dart';
+import '../gallery/gallery_page.dart';
 import 'photo_picker_controller.dart';
 
 class PhotoPickerPage extends HookConsumerWidget {
@@ -204,7 +207,7 @@ class PhotoPickerPage extends HookConsumerWidget {
                           selectedLocalPhotosNotifier.clearSelection();
 
                           // 非同期で分類処理を実行（バックグラウンド処理）
-                          Future.microtask(() async {
+                          Future.microtask(() {
                             final selectedPhotos = selectedLocalPhotos.toList();
                             final photoListNotifier = ref.read(
                               classifyLocalPhotoNotifierProvider.notifier,
@@ -225,7 +228,11 @@ class PhotoPickerPage extends HookConsumerWidget {
                               }
                             }).toList();
 
-                            await Future.wait(tasks);
+                            unawaited(Future.wait(tasks));
+                            if (!context.mounted) {
+                              return;
+                            }
+                            context.go(GalleryPage.routePath);
                           });
                         },
                       )
