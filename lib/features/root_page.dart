@@ -11,6 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../core/repositories/shared_preferences_repository.dart';
 import '../core/widgets/app_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
+import 'auth/auth_controller.dart';
 import 'auth/auth_repository.dart';
 import 'auth/sign_in_page.dart';
 import 'onboarding/onboarding_controller.dart';
@@ -20,13 +21,21 @@ import 'onboarding/onboarding_page.dart';
 ///
 /// 初期化処理が終わり次第、[NavigationFrame]を描画する。
 class RootPage extends HookConsumerWidget {
-  const RootPage({super.key, required this.child});
+  const RootPage({
+    super.key,
+    required this.child,
+    // required this.userId,
+  });
 
   final Widget child;
+
+  // final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isLoading = useState(true);
+    // リダイレクト処理にて userId があることは確認済み
+    final userId = ref.watch(userIdProvider)!;
 
     // 初期化処理を行う非同期関数
     Future<void> init(WidgetRef ref, BuildContext context) async {
@@ -57,6 +66,7 @@ class RootPage extends HookConsumerWidget {
     return isLoading.value
         ? const SizedBox.shrink() // ローディング中は空のウィジェットを表示
         : NavigationFrame(
+            userId: userId,
             child: Stack(
               children: [
                 child,

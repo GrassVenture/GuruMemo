@@ -22,7 +22,7 @@ final routerProvider = Provider<GoRouter>(
       final userId = ref.read(userIdProvider);
       // ログインしていなければ、サインインページに遷移
       final isLoggedIn = userId != null;
-      if (isLoggedIn) {
+      if (!isLoggedIn) {
         return SignInPage.routePath;
       }
 
