@@ -31,21 +31,23 @@ class CameraPage extends HookConsumerWidget {
           Positioned.fill(
             child: ref.watch(cameraControllerProvider).when(
                   data: CameraPreview.new,
-                  error: (err, stack) => const Center(
+                  error: (err, stack) => Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'カメラの初期化に失敗しました。\n'
                           '設定画面で権限を許可してください。',
                           textAlign: TextAlign.center,
                         ),
-                        Gap(16),
+                        const Gap(16),
                         FractionallySizedBox(
                           widthFactor: 0.5, // 横幅を親要素の半分に設定
                           child: ElevatedButton(
-                            onPressed: openAppSettings,
-                            child: Text('設定を開く'),
+                            onPressed: () async {
+                              await openAppSettings();
+                            },
+                            child: const Text('設定を開く'),
                           ),
                         ),
                       ],
