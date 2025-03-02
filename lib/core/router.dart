@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../features/auth/auth_controller.dart';
 import '../features/auth/my_page.dart';
 import '../features/auth/sign_in_page.dart';
 import '../features/photo/camera/camera_page.dart';
@@ -18,6 +19,14 @@ final routerProvider = Provider<GoRouter>(
     initialLocation: GalleryPage.routePath,
     redirect: (context, state) {
       ref.read(analyticsServiceProvider).sendScreenView(state.matchedLocation);
+      final userId = ref.read(userIdProvider);
+      // ログインしていなければ、サインインページに遷移
+      final isLoggedIn = userId != null;
+      if (isLoggedIn) {
+        return SignInPage.routePath;
+      }
+
+      // TODO(masaki): userId があれば、そのまま遷移 & userId を渡す
       return null;
     },
     routes: [
