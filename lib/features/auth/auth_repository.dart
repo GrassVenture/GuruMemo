@@ -157,7 +157,6 @@ class AuthRepository {
           'userId': userId,
         },
       );
-      await _auth.currentUser?.delete();
     } on Exception catch (error) {
       logger.e(error.toString());
     }
