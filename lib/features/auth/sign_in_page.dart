@@ -8,7 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 // import '../../core/analytics/analytics_service.dart';
 import '../../core/themes.dart';
 import '../../core/widgets/app_snack_bar.dart';
-import '../photo/swipe_photo/swipe_photo_page.dart';
+import '../photo/gallery/gallery_page.dart';
 import 'auth_controller.dart';
 
 /// サインインページ
@@ -115,7 +115,7 @@ class SignInPage extends HookConsumerWidget {
       if (!context.mounted) {
         return;
       }
-      GoRouter.of(context).go(SwipePhotoPage.routePath);
+      GoRouter.of(context).go(GalleryPage.routePath);
     } on Exception catch (e) {
       AppSnackBar.show(message: 'サインインに失敗しました: $e');
     } finally {
