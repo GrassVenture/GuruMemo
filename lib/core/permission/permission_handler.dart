@@ -3,14 +3,15 @@ import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../widgets/app_snack_bar.dart';
+
 class PermissionHandler extends ChangeNotifier {
   // Static instance
 
   factory PermissionHandler() {
-    // Factory constructor to return the instance
     return _instance;
   }
-  PermissionHandler._(); // Private constructor
+  PermissionHandler._();
   static final _instance = PermissionHandler._();
 
   final _permissionQueue = Queue<Permission>();
@@ -23,11 +24,27 @@ class PermissionHandler extends ChangeNotifier {
     }
 
     if (status.isPermanentlyDenied) {
-      await openAppSettings();
+      AppSnackBar.show(
+        message: '設定から権限を許可してください。',
+        actionLabel: '設定を開く',
+        onActionPressed: () async {
+          await openAppSettings();
+        },
+      );
       return false;
     }
 
     final result = await permission.request();
+    if (result.isPermanentlyDenied) {
+      AppSnackBar.show(
+        message: '設定から権限を許可してください。',
+        actionLabel: '設定を開く',
+        onActionPressed: () async {
+          await openAppSettings();
+        },
+      );
+      return false;
+    }
     return result.isGranted;
   }
 
@@ -38,13 +55,14 @@ class PermissionHandler extends ChangeNotifier {
       final granted = await _requestPermission(permission);
       if (!granted) {
         allGranted = false;
+        break;
       }
       notifyListeners();
     }
     return allGranted;
   }
 
-  Future<bool> requestPermissions(List<Permission> permissions) async {
+  Future<bool> requestPermissions(List<Permission> permissions) {
     _permissionQueue.addAll(permissions);
 
     return _processQueue();
