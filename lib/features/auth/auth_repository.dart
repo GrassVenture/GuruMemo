@@ -157,6 +157,8 @@ class AuthRepository {
           'userId': userId,
         },
       );
+      // 認証情報をリセットするためにサインアウト
+      await _auth.signOut();
     } on Exception catch (error) {
       logger.e(error.toString());
     }
