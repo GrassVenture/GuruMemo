@@ -1,10 +1,10 @@
 import 'package:drift/drift.dart';
 import 'package:gallery_saver_plus/gallery_saver.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:photo_manager/photo_manager.dart';
 
 import '../../../core/local_database/local_database.dart';
+import '../../core/logger.dart';
 
 /// [LocalPhotoRepository]用プロバイダー
 final Provider<LocalPhotoRepository> localPhotoRepositoryProvider =
@@ -39,9 +39,8 @@ class LocalPhotoRepository {
   Future<void> savePhotoByImagePath(String imagePath) async {
     try {
       await GallerySaver.saveImage(imagePath);
-      print('画像の保存に成功しました: $imagePath');
-    } catch (e) {
-      print('エラーが発生しました: $e');
+    } on Exception catch (e) {
+      logger.e('ローカルへの写真保存でエラーが発生しました: $e');
     }
   }
 
