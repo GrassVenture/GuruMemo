@@ -6,6 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../features/auth/auth_controller.dart';
 import '../features/auth/my_page.dart';
 import '../features/auth/sign_in_page.dart';
+import '../features/onboarding/onboarding_controller.dart';
+import '../features/onboarding/onboarding_page.dart';
 import '../features/photo/camera/camera_page.dart';
 import '../features/photo/camera/camera_preview_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
@@ -19,6 +21,12 @@ final routerProvider = Provider<GoRouter>(
     initialLocation: GalleryPage.routePath,
     redirect: (context, state) {
       ref.read(analyticsServiceProvider).sendScreenView(state.matchedLocation);
+      // オンボーディングが終わっていなければ、オンボーディングページに遷移
+      final isOnboardingCompleted =
+          ref.read(isOnboardingCompletedNotifierProvider);
+      if (!isOnboardingCompleted) {
+        return OnboardingPage.routePath;
+      }
       final userId = ref.read(userIdProvider);
       // ログインしていなければ、サインインページに遷移
       final isLoggedIn = userId != null;
@@ -30,6 +38,11 @@ final routerProvider = Provider<GoRouter>(
       return null;
     },
     routes: [
+      GoRoute(
+        name: OnboardingPage.routeName,
+        path: OnboardingPage.routePath,
+        builder: (context, state) => const OnboardingPage(),
+      ),
       GoRoute(
         name: SignInPage.routeName,
         path: SignInPage.routePath,

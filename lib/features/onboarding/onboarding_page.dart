@@ -15,6 +15,9 @@ import 'onboarding_controller.dart';
 class OnboardingPage extends HookConsumerWidget {
   const OnboardingPage({super.key});
 
+  static const routeName = 'onboarding_page';
+  static const routePath = '/onboarding_page';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final pageController = usePageController();

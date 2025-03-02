@@ -8,15 +8,16 @@ import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import 'core/repositories/shared_preferences_repository.dart';
 import 'core/router.dart';
 import 'core/themes.dart';
 
-final scaffoldMessengerKey =
-    GlobalKey<ScaffoldMessengerState>();
+final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  final container = ProviderContainer();
   await Future.wait([
     Firebase.initializeApp(),
     dotenv.load(),
@@ -25,8 +26,10 @@ Future<void> main() async {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]),
+    container.read(sharedPreferencesRepositoryProvider).init(),
   ]);
 
+  // TODO(masaki): 修正
   // Firebase Analyticsのインスタンスを初期化する
   final analytics = FirebaseAnalytics.instance;
 
@@ -44,7 +47,10 @@ Future<void> main() async {
     return true;
   };
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(UncontrolledProviderScope(
+    container: container,
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends ConsumerWidget {

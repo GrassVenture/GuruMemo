@@ -8,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../core/repositories/shared_preferences_repository.dart';
 import '../core/widgets/app_dialog.dart';
 import '../core/widgets/navigation_frame.dart';
 import 'auth/auth_repository.dart';
@@ -40,9 +39,9 @@ class RootPage extends HookConsumerWidget {
     Future<void> init(WidgetRef ref, BuildContext context) async {
       await Future.wait([
         _checkBuildNumber(context),
-        ref.watch(sharedPreferencesRepositoryProvider).init(),
       ]);
 
+      // TODO(masaki): 削除
       final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
       if (!isSignedIn && context.mounted) {
         GoRouter.of(context).go(SignInPage.routePath);
