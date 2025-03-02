@@ -27,10 +27,10 @@ final routerProvider = Provider<GoRouter>(
       if (!isOnboardingCompleted) {
         return OnboardingPage.routePath;
       }
-      final userId = ref.read(userIdProvider);
+      final userId = ref.watch(userIdProvider);
       // ログインしていなければ、サインインページに遷移
-      final isLoggedIn = userId != null;
-      if (!isLoggedIn) {
+      final isSignedIn = userId != null;
+      if (!isSignedIn) {
         return SignInPage.routePath;
       }
 

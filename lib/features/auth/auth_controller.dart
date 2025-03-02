@@ -51,6 +51,11 @@ class AuthController {
     await _authRepository.deleteUserAccount();
   }
 
+  /// ログアウト処理を行う。
+  Future<void> signOut() async {
+    await _authRepository.signOut();
+  }
+
   /// Googleサインイン用メソッド
   Future<({String accessToken, String userId})> signInWithGoogle() {
     return _authRepository.signInWithGoogle();

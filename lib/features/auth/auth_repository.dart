@@ -153,11 +153,16 @@ class AuthRepository {
           'userId': userId,
         },
       );
-      // 認証情報をリセットするためにサインアウト
-      await _auth.signOut();
+      // 認証情報をリセットするためにサインアウトする
+      await signOut();
     } on Exception catch (error) {
       logger.e(error.toString());
     }
+  }
+
+  /// サインアウト処理を行う。
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 
   /// CloudFunctionsのCallable関数を呼び出す
