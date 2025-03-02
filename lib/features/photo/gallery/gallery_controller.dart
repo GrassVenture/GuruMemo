@@ -1,15 +1,11 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:exif/exif.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/image_helper.dart';
 import '../../../core/local_database/local_database.dart';
 import '../../../core/logger.dart';
 import '../../../core/services/analytics_service.dart';

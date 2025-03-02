@@ -62,7 +62,7 @@ class CameraPreviewPage extends HookConsumerWidget {
                       .read(localPhotoRepositoryProvider)
                       .savePhotoByImagePath(imagePath);
                   unawaited(ref
-                      .read(latestPhotoListProvider.notifier)
+                      .read(classifyLatestPhotoNotifierProvider.notifier)
                       .classifyPhotoAsFood());
                   if (!context.mounted) {
                     return;

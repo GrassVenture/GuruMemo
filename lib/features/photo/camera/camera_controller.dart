@@ -1,10 +1,8 @@
 import 'package:camera/camera.dart';
-import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:photo_manager/photo_manager.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/exception.dart';
 import '../../../core/image_helper.dart';
@@ -12,108 +10,12 @@ import '../../../core/logger.dart';
 import '../../auth/auth_controller.dart';
 import '../local_photo_manager_service.dart';
 import '../remote_photo_repository.dart';
-import 'camera_state.dart';
 
-class CameraStateNotifier extends StateNotifier<CameraState> {
-  CameraStateNotifier(this.ref) : super(const CameraState());
+part 'camera_controller.g.dart';
 
-  final Ref ref;
-
-  Future<bool> takePictureAndSave(BuildContext context) async {
-    state = state.copyWith(isTakingPicture: true); // 撮影中フラグをセット
-
-    try {
-      final controller = await ref.read(cameraControllerProvider.future);
-      final image = await controller.takePicture();
-      // 権限のリクエストをまとめて行う
-      if (!(await _ensurePermissions())) {
-        return false;
-      }
-
-      // 画像をギャラリーに保存
-      final result = await ImageGallerySaverPlus.saveFile(image.path);
-      logger.i('ギャラリーに画像を保存しました: $result');
-
-      // 状態更新
-      state = state.copyWith(
-        capturedImagePath: image.path,
-      );
-    } on Exception catch (e) {
-      logger.e('写真撮影エラー: $e');
-      return false;
-    } finally {
-      state = state.copyWith(isTakingPicture: false); // 撮影中フラグを解除
-    }
-    return true;
-  }
-
-  // 権限の確認とリクエスト
-  Future<bool> _ensurePermissions() async {
-    // 位置情報の権限をチェック
-    var locationPermission = await Geolocator.checkPermission();
-    if (locationPermission == LocationPermission.denied ||
-        locationPermission == LocationPermission.deniedForever) {
-      locationPermission = await Geolocator.requestPermission();
-      if (locationPermission == LocationPermission.denied ||
-          locationPermission == LocationPermission.deniedForever) {
-        return false;
-      }
-    }
-
-    final cameraStatus = await Permission.camera.status;
-    final storageStatus = await Permission.storage.status;
-    final photosStatus = await Permission.photos.status;
-    final microphoneStatus = await Permission.microphone.status;
-
-    if (photosStatus.isLimited || storageStatus.isLimited) {
-      logger.i('_ensurePermissions: 写真またはストレージのアクセスが制限されています');
-      return false;
-    }
-
-    if (!storageStatus.isGranted ||
-        !cameraStatus.isGranted ||
-        !photosStatus.isGranted ||
-        !microphoneStatus.isGranted) {
-      logger.i('_ensurePermissions: 権限が不足しているためリクエストします');
-      final statuses = await [
-        Permission.camera,
-        Permission.storage,
-        Permission.photos,
-        Permission.microphone,
-      ].request();
-
-      if (statuses[Permission.camera]!.isPermanentlyDenied ||
-          statuses[Permission.storage]!.isPermanentlyDenied ||
-          statuses[Permission.photos]!.isPermanentlyDenied ||
-          statuses[Permission.location]!.isPermanentlyDenied ||
-          statuses[Permission.microphone]!.isPermanentlyDenied ||
-          locationPermission == LocationPermission.deniedForever) {
-        // TODO(sho): このままだと、権限が足りてなくても通ってしまうので、あとでここはfalseに戻す
-        // return false;
-        return true;
-      }
-
-      if (statuses[Permission.camera]!.isGranted &&
-          statuses[Permission.storage]!.isGranted &&
-          statuses[Permission.photos]!.isGranted &&
-          statuses[Permission.location]!.isGranted &&
-          statuses[Permission.microphone]!.isGranted) {
-        logger.i('_ensurePermissions: すべての権限が許可されました');
-        return true;
-      } else {
-        logger.i('_ensurePermissions: 権限が不足しています');
-        return false;
-      }
-    } else {
-      logger.i('_ensurePermissions: すべての権限がすでに許可されています');
-      return true;
-    }
-  }
-}
-
-// カメラコントローラ用のプロバイダー
-final AutoDisposeFutureProvider<CameraController> cameraControllerProvider =
-    FutureProvider.autoDispose<CameraController>((ref) async {
+/// カメラコントローラ用のプロバイダー
+@riverpod
+Future<Raw<CameraController>> cameraController(Ref ref) async {
   final cameras = await availableCameras();
 
   if (cameras.isEmpty) {
@@ -131,25 +33,11 @@ final AutoDisposeFutureProvider<CameraController> cameraControllerProvider =
 
   await controller.initialize();
   return controller;
-});
+}
 
-// カメラ状態を管理するためのStateNotifierプロバイダー
-final cameraStateProvider =
-    StateNotifierProvider<CameraStateNotifier, CameraState>((ref) {
-  return CameraStateNotifier(ref);
-});
-
-/// 写真リストを管理するプロバイダー
-final AutoDisposeAsyncNotifierProvider<ClassifyLatestPhotoNotifier,
-        AssetEntity?> latestPhotoListProvider =
-    AsyncNotifierProvider.autoDispose<ClassifyLatestPhotoNotifier,
-        AssetEntity?>(
-  ClassifyLatestPhotoNotifier.new,
-);
-
-/// 最新１枚の写真を食べ物に分類するProvider
-class ClassifyLatestPhotoNotifier
-    extends AutoDisposeAsyncNotifier<AssetEntity?> {
+/// ローカルストレージ最新１枚の写真を食べ物に分類するProvider
+@riverpod
+class ClassifyLatestPhotoNotifier extends _$ClassifyLatestPhotoNotifier {
   @override
   Future<AssetEntity?> build() async {
     // パーミッション確認
@@ -210,7 +98,7 @@ class ClassifyLatestPhotoNotifier
     }
   }
 
-  // 位置情報の取得
+  //　位置情報の取得
   Future<Position?> _getCurrentPosition() async {
     try {
       const locationSettings = LocationSettings(

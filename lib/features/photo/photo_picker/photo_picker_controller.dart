@@ -50,7 +50,6 @@ class SelectedLocalPhotos extends _$SelectedLocalPhotos {
   @override
   List<AssetEntity> build() => [];
 
-  /// 写真を選択
   void selectPhoto(AssetEntity photo) {
     if (state.length >= _maxSelection) {
       return;
