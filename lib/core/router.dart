@@ -30,14 +30,14 @@ final routerProvider = Provider<GoRouter>(
       return null;
     },
     routes: [
+      GoRoute(
+        name: SignInPage.routeName,
+        path: SignInPage.routePath,
+        builder: (context, state) => const SignInPage(),
+      ),
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
         routes: [
-          GoRoute(
-            name: SignInPage.routeName,
-            path: SignInPage.routePath,
-            builder: (context, state) => const SignInPage(),
-          ),
           GoRoute(
             name: GalleryPage.routeName,
             path: GalleryPage.routePath,
