@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +9,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import 'core/repositories/shared_preferences_repository.dart';
 import 'core/router.dart';
+import 'core/services/analytics_service.dart';
 import 'core/themes.dart';
 
 final scaffoldMessengerKey = GlobalKey<ScaffoldMessengerState>();
@@ -29,12 +29,7 @@ Future<void> main() async {
     container.read(sharedPreferencesRepositoryProvider).init(),
   ]);
 
-  // TODO(masaki): 修正
-  // Firebase Analyticsのインスタンスを初期化する
-  final analytics = FirebaseAnalytics.instance;
-
-  // アプリが開かれたことを記録する
-  await analytics.logAppOpen();
+  container.read(analyticsServiceProvider).logAppOpen();
 
   FlutterError.onError = (errorDetails) {
     FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);

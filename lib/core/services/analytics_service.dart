@@ -39,6 +39,11 @@ class AnalyticsService {
   /// 文字列はスネークケースで記述する。
   final Map<String, String> _parameters;
 
+  /// アプリが開かれたことを送信する。
+  void logAppOpen() {
+    unawaited(_analytics.logAppOpen());
+  }
+
   /// どの画面を開いているか、Analyticsにログを送信するメソッド
   ///
   /// [FirebaseAnalytics.logScreenView]加えて、
