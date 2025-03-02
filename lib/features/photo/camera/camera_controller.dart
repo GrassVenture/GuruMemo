@@ -40,7 +40,6 @@ Future<Raw<CameraController>> cameraController(Ref ref) async {
 class ClassifyLatestPhotoNotifier extends _$ClassifyLatestPhotoNotifier {
   @override
   Future<AssetEntity?> build() async {
-    // パーミッション確認
     final permission = await PhotoManager.requestPermissionExtend();
     if (!permission.isAuth && !permission.hasAccess) {
       throw PermissionException();
@@ -49,6 +48,7 @@ class ClassifyLatestPhotoNotifier extends _$ClassifyLatestPhotoNotifier {
     return null;
   }
 
+  /// 最新の写真を食べ物として分類する
   Future<void> classifyPhotoAsFood() async {
     try {
       await PhotoManager.clearFileCache();
@@ -98,7 +98,6 @@ class ClassifyLatestPhotoNotifier extends _$ClassifyLatestPhotoNotifier {
     }
   }
 
-  //　位置情報の取得
   Future<Position?> _getCurrentPosition() async {
     try {
       const locationSettings = LocationSettings(

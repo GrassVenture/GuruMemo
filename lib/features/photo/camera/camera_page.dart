@@ -58,7 +58,6 @@ class CameraPage extends HookConsumerWidget {
                   ),
                 ),
           ),
-          // 撮影ボタンの配置
           if (cameraState is AsyncData<CameraController>)
             Positioned(
               bottom: 56,
@@ -94,7 +93,6 @@ class CameraPage extends HookConsumerWidget {
                 ),
               ),
             ),
-
           Positioned(
             top: 60,
             left: 16,
