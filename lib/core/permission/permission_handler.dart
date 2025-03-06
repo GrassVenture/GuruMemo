@@ -1,19 +1,9 @@
 import 'dart:collection';
 
-import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-
 import '../widgets/app_snack_bar.dart';
 
-class PermissionHandler extends ChangeNotifier {
-  // Static instance
-
-  factory PermissionHandler() {
-    return _instance;
-  }
-  PermissionHandler._();
-  static final _instance = PermissionHandler._();
-
+class PermissionHandler {
   final _permissionQueue = Queue<Permission>();
 
   Future<bool> _requestPermission(Permission permission) async {
@@ -57,7 +47,6 @@ class PermissionHandler extends ChangeNotifier {
         allGranted = false;
         break;
       }
-      notifyListeners();
     }
     return allGranted;
   }
@@ -66,9 +55,5 @@ class PermissionHandler extends ChangeNotifier {
     _permissionQueue.addAll(permissions);
 
     return _processQueue();
-  }
-
-  void refresh() {
-    notifyListeners();
   }
 }
