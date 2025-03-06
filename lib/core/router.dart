@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../features/auth/auth_controller.dart';
 import '../features/auth/my_page.dart';
 import '../features/auth/sign_in_page.dart';
+import '../features/onboarding/onboarding_controller.dart';
+import '../features/onboarding/onboarding_page.dart';
 import '../features/photo/camera/camera_page.dart';
 import '../features/photo/camera/camera_preview_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
@@ -18,17 +21,36 @@ final routerProvider = Provider<GoRouter>(
     initialLocation: GalleryPage.routePath,
     redirect: (context, state) {
       ref.read(analyticsServiceProvider).sendScreenView(state.matchedLocation);
+      // オンボーディングが終わっていなければ、オンボーディングページに遷移
+      final isOnboardingCompleted =
+          ref.read(isOnboardingCompletedNotifierProvider);
+      if (!isOnboardingCompleted) {
+        return OnboardingPage.routePath;
+      }
+      final userId = ref.watch(userIdProvider);
+      // ログインしていなければ、サインインページに遷移
+      final isSignedIn = userId != null;
+      if (!isSignedIn) {
+        return SignInPage.routePath;
+      }
+
+      // TODO(masaki): userId があれば、そのまま遷移 & userId を渡す
       return null;
     },
     routes: [
+      GoRoute(
+        name: OnboardingPage.routeName,
+        path: OnboardingPage.routePath,
+        builder: (context, state) => const OnboardingPage(),
+      ),
+      GoRoute(
+        name: SignInPage.routeName,
+        path: SignInPage.routePath,
+        builder: (context, state) => const SignInPage(),
+      ),
       ShellRoute(
         builder: (context, state, child) => RootPage(child: child),
         routes: [
-          GoRoute(
-            name: SignInPage.routeName,
-            path: SignInPage.routePath,
-            builder: (context, state) => const SignInPage(),
-          ),
           GoRoute(
             name: GalleryPage.routeName,
             path: GalleryPage.routePath,

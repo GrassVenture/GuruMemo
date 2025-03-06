@@ -47,10 +47,6 @@ class AuthRepository {
   FirebaseAuth get auth => _auth;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  bool isSignedIn() {
-    return _auth.currentUser != null;
-  }
-
   // Googleサインインのメソッド
   Future<({String accessToken, String userId})> signInWithGoogle() async {
     final googleUser = await GoogleSignIn(
@@ -157,9 +153,16 @@ class AuthRepository {
           'userId': userId,
         },
       );
+      // 認証情報をリセットするためにサインアウトする
+      await signOut();
     } on Exception catch (error) {
       logger.e(error.toString());
     }
+  }
+
+  /// サインアウト処理を行う。
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 
   /// CloudFunctionsのCallable関数を呼び出す
