@@ -203,7 +203,7 @@ class NavigationFrame extends HookConsumerWidget {
       case 0:
         context.go(GalleryPage.routePath);
       case 1:
-        context.go(PhotoPickerPage.routePath);
+        context.push(PhotoPickerPage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }
