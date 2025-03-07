@@ -203,11 +203,18 @@ class PhotoPickerPage extends HookConsumerWidget {
                 return selectedCount > 0
                     ? AppElevatedButton(
                         text: '$selectedCount 件を追加',
-                        onPressed: () {
+                        onPressed: () async {
                           selectedLocalPhotosNotifier.clearSelection();
 
+                          final granted = await _permission.requestPermissions(
+                              [Permission.location, Permission.photos]);
+
+                          if (!granted) {
+                            return;
+                          }
+
                           // 非同期で分類処理を実行（バックグラウンド処理）
-                          Future.microtask(() {
+                          await Future.microtask(() {
                             final selectedPhotos = selectedLocalPhotos.toList();
                             final photoListNotifier = ref.read(
                               classifyLocalPhotoNotifierProvider.notifier,
