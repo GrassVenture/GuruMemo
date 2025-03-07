@@ -13,6 +13,7 @@ import '../../../core/permission/permission_handler.dart';
 import '../../../core/themes.dart';
 
 import '../../../core/widgets/app_elevated_button.dart';
+import '../../../core/widgets/navigation_frame_controller.dart';
 import '../camera/camera_page.dart';
 import '../gallery/gallery_page.dart';
 import 'photo_picker_controller.dart';
@@ -215,7 +216,7 @@ class PhotoPickerPage extends HookConsumerWidget {
                           }
 
                           // 非同期で分類処理を実行（バックグラウンド処理）
-                          await Future.microtask(() {
+                          await Future.microtask(() async {
                             final selectedPhotos = selectedLocalPhotos.toList();
                             final photoListNotifier = ref.read(
                               classifyLocalPhotoNotifierProvider.notifier,
@@ -237,9 +238,13 @@ class PhotoPickerPage extends HookConsumerWidget {
                             }).toList();
 
                             unawaited(Future.wait(tasks));
+                            await ref
+                                .read(selectedIndexProvider.notifier)
+                                .updateIndex(0);
                             if (!context.mounted) {
                               return;
                             }
+
                             context.go(GalleryPage.routePath);
                           });
                         },
