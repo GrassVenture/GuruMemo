@@ -15,17 +15,17 @@ import '../local_photo_repository.dart';
 import 'camera_controller.dart';
 
 class CameraPreviewPage extends HookConsumerWidget {
-  CameraPreviewPage({super.key, required this.imagePath});
+  const CameraPreviewPage({super.key, required this.imagePath});
 
   final String imagePath;
 
   static const routeName = 'camera_preview_page';
   static const routePath = '/camera_preview_page';
 
-  final _permission = PermissionHandler();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final permissionHandler = ref.read(permissionHandlerProvider);
+
     return Scaffold(
       appBar: AppBar(
         leading: Padding(
@@ -62,7 +62,7 @@ class CameraPreviewPage extends HookConsumerWidget {
               AppElevatedButton(
                 text: 'この写真を追加',
                 onPressed: () async {
-                  final granted = await _permission.requestPermissions([
+                  final granted = await permissionHandler.requestPermissions([
                     Permission.camera,
                     Permission.microphone,
                     Permission.location,

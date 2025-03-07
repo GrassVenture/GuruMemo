@@ -1,9 +1,15 @@
 import 'dart:collection';
 
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../widgets/app_snack_bar.dart';
 
+part 'permission_handler.g.dart';
+
 class PermissionHandler {
+  PermissionHandler._();
+
   final _permissionQueue = Queue<Permission>();
 
   Future<bool> _requestPermission(Permission permission) async {
@@ -56,4 +62,9 @@ class PermissionHandler {
 
     return _processQueue();
   }
+}
+
+@riverpod
+PermissionHandler permissionHandler(Ref ref) {
+  return PermissionHandler._();
 }

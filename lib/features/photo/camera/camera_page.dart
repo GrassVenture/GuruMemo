@@ -13,17 +13,16 @@ import 'camera_controller.dart';
 import 'camera_preview_page.dart';
 
 class CameraPage extends HookConsumerWidget {
-  CameraPage({super.key});
+  const CameraPage({super.key});
 
   static const routeName = 'camera_page';
   static const routePath = '/camera_page';
-
-  final _permission = PermissionHandler();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cacheStrategy = useState(AsyncCache<dynamic>.ephemeral());
     final cameraState = ref.watch(cameraControllerProvider);
+    final permissionHandler = ref.read(permissionHandlerProvider);
 
     return Scaffold(
       body: Stack(
@@ -64,7 +63,7 @@ class CameraPage extends HookConsumerWidget {
               left: MediaQuery.of(context).size.width / 2 - 34,
               child: GestureDetector(
                 onTap: () => cacheStrategy.value.fetch(() async {
-                  final granted = await _permission.requestPermissions([
+                  final granted = await permissionHandler.requestPermissions([
                     Permission.camera,
                     Permission.microphone,
                     Permission.location,
