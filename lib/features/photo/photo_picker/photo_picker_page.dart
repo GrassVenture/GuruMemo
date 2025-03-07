@@ -18,18 +18,18 @@ import '../gallery/gallery_page.dart';
 import 'photo_picker_controller.dart';
 
 class PhotoPickerPage extends HookConsumerWidget {
-  PhotoPickerPage({super.key});
+  const PhotoPickerPage({super.key});
 
   static const routeName = 'photo_picker_page';
   static const routePath = '/photo_picker_page';
 
-  final _permission = PermissionHandler();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final permissionHandler = ref.read(permissionHandlerProvider);
+
     useEffect(() {
       Future.microtask(() async {
-        await _permission.requestPermissions([
+        await permissionHandler.requestPermissions([
           Permission.location,
           Permission.photos,
         ]);
@@ -51,7 +51,7 @@ class PhotoPickerPage extends HookConsumerWidget {
           AppElevatedButton(
             text: 'カメラを開く',
             onPressed: () async {
-              final granted = await _permission.requestPermissions([
+              final granted = await permissionHandler.requestPermissions([
                 Permission.camera,
                 Permission.microphone,
               ]);
@@ -206,8 +206,9 @@ class PhotoPickerPage extends HookConsumerWidget {
                         onPressed: () async {
                           selectedLocalPhotosNotifier.clearSelection();
 
-                          final granted = await _permission.requestPermissions(
-                              [Permission.location, Permission.photos]);
+                          final granted = await permissionHandler
+                              .requestPermissions(
+                                  [Permission.location, Permission.photos]);
 
                           if (!granted) {
                             return;
