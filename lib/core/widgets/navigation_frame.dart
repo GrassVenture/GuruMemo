@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../core/themes.dart';
-import '../../features/auth/auth_repository.dart';
 import '../../features/auth/my_page.dart';
 import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/gallery/gallery_page.dart';
@@ -39,9 +38,6 @@ class NavigationFrame extends HookConsumerWidget {
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedNotifierProvider);
 
-    // サインイン状態かどうかに応じて、ボトムナビゲーションバーの表示・非表示を切り替える。
-    final isSignedIn = ref.read(authRepositoryProvider).isSignedIn();
-
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
 
@@ -65,65 +61,63 @@ class NavigationFrame extends HookConsumerWidget {
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
           ),
-          child: isSignedIn
-              ? Padding(
-                  padding: const EdgeInsets.only(top: 4, bottom: 16),
-                  child: Stack(
-                    children: [
-                      AnimatedPositioned(
-                        duration: const Duration(milliseconds: 400),
-                        curve: StickyCurve(), // カスタムCurveを使用
-                        left: selectedIndex.value * itemWidth +
-                            (itemWidth - circleWidth) / 2,
-                        child: Container(
-                          width: circleWidth,
-                          height: 72,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(36),
-                            color: Themes.mainOrange,
-                            border: Border.all(
-                              color: Themes.gray.shade900,
-                              width: 2,
-                            ),
-                          ),
-                        ),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 4, bottom: 16),
+            child: Stack(
+              children: [
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 400),
+                  curve: StickyCurve(), // カスタムCurveを使用
+                  left: selectedIndex.value * itemWidth +
+                      (itemWidth - circleWidth) / 2,
+                  child: Container(
+                    width: circleWidth,
+                    height: 72,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(36),
+                      color: Themes.mainOrange,
+                      border: Border.all(
+                        color: Themes.gray.shade900,
+                        width: 2,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildNavItem(
-                            icon: Icons.photo,
-                            label: 'ギャラリー',
-                            index: 0,
-                            context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
-                            selectedIndex: selectedIndex,
-                          ),
-                          _buildNavItem(
-                            icon: Icons.add,
-                            label: '写真を追加',
-                            index: 1,
-                            context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
-                            selectedIndex: selectedIndex,
-                          ),
-                          _buildNavItem(
-                            icon: Icons.person,
-                            label: 'マイページ',
-                            index: 2,
-                            context: context,
-                            isClassifyOnboardingCompleted:
-                                isClassifyOnboardingCompleted,
-                            selectedIndex: selectedIndex,
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
                   ),
-                )
-              : null,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    _buildNavItem(
+                      icon: Icons.photo,
+                      label: 'ギャラリー',
+                      index: 0,
+                      context: context,
+                      isClassifyOnboardingCompleted:
+                          isClassifyOnboardingCompleted,
+                      selectedIndex: selectedIndex,
+                    ),
+                    _buildNavItem(
+                      icon: Icons.add,
+                      label: '写真を追加',
+                      index: 1,
+                      context: context,
+                      isClassifyOnboardingCompleted:
+                          isClassifyOnboardingCompleted,
+                      selectedIndex: selectedIndex,
+                    ),
+                    _buildNavItem(
+                      icon: Icons.person,
+                      label: 'マイページ',
+                      index: 2,
+                      context: context,
+                      isClassifyOnboardingCompleted:
+                          isClassifyOnboardingCompleted,
+                      selectedIndex: selectedIndex,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
