@@ -12,6 +12,7 @@ import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/photo_picker/photo_picker_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
+import 'navigation_frame_controller.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends HookConsumerWidget {
@@ -21,14 +22,17 @@ class NavigationFrame extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = useState<int>(0);
+    final selectedIndex = ref.watch(selectedIndexProvider);
+    final selectedIndexNotifier = ref.read(selectedIndexProvider.notifier);
 
     useEffect(
       () {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final isOnboardingComplete =
               ref.read(isOnboardingCompletedNotifierProvider);
-          selectedIndex.value = !isOnboardingComplete ? 0 : 0;
+          !isOnboardingComplete
+              ? selectedIndexNotifier.updateIndex(0)
+              : selectedIndexNotifier.updateIndex(0);
         });
         return null;
       },
@@ -68,8 +72,8 @@ class NavigationFrame extends HookConsumerWidget {
                 AnimatedPositioned(
                   duration: const Duration(milliseconds: 400),
                   curve: StickyCurve(), // カスタムCurveを使用
-                  left: selectedIndex.value * itemWidth +
-                      (itemWidth - circleWidth) / 2,
+                  left:
+                      selectedIndex * itemWidth + (itemWidth - circleWidth) / 2,
                   child: Container(
                     width: circleWidth,
                     height: 72,
@@ -93,7 +97,7 @@ class NavigationFrame extends HookConsumerWidget {
                       context: context,
                       isClassifyOnboardingCompleted:
                           isClassifyOnboardingCompleted,
-                      selectedIndex: selectedIndex,
+                      ref: ref,
                     ),
                     _buildNavItem(
                       icon: Icons.add,
@@ -102,7 +106,7 @@ class NavigationFrame extends HookConsumerWidget {
                       context: context,
                       isClassifyOnboardingCompleted:
                           isClassifyOnboardingCompleted,
-                      selectedIndex: selectedIndex,
+                      ref: ref,
                     ),
                     _buildNavItem(
                       icon: Icons.person,
@@ -111,7 +115,7 @@ class NavigationFrame extends HookConsumerWidget {
                       context: context,
                       isClassifyOnboardingCompleted:
                           isClassifyOnboardingCompleted,
-                      selectedIndex: selectedIndex,
+                      ref: ref,
                     ),
                   ],
                 ),
@@ -129,9 +133,10 @@ class NavigationFrame extends HookConsumerWidget {
     required int index,
     required BuildContext context,
     required bool isClassifyOnboardingCompleted,
-    required ValueNotifier<int> selectedIndex,
+    required WidgetRef ref,
   }) {
-    final isSelected = index == selectedIndex.value;
+    final selectedIndex = ref.watch(selectedIndexProvider);
+    final isSelected = index == selectedIndex;
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
 
@@ -139,7 +144,7 @@ class NavigationFrame extends HookConsumerWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          selectedIndex.value = index;
+          ref.read(selectedIndexProvider.notifier).updateIndex(index);
           _onItemTapped(index, context, isClassifyOnboardingCompleted);
         },
         splashColor: Themes.mainOrange.withValues(alpha: 0.1),
