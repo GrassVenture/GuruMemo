@@ -13,28 +13,6 @@ import '../remote_photo_repository.dart';
 
 part 'camera_controller.g.dart';
 
-/// カメラコントローラ用のプロバイダー
-@riverpod
-Future<Raw<CameraController>> cameraController(Ref ref) async {
-  final cameras = await availableCameras();
-
-  if (cameras.isEmpty) {
-    throw CameraException('NoCameraAvailable', '''
-利用可能なカメラが見つかりませんでした''');
-  }
-
-  final camera = cameras.first;
-  final controller = CameraController(
-    camera,
-    ResolutionPreset.medium,
-  );
-
-  ref.onDispose(controller.dispose);
-
-  await controller.initialize();
-  return controller;
-}
-
 /// ローカルストレージ最新１枚の写真を食べ物に分類するProvider
 @riverpod
 class ClassifyLatestPhotoNotifier extends _$ClassifyLatestPhotoNotifier {
