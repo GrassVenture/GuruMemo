@@ -48,6 +48,16 @@ class PhotoPickerPage extends HookConsumerWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         titleSpacing: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.close, color: Themes.gray),
+          onPressed: () async {
+            await ref.read(selectedIndexProvider.notifier).updateIndex(0);
+            if (!context.mounted) {
+              return;
+            }
+            context.go(GalleryPage.routePath);
+          },
+        ),
         actions: [
           AppElevatedButton(
             text: 'カメラを開く',
