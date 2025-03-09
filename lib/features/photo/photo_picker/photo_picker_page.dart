@@ -141,9 +141,9 @@ class PhotoPickerPage extends HookConsumerWidget {
                                         fit: BoxFit.cover,
                                       ),
                                     )
-                                  : const ColoredBox(color: Colors.grey),
+                                  : const ColoredBox(color: Themes.gray),
                               loading: () =>
-                                  const ColoredBox(color: Colors.grey),
+                                  const ColoredBox(color: Themes.gray),
                               error: (_, __) =>
                                   const ColoredBox(color: Colors.red),
                             ),
