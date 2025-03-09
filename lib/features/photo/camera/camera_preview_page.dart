@@ -29,12 +29,14 @@ class CameraPreviewPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final permissionHandler = ref.read(permissionHandlerProvider);
 
+    // `PopScope` を使用して Android の戻るボタン押下時の挙動を制御
     return PopScope(
-      canPop: false,
+      canPop: false, // 戻るボタンを無効化
       onPopInvokedWithResult: (bool didPop, Object? result) async {
         if (didPop) {
-          return;
+          return; // 重複実行防止
         }
+        // 戻るボタン押下時の処理
         await ref.read(selectedIndexProvider.notifier).updateIndex(1);
         if (!context.mounted) {
           return;
