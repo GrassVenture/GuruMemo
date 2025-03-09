@@ -13,7 +13,7 @@ import '../../../core/permission/permission_handler.dart';
 import '../../../core/themes.dart';
 
 import '../../../core/widgets/app_elevated_button.dart';
-import '../../../core/widgets/navigation_frame_controller.dart';
+import '../../../core/widgets/navigation_frame.dart';
 import '../camera/camera_page.dart';
 import '../gallery/gallery_page.dart';
 import 'photo_picker_controller.dart';

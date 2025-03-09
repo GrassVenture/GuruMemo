@@ -10,7 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../core/themes.dart';
 import '../../../core/permission/permission_handler.dart';
 import '../../../core/widgets/app_elevated_button.dart';
-import '../../../core/widgets/navigation_frame_controller.dart';
+import '../../../core/widgets/navigation_frame.dart';
 import '../gallery/gallery_page.dart';
 import '../local_photo_repository.dart';
 import '../photo_picker/photo_picker_page.dart';

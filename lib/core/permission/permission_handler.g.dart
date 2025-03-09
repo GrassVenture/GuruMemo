@@ -8,7 +8,9 @@ part of 'permission_handler.dart';
 
 String _$permissionHandlerHash() => r'a3177fc16fe04b427dac2e2e936b71b91de3442d';
 
-/// See also [permissionHandler].
+/// [PermissionHandler]用プロバイダー
+///
+/// Copied from [permissionHandler].
 @ProviderFor(permissionHandler)
 final permissionHandlerProvider =
     AutoDisposeProvider<PermissionHandler>.internal(

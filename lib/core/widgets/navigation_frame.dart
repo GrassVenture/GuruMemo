@@ -5,6 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/themes.dart';
 import '../../features/auth/my_page.dart';
@@ -12,7 +13,8 @@ import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/photo_picker/photo_picker_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
-import 'navigation_frame_controller.dart';
+
+part 'navigation_frame.g.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends HookConsumerWidget {
@@ -217,5 +219,26 @@ class StickyCurve extends Curve {
     } else {
       return 1 - math.pow(-2 * t + 2, 3) / 2;
     }
+  }
+}
+
+/// アプリのボトムナビゲーションの[SelectedIndex]を管理するプロバイダー。
+///
+/// NavigationFrameのシェルルート外からシェルルート内に画面遷移する際にも、
+/// [SelectedIndex]を変更できるようにするため、実装している。
+///
+/// ### 初期値:
+/// - `0`（ボトムナビゲーションバーの一番左の項目が初期選択状態）
+///
+/// ### 更新方法:
+/// - `updateIndex(int newIndex)` を呼び出して新しいインデックスを設定する。
+@riverpod
+class SelectedIndex extends _$SelectedIndex {
+  @override
+  int build() => 0;
+
+  /// [SelectedIndex]の値を更新する
+  Future<void> updateIndex(int newIndex) async {
+    state = newIndex;
   }
 }
