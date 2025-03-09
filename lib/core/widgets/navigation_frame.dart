@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -9,7 +8,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/themes.dart';
 import '../../features/auth/my_page.dart';
-import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/gallery/gallery_page.dart';
 import '../../features/photo/photo_picker/photo_picker_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
@@ -25,21 +23,6 @@ class NavigationFrame extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final selectedIndex = ref.watch(selectedIndexProvider);
-    final selectedIndexNotifier = ref.read(selectedIndexProvider.notifier);
-
-    useEffect(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final isOnboardingComplete =
-              ref.read(isOnboardingCompletedNotifierProvider);
-          !isOnboardingComplete
-              ? selectedIndexNotifier.updateIndex(0)
-              : selectedIndexNotifier.updateIndex(0);
-        });
-        return null;
-      },
-      [],
-    );
 
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedNotifierProvider);
