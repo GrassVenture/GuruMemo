@@ -1,16 +1,13 @@
-import 'dart:collection';
-
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+
 import '../widgets/app_snack_bar.dart';
 
 part 'permission_handler.g.dart';
 
 class PermissionHandler {
   PermissionHandler._();
-
-  final _permissionQueue = Queue<Permission>();
 
   Future<bool> _requestPermission(Permission permission) async {
     final status = await permission.status;
@@ -44,23 +41,14 @@ class PermissionHandler {
     return result.isGranted;
   }
 
-  Future<bool> _processQueue() async {
-    var allGranted = true;
-    while (_permissionQueue.isNotEmpty) {
-      final permission = _permissionQueue.removeFirst();
+  Future<bool> requestPermissions(List<Permission> permissions) async {
+    for (final permission in permissions) {
       final granted = await _requestPermission(permission);
       if (!granted) {
-        allGranted = false;
-        break;
+        return false;
       }
     }
-    return allGranted;
-  }
-
-  Future<bool> requestPermissions(List<Permission> permissions) {
-    _permissionQueue.addAll(permissions);
-
-    return _processQueue();
+    return true;
   }
 }
 
