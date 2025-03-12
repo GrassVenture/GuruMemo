@@ -37,7 +37,10 @@ class PermissionHandler {
     }
 
     final result = await permission.request();
-    if (result.isPermanentlyDenied) {
+    if (result.isPermanentlyDenied ||
+        result.isDenied ||
+        result.isRestricted ||
+        result.isLimited) {
       AppSnackBar.show(
         message: '設定から権限を許可してください。',
         actionLabel: '設定を開く',
@@ -47,6 +50,7 @@ class PermissionHandler {
       );
       return false;
     }
+
     return result.isGranted;
   }
 

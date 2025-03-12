@@ -29,7 +29,7 @@ class PhotoPickerPage extends HookConsumerWidget {
     final permissionHandler = ref.read(permissionHandlerProvider);
 
     useEffect(() {
-      Future.microtask(() async {
+      Future(() async {
         await permissionHandler.requestPermissions([
           Permission.location,
           Permission.photos,
@@ -77,8 +77,8 @@ class PhotoPickerPage extends HookConsumerWidget {
               text: 'カメラを開く',
               onPressed: () async {
                 final granted = await permissionHandler.requestPermissions([
-                  Permission.camera,
-                  Permission.microphone,
+                  Permission.location,
+                  Permission.photos,
                 ]);
 
                 if (!granted || !context.mounted) {

@@ -22,8 +22,8 @@ class CameraPage extends HookConsumerWidget {
     useEffect(() {
       Future(() async {
         if (!await permissionHandler.requestPermissions([
-          Permission.camera,
           Permission.photos,
+          Permission.location,
         ])) {
           if (context.mounted) {
             context.pop(); // 権限なしなら戻る

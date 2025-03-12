@@ -83,12 +83,8 @@ class CameraPreviewPage extends HookConsumerWidget {
                 AppElevatedButton(
                   text: 'この写真を追加',
                   onPressed: () async {
-                    final granted = await permissionHandler.requestPermissions([
-                      Permission.camera,
-                      Permission.microphone,
-                      Permission.location,
-                      Permission.photos
-                    ]);
+                    final granted = await permissionHandler.requestPermissions(
+                        [Permission.location, Permission.photos]);
 
                     if (!granted) {
                       return;
@@ -114,8 +110,8 @@ class CameraPreviewPage extends HookConsumerWidget {
                 TextButton(
                   onPressed: () async {
                     final granted = await permissionHandler.requestPermissions([
-                      Permission.camera,
-                      Permission.microphone,
+                      Permission.photos,
+                      Permission.location,
                     ]);
                     if (!granted || !context.mounted) {
                       return;
