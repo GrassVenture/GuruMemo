@@ -1,17 +1,18 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../core/themes.dart';
 import '../../features/auth/my_page.dart';
-import '../../features/onboarding/onboarding_controller.dart';
 import '../../features/photo/gallery/gallery_page.dart';
-import '../../features/photo/gallery/photo_picker_page.dart';
+import '../../features/photo/photo_picker/photo_picker_page.dart';
 import '../../features/photo/swipe_photo/swipe_photo_controller.dart';
+
+part 'navigation_frame.g.dart';
 
 /// [BottomNavigationBar]を用いてページ遷移を管理するクラス
 class NavigationFrame extends HookConsumerWidget {
@@ -21,19 +22,7 @@ class NavigationFrame extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final selectedIndex = useState<int>(0);
-
-    useEffect(
-      () {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          final isOnboardingComplete =
-              ref.read(isOnboardingCompletedNotifierProvider);
-          selectedIndex.value = !isOnboardingComplete ? 0 : 0;
-        });
-        return null;
-      },
-      [],
-    );
+    final selectedIndex = ref.watch(selectedIndexProvider);
 
     final isClassifyOnboardingCompleted =
         ref.watch(isClassifyOnboardingCompletedNotifierProvider);
@@ -68,8 +57,8 @@ class NavigationFrame extends HookConsumerWidget {
                 AnimatedPositioned(
                   duration: const Duration(milliseconds: 400),
                   curve: StickyCurve(), // カスタムCurveを使用
-                  left: selectedIndex.value * itemWidth +
-                      (itemWidth - circleWidth) / 2,
+                  left:
+                      selectedIndex * itemWidth + (itemWidth - circleWidth) / 2,
                   child: Container(
                     width: circleWidth,
                     height: 72,
@@ -93,7 +82,7 @@ class NavigationFrame extends HookConsumerWidget {
                       context: context,
                       isClassifyOnboardingCompleted:
                           isClassifyOnboardingCompleted,
-                      selectedIndex: selectedIndex,
+                      ref: ref,
                     ),
                     _buildNavItem(
                       icon: Icons.add,
@@ -102,7 +91,7 @@ class NavigationFrame extends HookConsumerWidget {
                       context: context,
                       isClassifyOnboardingCompleted:
                           isClassifyOnboardingCompleted,
-                      selectedIndex: selectedIndex,
+                      ref: ref,
                     ),
                     _buildNavItem(
                       icon: Icons.person,
@@ -111,7 +100,7 @@ class NavigationFrame extends HookConsumerWidget {
                       context: context,
                       isClassifyOnboardingCompleted:
                           isClassifyOnboardingCompleted,
-                      selectedIndex: selectedIndex,
+                      ref: ref,
                     ),
                   ],
                 ),
@@ -129,9 +118,10 @@ class NavigationFrame extends HookConsumerWidget {
     required int index,
     required BuildContext context,
     required bool isClassifyOnboardingCompleted,
-    required ValueNotifier<int> selectedIndex,
+    required WidgetRef ref,
   }) {
-    final isSelected = index == selectedIndex.value;
+    final selectedIndex = ref.watch(selectedIndexProvider);
+    final isSelected = index == selectedIndex;
     final itemWidth = MediaQuery.of(context).size.width / 3;
     final circleWidth = itemWidth * 0.8;
 
@@ -139,7 +129,7 @@ class NavigationFrame extends HookConsumerWidget {
       color: Colors.transparent,
       child: InkWell(
         onTap: () {
-          selectedIndex.value = index;
+          ref.read(selectedIndexProvider.notifier).updateIndex(index);
           _onItemTapped(index, context, isClassifyOnboardingCompleted);
         },
         splashColor: Themes.mainOrange.withValues(alpha: 0.1),
@@ -197,7 +187,7 @@ class NavigationFrame extends HookConsumerWidget {
       case 0:
         context.go(GalleryPage.routePath);
       case 1:
-        context.go(PhotoPickerPage.routePath);
+        context.push(PhotoPickerPage.routePath);
       case 2:
         context.go(MyPage.routePath);
     }
@@ -212,5 +202,26 @@ class StickyCurve extends Curve {
     } else {
       return 1 - math.pow(-2 * t + 2, 3) / 2;
     }
+  }
+}
+
+/// アプリのボトムナビゲーションの[SelectedIndex]を管理するプロバイダー。
+///
+/// NavigationFrameのシェルルート外からシェルルート内に画面遷移する際にも、
+/// [SelectedIndex]を変更できるようにするため、実装している。
+///
+/// ### 初期値:
+/// - `0`（ボトムナビゲーションバーの一番左の項目が初期選択状態）
+///
+/// ### 更新方法:
+/// - `updateIndex(int newIndex)` を呼び出して新しいインデックスを設定する。
+@riverpod
+class SelectedIndex extends _$SelectedIndex {
+  @override
+  int build() => 0;
+
+  /// [SelectedIndex]の値を更新する
+  Future<void> updateIndex(int newIndex) async {
+    state = newIndex;
   }
 }

@@ -44,10 +44,14 @@
 	<string>このアプリは、カメラを起動してグルメの写真を保存するために使用します。</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>このアプリは、常に位置情報を使用してユーザーにサービスを提供します。</string>
+	<key>NSLocationUsageDescription</key>
+	<string>このアプリは、現在位置を使用して近くのレストランを表示するために使用します。</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>このアプリは、現在位置を使用して近くのレストランを表示するために使用します。</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>このアプリは、カメラ機能を使用するためにマイクを使用します。</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>このアプリは、写真ライブラリにアクセスしてグルメの写真を選別して保存するために使用します。</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>このアプリは、写真ライブラリにアクセスしてグルメの写真を選別して保存するために使用します。</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>

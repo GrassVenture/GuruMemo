@@ -1,10 +1,12 @@
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 
 import '../../core/build_context_extension.dart';
 import '../../core/themes.dart';
 
-class AppElevatedButton extends StatelessWidget {
+class AppElevatedButton extends HookWidget {
   const AppElevatedButton({
     super.key,
     required this.text,
@@ -41,6 +43,7 @@ class AppElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cacheStrategy = useState(AsyncCache<dynamic>.ephemeral());
     double backgroundHeight() {
       if (height != null) {
         return height! - 8;
@@ -98,7 +101,9 @@ class AppElevatedButton extends StatelessWidget {
             child: Material(
               color: Colors.transparent,
               child: InkWell(
-                onTap: onPressed,
+                onTap: () => cacheStrategy.value.fetch(() async {
+                  onPressed();
+                }),
                 borderRadius: BorderRadius.circular(40),
                 splashColor: Themes.mainOrange.withValues(alpha: 0.3),
               ),

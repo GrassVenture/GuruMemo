@@ -11,8 +11,8 @@ import '../features/onboarding/onboarding_page.dart';
 import '../features/photo/camera/camera_page.dart';
 import '../features/photo/camera/camera_preview_page.dart';
 import '../features/photo/gallery/gallery_page.dart';
-import '../features/photo/gallery/photo_picker_page.dart';
 import '../features/photo/photo_detail/photo_detail_page.dart';
+import '../features/photo/photo_picker/photo_picker_page.dart';
 import '../features/root_page.dart';
 import 'services/analytics_service.dart';
 
@@ -57,18 +57,18 @@ final routerProvider = Provider<GoRouter>(
             builder: (context, state) => const GalleryPage(),
           ),
           GoRoute(
-            name: PhotoPickerPage.routeName,
-            path: PhotoPickerPage.routePath,
-            builder: (context, state) {
-              return const PhotoPickerPage();
-            },
-          ),
-          GoRoute(
             name: MyPage.routeName,
             path: MyPage.routePath,
             builder: (context, state) => const MyPage(),
           ),
         ],
+      ),
+      GoRoute(
+        name: PhotoPickerPage.routeName,
+        path: PhotoPickerPage.routePath,
+        builder: (context, state) {
+          return const PhotoPickerPage();
+        },
       ),
       GoRoute(
         name: CameraPage.routeName,
@@ -80,10 +80,7 @@ final routerProvider = Provider<GoRouter>(
         path: CameraPreviewPage.routePath,
         builder: (context, state) {
           final imagePath = state.extra! as String;
-
-          return CameraPreviewPage(
-            imagePath: imagePath,
-          );
+          return CameraPreviewPage(imagePath: imagePath);
         },
       ),
       GoRoute(
