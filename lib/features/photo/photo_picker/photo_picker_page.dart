@@ -79,6 +79,7 @@ class PhotoPickerPage extends HookConsumerWidget {
                 final granted = await permissionHandler.requestPermissions([
                   Permission.location,
                   Permission.photos,
+                  Permission.camera,
                 ]);
 
                 if (!granted || !context.mounted) {

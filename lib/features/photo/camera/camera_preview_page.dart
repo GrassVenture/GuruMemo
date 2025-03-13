@@ -112,6 +112,7 @@ class CameraPreviewPage extends HookConsumerWidget {
                     final granted = await permissionHandler.requestPermissions([
                       Permission.photos,
                       Permission.location,
+                      Permission.camera,
                     ]);
                     if (!granted || !context.mounted) {
                       return;

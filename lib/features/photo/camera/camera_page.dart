@@ -24,6 +24,7 @@ class CameraPage extends HookConsumerWidget {
         if (!await permissionHandler.requestPermissions([
           Permission.photos,
           Permission.location,
+          Permission.camera,
         ])) {
           if (context.mounted) {
             context.pop(); // 権限なしなら戻る
