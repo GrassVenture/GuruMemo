@@ -53,7 +53,9 @@ class RootPage extends HookConsumerWidget {
     );
 
     return isLoading.value
-        ? const SizedBox.shrink() // ローディング中は空のウィジェットを表示
+        // TODO(masaki): SizedBox へ戻す
+
+        ? Container() // ローディング中は空のウィジェットを表示
         : NavigationFrame(
             // TODO(masaki): userIdを渡す
             // userId: userId,
