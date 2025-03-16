@@ -1,79 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../core/logger.dart';
+import '../../../core/services/analytics_service.dart';
 import '../../../core/themes.dart';
-import '../../auth/auth_controller.dart';
-import '../../auth/authed_user.dart';
-import '../photo.dart';
-import '../photo_controller.dart';
+import '../../../core/utils/category_constants.dart';
 import '../photo_detail/photo_detail_page.dart';
+import '../remote_photo.dart';
+import 'gallery_controller.dart';
 
-class HomePage extends HookConsumerWidget {
-  const HomePage({super.key});
+class GalleryPage extends HookConsumerWidget {
+  const GalleryPage({super.key});
 
-  static const routeName = 'home_page';
-  static const routePath = '/home_page';
-
-  Future<void> _downloadPhotos(
-    WidgetRef ref,
-    ValueNotifier<List<Photo>?> photoUrls,
-  ) async {
-    final userId = ref.watch(userIdProvider);
-
-    if (userId == null) {
-      return;
-    }
-
-    final result = await ref.read(photoControllerProvider).downloadPhotos(
-          userId: userId,
-        );
-
-    photoUrls.value = result.where((e) => e.url.isNotEmpty).toList();
-  }
-
-  Future<void> _initDownloadPhotos(
-    WidgetRef ref,
-    BuildContext context,
-    ValueNotifier<bool> isReady,
-    ValueNotifier<List<Photo>?> photoUrls,
-  ) async {
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      final isSignedIn = ref.watch(userIdProvider) != null;
-      if (!isSignedIn) {
-        isReady.value = true;
-        return;
-      }
-      await ref.watch(authedUserStreamProvider.future);
-      final authedUserAsync = ref.watch(authedUserStreamProvider).valueOrNull;
-      final isReadyForUse = authedUserAsync?.classifyPhotosStatus ==
-          ClassifyPhotosStatus.readyForUse;
-      if (!isReadyForUse) {
-        isReady.value = true;
-        return;
-      }
-
-      await _downloadPhotos(ref, photoUrls);
-      isReady.value = true;
-    });
-  }
+  static const routeName = 'gallery_page';
+  static const routePath = '/gallery_page';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isReady = useState(false);
-    final photoUrls = useState<List<Photo>?>(null);
+    final photoUrls = ref.watch(fetchPhotosProvider).when(
+          error: (err, _) {
+            logger.e(err);
+            return null;
+          },
+          loading: () => null,
+          data: (data) => data,
+        );
 
-    final tabController = useTabController(initialLength: 6);
+    final tabController =
+        useTabController(initialLength: CategoryConstants.categories.length);
 
     useEffect(
       () {
-        _initDownloadPhotos(ref, context, isReady, photoUrls);
-        return null;
+        Future<void> onTabChanged() async {
+          final category = CategoryConstants.categories[tabController.index];
+
+          ref.read(analyticsServiceProvider).sendEvent(
+            name: 'filter_photo',
+            additionalParams: {'category': category},
+          );
+        }
+
+        tabController.addListener(onTabChanged);
+        return () => tabController.removeListener(onTabChanged);
       },
-      [],
+      [tabController],
     );
 
     return Scaffold(
@@ -81,36 +54,32 @@ class HomePage extends HookConsumerWidget {
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBar(
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(0), // TabBarの高さを指定
+            preferredSize: const Size.fromHeight(0),
             child: TabBar(
               padding: const EdgeInsets.only(left: 16, bottom: 8),
               controller: tabController,
               isScrollable: true,
-              tabs: const [
-                Tab(text: 'すべて'),
-                Tab(text: 'ラーメン'),
-                Tab(text: 'カフェ'),
-                Tab(text: '和食'),
-                Tab(text: '洋食'),
-                Tab(text: 'エスニック'),
-              ],
+              tabs: CategoryConstants.tabLabels
+                  .map((label) => Tab(text: label))
+                  .toList(),
             ),
           ),
         ),
       ),
-      body: DefaultTabController(
-        length: 6,
-        child: TabBarView(
-          controller: tabController,
-          children: [
-            _buildPhotoGrid(context, 'すべて', photoUrls.value),
-            _buildPhotoGrid(context, 'ramen', photoUrls.value),
-            _buildPhotoGrid(context, 'cafe', photoUrls.value),
-            _buildPhotoGrid(context, 'japanese_food', photoUrls.value),
-            _buildPhotoGrid(context, 'western_food', photoUrls.value),
-            _buildPhotoGrid(context, 'ethnic', photoUrls.value),
-          ],
-        ),
+      body: Stack(
+        children: [
+          DefaultTabController(
+            length: CategoryConstants.categories.length,
+            child: TabBarView(
+              controller: tabController,
+              children: CategoryConstants.categories
+                  .map(
+                    (category) => _buildPhotoGrid(context, category, photoUrls),
+                  )
+                  .toList(),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -118,14 +87,14 @@ class HomePage extends HookConsumerWidget {
   Widget _buildPhotoGrid(
     BuildContext context,
     String category,
-    List<Photo>? photoUrls,
+    List<RemotePhoto>? photoUrls,
   ) {
     if (photoUrls == null) {
       return const Center(child: CircularProgressIndicator());
     }
 
-    List<Photo> filteredPhotos;
-    if (category == 'すべて') {
+    List<RemotePhoto> filteredPhotos;
+    if (category == CategoryConstants.all) {
       filteredPhotos = photoUrls;
     } else {
       filteredPhotos =
@@ -159,7 +128,6 @@ class HomePage extends HookConsumerWidget {
                     image: NetworkImage(photo.url),
                     fit: BoxFit.cover,
                     onError: (error, stackTrace) {
-                      // 画像が読み込めなかったときの代替表示
                       throw Exception('Error loading image: $error');
                     },
                   ),
@@ -169,7 +137,7 @@ class HomePage extends HookConsumerWidget {
                   ),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                height: 280, // 最低限の高さを設定
+                height: 280,
               ),
             ),
           );

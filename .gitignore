@@ -5,9 +5,11 @@
 *.swp
 .DS_Store
 .atom/
+.build/
 .buildlog/
 .history
 .svn/
+.swiftpm/
 migrate_working_dir/
 
 # IntelliJ related
@@ -63,3 +65,9 @@ app.*.map.json
 
 # Debug symbols for obfuscated Android and iOS builds
 obfuscate/
+
+
+# C++ビルド関連の一時ファイルを無視
+**/.cxx
+# Androidビルド時に生成されるiOS関連の一時ディレクトリを無視
+/android/build/ios/

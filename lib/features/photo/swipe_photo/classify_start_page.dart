@@ -3,28 +3,11 @@ import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/services/analytics_service.dart';
 import '../../../core/build_context_extension.dart';
-import '../../../core/shared_preferences_service.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
+import '../../../core/widgets/app_elevated_button.dart';
+import 'swipe_photo_controller.dart';
 import 'swipe_photo_page.dart';
-
-/// 写真分類スタート画面表示フラグ[StateProvider]
-///
-///  外部から更新をすることで[SharedPreferencesService]側の値も更新する。
-final isClassifyOnboardingCompletedProvider = StateProvider<bool>((ref) {
-  final sharedPreferencesService = ref.watch(sharedPreferencesServiceProvider);
-
-  ref.listenSelf((_, next) {
-    sharedPreferencesService.setBool(
-      key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-      value: next,
-    );
-  });
-
-  return sharedPreferencesService.getBool(
-    key: SharedPreferencesKey.isClassifyOnboardingCompleted,
-  );
-});
 
 /// 写真分類開始画面
 class ClassifyStartPage extends ConsumerWidget {
@@ -63,12 +46,17 @@ class ClassifyStartPage extends ConsumerWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(16),
-              child: CustomElevatedButton(
+              child: AppElevatedButton(
                 onPressed: () async {
                   final goRouter = GoRouter.of(context);
-                  ref
-                      .read(isClassifyOnboardingCompletedProvider.notifier)
-                      .update((state) => true);
+                  await ref
+                      .read(
+                        isClassifyOnboardingCompletedNotifierProvider.notifier,
+                      )
+                      .update(isClassifyOnboardingCompleted: true);
+                  ref.read(analyticsServiceProvider).sendEvent(
+                        name: 'google_sign_in',
+                      );
                   goRouter.go(SwipePhotoPage.routePath);
                 },
                 text: '分類スタート',

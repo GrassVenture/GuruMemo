@@ -43,7 +43,7 @@ abstract final class Themes {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 16),
           elevation: 4,
-          shadowColor: mainOrange.shade300.withOpacity(0.25),
+          shadowColor: mainOrange.shade300.withValues(alpha: 0.25),
           textStyle: theme.textTheme.labelLarge!.copyWith(
             fontWeight: FontWeight.bold,
           ),
@@ -60,7 +60,7 @@ abstract final class Themes {
       ),
       popupMenuTheme: PopupMenuThemeData(
         elevation: 4,
-        shadowColor: mainOrange.shade300.withOpacity(0.25),
+        shadowColor: mainOrange.shade300.withValues(alpha: 0.25),
         textStyle: TextStyle(
           color: gray.shade900,
           fontWeight: FontWeight.bold,
@@ -69,7 +69,7 @@ abstract final class Themes {
       cardTheme: CardTheme(
         elevation: 4,
         color: mainOrange.shade50,
-        shadowColor: mainOrange.shade300.withOpacity(0.25),
+        shadowColor: mainOrange.shade300.withValues(alpha: 0.25),
         surfaceTintColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(16),
@@ -147,7 +147,7 @@ abstract final class Themes {
           ),
           backgroundColor: WidgetStateProperty.resolveWith(
             (states) => states.contains(WidgetState.disabled)
-                ? gray.withOpacity(0.5)
+                ? gray.withValues(alpha: 0.5)
                 : mainOrange,
           ),
           shape: WidgetStateProperty.all<OutlinedBorder>(
@@ -164,7 +164,7 @@ abstract final class Themes {
           ),
           foregroundColor: WidgetStateProperty.all<Color>(gray[900]!),
           shadowColor: WidgetStateProperty.all<Color>(
-            mainOrange.shade300.withOpacity(0.25),
+            mainOrange.shade300.withValues(alpha: 0.25),
           ),
         ),
       ),
@@ -237,7 +237,7 @@ abstract final class Themes {
     );
   }
 
-  static const MaterialColor mainOrange =
+  static const mainOrange =
       MaterialColor(_mainOrangeValue, <int, Color>{
     50: Color(0xFFfdf3e4),
     100: Color(0xFFfce0ba),
@@ -250,9 +250,9 @@ abstract final class Themes {
     800: Color(0xFFe07533),
     900: Color(0xFFd3612f),
   });
-  static const int _mainOrangeValue = 0xFFef913a;
+  static const _mainOrangeValue = 0xFFef913a;
 
-  static const MaterialColor gray =
+  static const gray =
       MaterialColor(_grayPrimaryValue, <int, Color>{
     50: Color(0xFFfff4eb),
     100: Color(0xFFf8eae1),
@@ -265,5 +265,7 @@ abstract final class Themes {
     800: Color(0xFF372d26),
     900: Color(0xFF180c00),
   });
-  static const int _grayPrimaryValue = 0xFF90847c;
+  static const _grayPrimaryValue = 0xFF90847c;
+
+  static const errorAlertColor = Color(0xffef3a45);
 }

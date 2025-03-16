@@ -1,18 +1,14 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../../../core/build_context_extension.dart';
+import '../../../../core/services/analytics_service.dart';
 import '../../../../core/themes.dart';
-import '../../../../core/widgets/custom_elevated_button.dart';
+import '../../../../core/widgets/app_elevated_button.dart';
 import '../../../../core/widgets/scalable_photo.dart';
 import '../../../store/store.dart';
-import '../../photo_controller.dart';
-
-List<File> shopList = [];
-int shopNoSelected = 0; // 初期値を0に設定
+import '../../remote_photo_controller.dart';
 
 Future<void> showShopListDialog(
   BuildContext context, {
@@ -26,6 +22,7 @@ Future<void> showShopListDialog(
     context: context,
     barrierDismissible: false,
     builder: (BuildContext context) {
+      var shopNoSelected = 0; // 初期値を0に設定
       return StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog(
@@ -102,7 +99,7 @@ Future<void> showShopListDialog(
                                   borderRadius: BorderRadius.circular(8),
                                   boxShadow: [
                                     BoxShadow(
-                                      color: Colors.grey.withOpacity(0.5),
+                                      color: Colors.grey.withValues(alpha: 0.5),
                                       blurRadius: 3,
                                       offset: const Offset(0, 5),
                                     ),
@@ -179,15 +176,17 @@ Future<void> showShopListDialog(
                     ),
                     child: SizedBox(
                       height: 44,
-                      child: CustomElevatedButton(
+                      child: AppElevatedButton(
                         onPressed: () async {
-                          // 決定ボタン押下時にstoreIdを更新
                           await ref
-                              .read(photoControllerProvider)
+                              .read(remotePhotoControllerProvider)
                               .updateStoreIdForPhoto(
                                 userId: userId,
                                 photoId: photoId,
                                 storeId: stores[shopNoSelected].id,
+                              );
+                          ref.read(analyticsServiceProvider).sendEvent(
+                                name: 'update_store_info_for_photo',
                               );
                           onSelected();
                           shopNoSelected = 0;

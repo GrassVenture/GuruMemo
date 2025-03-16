@@ -63,7 +63,7 @@ class ScalablePhotoState extends State<ScalablePhoto> {
               icon: const Icon(Icons.zoom_out_map, size: 16),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Colors.white,
-                backgroundColor: Colors.black.withOpacity(0.5),
+                backgroundColor: Colors.black.withValues(alpha: 0.5),
                 shape: const CircleBorder(),
               ),
               onPressed: () {

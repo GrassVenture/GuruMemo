@@ -5,11 +5,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../../../core/services/analytics_service.dart';
 import '../../../core/build_context_extension.dart';
 import '../../../core/exception.dart';
 import '../../../core/themes.dart';
-import '../../../core/widgets/custom_elevated_button.dart';
-import '../../../core/widgets/photo_cards.dart';
+import '../../../core/widgets/app_elevated_button.dart';
+import '../../../core/widgets/cards/photo_cards.dart';
 import 'swipe_photo_controller.dart';
 
 /// 写真スワイプページ
@@ -21,7 +22,6 @@ class SwipePhotoPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     /// スワイプ用のコントローラー
     final swiperController = useMemoized(AppinioSwiperController.new);
 
@@ -111,7 +111,8 @@ class SwipePhotoPage extends HookConsumerWidget {
                   ),
                   Positioned(
                     bottom: 0,
-                    child: _buildButtons(context, swiperController, isSwipe),
+                    child:
+                        _buildButtons(context, ref, swiperController, isSwipe),
                   ),
                 ],
               );
@@ -123,8 +124,12 @@ class SwipePhotoPage extends HookConsumerWidget {
   }
 
   /// スワイプボタン
-  Widget _buildButtons(BuildContext context,
-      AppinioSwiperController swiperController, ValueNotifier<bool> isSwipe,) {
+  Widget _buildButtons(
+    BuildContext context,
+    WidgetRef ref,
+    AppinioSwiperController swiperController,
+    ValueNotifier<bool> isSwipe,
+  ) {
     return SizedBox(
       width: context.screenWidth,
       height: 210,
@@ -139,9 +144,12 @@ class SwipePhotoPage extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(28),
                 child: ColoredBox(
                   color: Colors.white,
-                  child: CustomElevatedButton(
-                    onPressed: () => _guardSwipe(swiperController.swipeLeft,
-                                      isSwipe,),
+                  child: AppElevatedButton(
+                    onPressed: () => _guardSwipe(
+                      swiperController.swipeLeft,
+                      isSwipe,
+                      ref,
+                    ),
                     text: 'ちがう',
                     backgroundColor: Themes.gray.shade200,
                     textColor: Themes.gray.shade900,
@@ -162,9 +170,12 @@ class SwipePhotoPage extends HookConsumerWidget {
                 borderRadius: BorderRadius.circular(28),
                 child: ColoredBox(
                   color: Colors.white,
-                  child: CustomElevatedButton(
-                    onPressed: () => _guardSwipe(swiperController.swipeRight,
-                                     isSwipe,),
+                  child: AppElevatedButton(
+                    onPressed: () => _guardSwipe(
+                      swiperController.swipeRight,
+                      isSwipe,
+                      ref,
+                    ),
                     text: 'グルメ',
                     backgroundColor: Themes.mainOrange,
                     textColor: Colors.white,
@@ -236,31 +247,31 @@ class SwipePhotoPage extends HookConsumerWidget {
                 ),
                 const Gap(8),
                 ref.watch(foodPhotoTotalProvider).when(
-                  data: (count) {
-                    return Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.add,
-                          color: Themes.mainOrange,
-                        ),
-                        Padding(
-                          padding:
-                              const EdgeInsets.only(left: 16, bottom: 2),
-                          child: Text(
-                            '$count 枚',
-                            style:
-                                context.textTheme.headlineSmall?.copyWith(
+                      data: (count) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(
+                              Icons.add,
                               color: Themes.mainOrange,
                             ),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                  error: (error, _) => _buildError(context, ref, error),
-                  loading: _buildLoading,
-                ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 16, bottom: 2),
+                              child: Text(
+                                '$count 枚',
+                                style:
+                                    context.textTheme.headlineSmall?.copyWith(
+                                  color: Themes.mainOrange,
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                      error: (error, _) => _buildError(context, ref, error),
+                      loading: _buildLoading,
+                    ),
               ],
             ),
           ),
@@ -294,10 +305,22 @@ class SwipePhotoPage extends HookConsumerWidget {
   Widget _buildLoading() => const CircularProgressIndicator();
 
   /// スワイプボタン連打防止
-  Future<void> _guardSwipe(Future<void> Function() execute, 
-          ValueNotifier<bool> isSwipe,) async {
+  Future<void> _guardSwipe(
+    Future<void> Function() execute,
+    ValueNotifier<bool> isSwipe,
+    WidgetRef ref,
+  ) async {
+    var swipeCount = 0;
+
     if (isSwipe.value) {
       isSwipe.value = false;
+      swipeCount++; // Increment swipe count
+
+      ref.read(analyticsServiceProvider).sendEvent(
+        name: 'swipe_photo',
+        additionalParams: {'swipe_count': swipeCount.toString()},
+      );
+
       await execute();
       await Future<void>.delayed(
         const Duration(milliseconds: 300),

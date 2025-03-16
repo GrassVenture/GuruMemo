@@ -1,8 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'auth_repository.dart';
 import 'authed_user.dart';
+
+part 'auth_controller.g.dart';
 
 /// [FirebaseAuth]のインスタンスを提供するProvider
 final _authProvider =
@@ -14,6 +17,11 @@ final _authProvider =
 final _userProvider =
     StreamProvider<User?>((ref) => ref.watch(_authProvider).userChanges());
 
+/// [FirebaseAuth]のcurrentUserを取得するProvider
+final firebaseUserProvider = Provider<User?>((ref) {
+  return ref.watch(_authProvider).currentUser;
+});
+
 /// userIdを管理するProvider
 ///
 /// [_userProvider]をwatchしているため、認証状態の変更を検知する
@@ -23,9 +31,10 @@ final userIdProvider = Provider<String?>((ref) {
 });
 
 /// [AuthedUser]を購読するProvider
-final authedUserStreamProvider = StreamProvider.autoDispose<AuthedUser>(
-  (ref) => ref.watch(authRepositoryProvider).subscribeAuthedUser(),
-);
+@riverpod
+Stream<AuthedUser> authedUserStream(Ref ref) {
+  return ref.watch(authRepositoryProvider).subscribeAuthedUser();
+}
 
 final authControllerProvider = Provider<AuthController>(AuthController.new);
 
@@ -42,13 +51,18 @@ class AuthController {
     await _authRepository.deleteUserAccount();
   }
 
+  /// ログアウト処理を行う。
+  Future<void> signOut() async {
+    await _authRepository.signOut();
+  }
+
   /// Googleサインイン用メソッド
-  Future<({String accessToken, String userId})> signInWithGoogle() async {
+  Future<({String accessToken, String userId})> signInWithGoogle() {
     return _authRepository.signInWithGoogle();
   }
 
   /// Appleサインイン用メソッド
-  Future<({String accessToken, String userId})> signInWithApple() async {
+  Future<({String accessToken, String userId})> signInWithApple() {
     return _authRepository.signInWithApple();
   }
 }
