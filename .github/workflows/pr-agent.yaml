@@ -20,11 +20,26 @@ jobs:
           # CONFIG.MODEL: gpt-4o-2024-05-13  # 最新モデルの対応
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          # PR説明の自動生成を無効化
+          PR_DESCRIPTION.ENABLE: false
+
+          # コードレビュー機能を有効化
+          PR_REVIEWER.ENABLE: true
           PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
-          PR_DESCRIPTION.ADD_ORIGINAL_USER_DESCRIPTION: false
-          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
+
+          # コード提案機能を有効化
+          PR_CODE_SUGGESTIONS.ENABLE: true
           PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
-          PR_UPDATE_CHANGELOG.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
+
+          # 自動説明機能を明示的に無効化
+          github_action.auto_describe: "false"
+
+#          PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
+#          PR_DESCRIPTION.ADD_ORIGINAL_USER_DESCRIPTION: false
+#          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
+#          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
+#          PR_UPDATE_CHANGELOG.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
 #          github_action.auto_review: "true"
 #          github_action.auto_describe: "true"
 #          github_action.auto_improve: "true"
