@@ -9,11 +9,11 @@ enable=false  # PR説明の自動生成を無効化
 [pr_reviewer]
 enable=true  # コードレビュー機能を有効化
 persistent_comment=true
-extra_instructions = "Please use Japanese in comments. レビューの際には code_standards.md に記載されているFlutterコード規約に基づいてレビューを行ってください。PRの説明は編集せず、コードレビューとコメントのみを行ってください。"
+extra_instructions = “Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments.”
 
 [pr_code_suggestions]
 enable=true  # コード提案機能を有効化
-extra_instructions = "Please use Japanese in suggestions. コードの改善提案は code_standards.mdのFlutterコード規約に基づいて行ってください。PR説明は変更しないでください。"
+extra_instructions = “Please use Japanese in suggestions. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description.”
 focus_only_on_problems=true
 persistent_comment=true
 
