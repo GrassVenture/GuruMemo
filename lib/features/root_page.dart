@@ -53,9 +53,7 @@ class RootPage extends HookConsumerWidget {
     );
 
     return isLoading.value
-        // TODO(masaki): SizedBox へ戻す
-
-        ? const Text('a typo text exemple') // ローディング中は空のウィジェットを表示
+        ? const SizedBox.shrink() // ローディング中は空のウィジェットを表示
         : NavigationFrame(
             // TODO(masaki): userIdを渡す
             // userId: userId,
