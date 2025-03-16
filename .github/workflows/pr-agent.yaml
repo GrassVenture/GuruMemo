@@ -20,8 +20,8 @@ jobs:
           # CONFIG.MODEL: gpt-4o-2024-05-13  # 最新モデルの対応
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#          PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
-#          PR_DESCRIPTION.ADD_ORIGINAL_USER_DESCRIPTION: true
+          PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
+          PR_DESCRIPTION.ADD_ORIGINAL_USER_DESCRIPTION: false
 #          PR_DESCRIPTION.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions. Titles should have prefix of commitlint pattern such as `feat:`, `chore:`, `test:`, `fix:`, `ci:`, `docs:` etc"
 #          PR_CODE_SUGGESTIONS.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
 #          PR_UPDATE_CHANGELOG.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
