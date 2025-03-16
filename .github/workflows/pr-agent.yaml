@@ -17,7 +17,7 @@ jobs:
         id: pragent
         uses: Codium-ai/pr-agent@main
         env:
-          CONFIG.MODEL: gpt-4o-2024-05-13  # 最新モデルの対応
+#          CONFIG.MODEL: gpt-4o-2024-05-13  # 最新モデルの対応
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_REVIEWER.EXTRA_INSTRUCTIONS: "Please use Japanese in descriptions."
