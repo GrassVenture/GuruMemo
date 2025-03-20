@@ -8,7 +8,7 @@ add_original_user_description=false # PR説明の自動生成を無効化
 
 [pr_reviewer]
 persistent_comment=true
-extra_instructions = "Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments."
+extra_instructions = "Please use Japanese in the description. Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments."
 
 [pr_code_suggestions]
 extra_instructions = "Please use Japanese in suggestions. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
