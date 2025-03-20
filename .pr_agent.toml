@@ -7,12 +7,10 @@ response_language="ja-JP"
 add_original_user_description=false # PR説明の自動生成を無効化
 
 [pr_reviewer]
-enable=true  # コードレビュー機能を有効化
 persistent_comment=true
 extra_instructions = "Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments."
 
 [pr_code_suggestions]
-enable=true  # コード提案機能を有効化
 extra_instructions = "Please use Japanese in suggestions. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
 focus_only_on_problems=true
 persistent_comment=true
