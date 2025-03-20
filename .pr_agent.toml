@@ -6,7 +6,6 @@ response_language="ja-JP"
 [pr_description]
 enable=false  # PR説明の自動生成を無効化
 
-# sample comment
 [pr_reviewer]
 enable=true  # コードレビュー機能を有効化
 persistent_comment=true
