@@ -15,6 +15,9 @@ extra_instructions = "Please use Japanese in suggestions. Please make code impro
 focus_only_on_problems=true
 persistent_comment=true
 
+[pr_update_changelog]
+extra_instructions = "Please use Japanese in suggestions. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
+
 [best_practices]
 content = "code_standards.md"
 enable_global_best_practices = true
