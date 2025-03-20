@@ -20,6 +20,6 @@ content = "code_standards.md"
 enable_global_best_practices = true
 
 [github_action_config]
-auto_review = false
+auto_review = true
 auto_describe = false
 auto_improve = false
