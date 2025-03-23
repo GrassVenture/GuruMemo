@@ -16,14 +16,12 @@ extra_instructions = "Please use Japanese in the description. When you make PR R
 
 [pr_code_suggestions]
 extra_instructions = "Please use Japanese in descriptions. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
-focus_only_on_problems=true
 
 [pr_update_changelog]
 extra_instructions = "Please use Japanese in descriptions."
 
 [best_practices]
 content = "code_standards.md"
-enable_global_best_practices = true
 
 [github_action_config]
 auto_review = true
