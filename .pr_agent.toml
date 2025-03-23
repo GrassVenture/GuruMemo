@@ -1,10 +1,9 @@
 # PR-Agent Configuration File
 
 [config]
-response_language="ja-JP"
 
 [pr_description]
-add_original_user_description=false # PR説明の自動生成を無効化
+add_original_user_description=false # ユーザーが作成したコメントの上書きを無効化
 extra_instructions = "Please use Japanese in descriptions."
 
 [pr_reviewer]
