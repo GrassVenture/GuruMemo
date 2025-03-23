@@ -5,7 +5,7 @@ response_language="ja-JP"
 
 [pr_description]
 add_original_user_description=false # PR説明の自動生成を無効化
-extra_instructions = "Please use Japanese in the description."
+extra_instructions = "Please use Japanese in descriptions."
 
 [pr_reviewer]
 persistent_comment=true
