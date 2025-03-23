@@ -21,7 +21,7 @@ extra_instructions = "Please use Japanese in descriptions. Please make code impr
 extra_instructions = "Please use Japanese in descriptions."
 
 [best_practices]
-content = "code_standards.md"
+
 
 [github_action_config]
 auto_review = true
