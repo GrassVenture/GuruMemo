@@ -4,11 +4,11 @@
 
 [pr_description]
 add_original_user_description=false # ユーザーが作成したコメントの上書きを無効化
-extra_instructions = "Please use Japanese in descriptions."
+extra_instructions = "Please use Japanese in descriptions. When you make PR Reviewer Guide, please make it in Japanese also."
 
 [pr_reviewer]
 persistent_comment=true
-extra_instructions = "Please use Japanese in the description. Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments."
+extra_instructions = "Please use Japanese in the description. When you make PR Reviewer Guide, please make it in Japanese also. Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments."
 
 [pr_code_suggestions]
 extra_instructions = "Please use Japanese in the description. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
