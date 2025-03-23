@@ -5,10 +5,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../core/logger.dart';
 import '../../../core/permission/permission_handler.dart';
 import '../../../core/themes.dart';
 
@@ -243,26 +241,16 @@ class PhotoPickerPage extends HookConsumerWidget {
 
                             // 非同期で分類処理を実行（バックグラウンド処理）
                             await Future.microtask(() async {
-                              final selectedPhotos =
+                              final selectedPhotos = 
                                   selectedLocalPhotos.toList();
                               final photoListNotifier = ref.read(
                                 classifyLocalPhotoNotifierProvider.notifier,
                               );
 
                               final tasks = selectedPhotos.map((photo) async {
-                                try {
-                                  final file = await photo.file;
-
-                                  if (file != null) {
-                                    final xFile = XFile(file.path);
-                                    await photoListNotifier.classifyPhotoAsFood(
-                                      image: xFile,
-                                    );
-                                  }
-                                } on Exception catch (e) {
-                                  logger
-                                      .e('Error classify processing photo: $e');
-                                }
+                                await photoListNotifier.classifyPhotoAsFood(
+                                  photo: photo,
+                                );
                               }).toList();
 
                               unawaited(Future.wait(tasks));

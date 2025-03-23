@@ -196,7 +196,7 @@ final selectedLocalPhotosProvider = AutoDisposeNotifierProvider<
 
 typedef _$SelectedLocalPhotos = AutoDisposeNotifier<List<AssetEntity>>;
 String _$classifyLocalPhotoNotifierHash() =>
-    r'0f08daa3b9571125b1e6bcf99eb7269f514c3aff';
+    r'b9b94465a8cdbb7cb5a73d30fbfab640da6ebdf5';
 
 /// 画像選択画面で選択された画像を用いて、画像分類APIを呼び出すProvider
 ///

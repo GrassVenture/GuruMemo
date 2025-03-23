@@ -1,4 +1,9 @@
-# PR-Agent Configuration File
+# PR-Agent 設定用ファイル。
+#
+# 設定可能なフィールド及びデフォルト値は以下を参照：
+# https://github.com/qodo-ai/pr-agent/blob/main/pr_agent/settings/configuration.toml
+# 各フィールドの詳細は以下で質問可能：
+# https://qodo-merge-docs.qodo.ai/ai_search/
 
 [config]
 
@@ -7,20 +12,16 @@ add_original_user_description=false # ユーザーが作成したコメントの
 extra_instructions = "Please use Japanese in descriptions. When you make PR Reviewer Guide, please make it in Japanese also."
 
 [pr_reviewer]
-persistent_comment=true
 extra_instructions = "Please use Japanese in the description. When you make PR Reviewer Guide, please make it in Japanese also. Please review the code based on the Flutter code standards in code_standards.md. Please do not edit the PR description, only perform code reviews and comments."
 
 [pr_code_suggestions]
-extra_instructions = "Please use Japanese in the description. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
-focus_only_on_problems=true
-persistent_comment=true
+extra_instructions = "Please use Japanese in descriptions. Please make code improvement suggestions based on the Flutter code standards in code_standards.md. Please do not change the PR description."
 
 [pr_update_changelog]
-extra_instructions = "Please use Japanese in the description."
+extra_instructions = "Please use Japanese in descriptions."
 
 [best_practices]
-content = "code_standards.md"
-enable_global_best_practices = true
+
 
 [github_action_config]
 auto_review = true

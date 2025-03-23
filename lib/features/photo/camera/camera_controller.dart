@@ -49,12 +49,15 @@ class ClassifyLatestPhotoNotifier extends _$ClassifyLatestPhotoNotifier {
       final longitude = position?.longitude;
 
       if (latitude != null && longitude != null) {
+        logger.d('位置情報を取得しました: userId=$userId, photoId=$modifiedPhotoId, 緯度=$latitude, 経度=$longitude');
         await ref.read(photoRepositoryProvider).registerStoreInfo(
               photoId: modifiedPhotoId,
               userId: userId,
               latitude: latitude,
               longitude: longitude,
             );
+      } else {
+        logger.w('位置情報の取得に失敗しました: userId=$userId, photoId=$modifiedPhotoId');
       }
 
       final photoFile = await latestPhoto.file;

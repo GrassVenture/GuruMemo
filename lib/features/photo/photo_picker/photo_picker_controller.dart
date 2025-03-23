@@ -3,15 +3,16 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:exif/exif.dart';
-import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:photo_manager/photo_manager.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/image_helper.dart';
 import '../../../core/logger.dart';
+import '../../../core/timestamp_converter.dart';
 import '../../auth/auth_controller.dart';
 import '../local_photo_manager_service.dart';
+import '../local_photo_repository.dart';
 import '../remote_photo_repository.dart';
 
 part 'photo_picker_controller.g.dart';
@@ -85,10 +86,9 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
   }
 
   Future<void> classifyPhotoAsFood({
-    required XFile image,
-    bool isFood = true,
+    required AssetEntity photo,
   }) async {
-    final modifiedPhotoId = image.path.split('/').last.replaceAll('/', '-');
+    final modifiedPhotoId = photo.id.replaceAll('/', '-');
     final userId = ref.read(userIdProvider);
 
     if (userId == null) {
@@ -97,24 +97,38 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
     }
 
     try {
-      final location = await _getImageLocation(image.path);
+      final photoFile = await photo.file;
+      if (photoFile == null) {
+        logger.e('写真ファイルの取得に失敗しました');
+        return;
+      }
 
-      if (isFood) {
-        if (location != null && location.isNotEmpty) {
-          // サーバーに位置情報を送信
-          await ref.read(photoRepositoryProvider).registerStoreInfo(
-                photoId: modifiedPhotoId,
-                userId: userId,
-                latitude: location['latitude'],
-                longitude: location['longitude'],
-              );
-        }
+    await ref.read(localPhotoRepositoryProvider).savePhoto(
+              photo: photo,
+              isFood: true,
+    );
+
+      final location = await _getImageLocation(photoFile.path);
+      logger.d('位置情報: $location');
+
+      if (location != null && location.isNotEmpty) {
+        // サーバーに位置情報を送信
+        await ref.read(photoRepositoryProvider).registerStoreInfo(
+              photoId: modifiedPhotoId,
+              userId: userId,
+              latitude: location['latitude'],
+              longitude: location['longitude'],
+            );
 
         // 画像ファイルの圧縮と送信
-        final photoFile = File(image.path);
         final compressedData = await ImageHelper.compress(photoFile);
 
         if (compressedData != null) {
+          await ref.read(photoRepositoryProvider).registerPhotoData(
+                    userId: userId,
+                    shotAt: UnionTimestamp.dateTime(photo.createDateTime),
+                    photoId: modifiedPhotoId,
+                  );
           await ref.read(photoRepositoryProvider).categorizeFood(
                 userId: userId,
                 photoId: modifiedPhotoId,
