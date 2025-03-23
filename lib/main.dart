@@ -48,7 +48,7 @@ Future<void> main() async {
   ));
 }
 
-/// エントリーポイントとなるクラス。
+/// エントリーポイントとなるウィジェット。
 class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
