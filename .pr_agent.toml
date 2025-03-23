@@ -1,4 +1,9 @@
-# PR-Agent Configuration File
+# PR-Agent 設定用ファイル。
+#
+# 設定可能なフィールド及びデフォルト値は以下を参照：
+# https://github.com/qodo-ai/pr-agent/blob/main/pr_agent/settings/configuration.toml
+# 各フィールドの詳細は以下で質問可能：
+# https://qodo-merge-docs.qodo.ai/ai_search/
 
 [config]
 
