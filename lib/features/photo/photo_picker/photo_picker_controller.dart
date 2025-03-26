@@ -108,44 +108,57 @@ class ClassifyLocalPhotoNotifier extends _$ClassifyLocalPhotoNotifier {
               isFood: true,
     );
 
-      final location = await _getImageLocation(photoFile.path);
-      logger.d('位置情報: $location');
+    logger.d('photo_managerパッケージ modifiedPhotoId: $modifiedPhotoId');
+    logger.d('photo_managerパッケージ photo: $photo');
+    logger.d('photo_managerパッケージ latitude: ${photo.latitude}');
+    logger.d('photo_managerパッケージ longitude: ${photo.longitude}');
 
-      if (location != null && location.isNotEmpty) {
-        // サーバーに位置情報を送信
-        await ref.read(photoRepositoryProvider).registerStoreInfo(
-              photoId: modifiedPhotoId,
-              userId: userId,
-              latitude: location['latitude'],
-              longitude: location['longitude'],
-            );
-
-        // 画像ファイルの圧縮と送信
-        final compressedData = await ImageHelper.compress(photoFile);
-
-        if (compressedData != null) {
-          await ref.read(photoRepositoryProvider).registerPhotoData(
-                    userId: userId,
-                    shotAt: UnionTimestamp.dateTime(photo.createDateTime),
-                    photoId: modifiedPhotoId,
-                  );
-          await ref.read(photoRepositoryProvider).categorizeFood(
-                userId: userId,
-                photoId: modifiedPhotoId,
-                photoData: compressedData,
-              );
-        }
-      }
-    } on Exception catch (e, stackTrace) {
-      state = AsyncValue.error(e, stackTrace);
-      logger.e('Error in classifyPhotoAsFood: $e');
+    Map<String, double>? location;
+    if (Platform.isIOS && photo.latitude != null && photo.longitude != null) {
+      location = {
+        'latitude': photo.latitude!,
+        'longitude': photo.longitude!,
+      };
+    } else {
+      location = await _getImageLocation(photoFile.path);
     }
+    logger.d('位置情報: $location');
+
+    if (location != null && location.isNotEmpty) {
+      // サーバーに位置情報を送信
+      await ref.read(photoRepositoryProvider).registerStoreInfo(
+            photoId: modifiedPhotoId,
+            userId: userId,
+            latitude: location['latitude'],
+            longitude: location['longitude'],
+          );
+
+      // 画像ファイルの圧縮と送信
+      final compressedData = await ImageHelper.compress(photoFile);
+
+      if (compressedData != null) {
+        await ref.read(photoRepositoryProvider).registerPhotoData(
+                  userId: userId,
+                  shotAt: UnionTimestamp.dateTime(photo.createDateTime),
+                  photoId: modifiedPhotoId,
+                );
+        await ref.read(photoRepositoryProvider).categorizeFood(
+              userId: userId,
+              photoId: modifiedPhotoId,
+              photoData: compressedData,
+            );
+      }
+    }
+  } on Exception catch (e, stackTrace) {
+    state = AsyncValue.error(e, stackTrace);
+    logger.e('Error in classifyPhotoAsFood: $e');
   }
+}
 
   Future<Map<String, double>?> _getImageLocation(String imagePath) async {
     try {
       final file = File(imagePath);
-      final bytes = await file.readAsBytes();
+      final bytes =  file.readAsBytesSync();
 
       // EXIFデータを解析
       final data = await readExifFromBytes(bytes);
